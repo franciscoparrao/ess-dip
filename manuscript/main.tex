@@ -1,0 +1,88 @@
+% Manuscript — target: Mathematical Geosciences (Springer / IAMG)
+% Generic article preamble for drafting. Switch to Springer's svjour3/sn-jnl
+% class at submission stage ("your paper your way" allows generic format first).
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+
+% theorem-like environments
+\theoremstyle{definition}
+\newtheorem{property}{Property}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+% notation shortcuts
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\neff}{n_{\mathrm{eff}}}
+\newcommand{\dip}{\mathrm{dip}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\title{Effective-sample-size calibration of a modality test for selecting
+the number of clusters in spatially autocorrelated data}
+\author{F. Parra \and [co-authors]}
+\date{Draft --- \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Selecting the number of clusters $K$ is a basic step in unsupervised
+classification. The standard internal criteria --- the gap statistic, the
+average silhouette, the Calinski--Harabasz and Davies--Bouldin indices ---
+assume independent observations and are therefore miscalibrated on spatial
+data, where neighbouring locations are autocorrelated and the effective sample
+size is far below the nominal one, and where a smooth large-scale trend mimics
+discrete structure. We show that the consequence is systematic over-detection:
+on autocorrelated fields without discrete classes these criteria report
+spurious clusters in every one of $75$ controlled realisations, and on real
+imagery they fragment single land-cover regions. We recast cluster-number
+selection as a test for \emph{multimodality in excess of spatial
+autocorrelation}. The proposed method, ESS-Dip, evaluates the Hartigan dip
+statistic along the locally optimal split direction and calibrates it against
+the effective sample size derived from a within-class autocorrelation range,
+which a local declustering estimator separates from the between-class scale; a
+low-order trend is removed adaptively. A recursive partitioning returns $K$,
+and the test carries an asymptotic false-split-control property. On a factorial
+simulation with known ground truth, ESS-Dip is the only criterion among thirteen to
+combine perfect specificity with competitive exact-$K$ recovery and attains the
+best balanced score; on the Indian Pines, Salinas and Sentinel-2 scenes it
+identifies single land-cover regions as homogeneous where the standard criteria
+do not. The method is conservative by design --- a guard against the
+over-segmentation the standard criteria exhibit rather than an exhaustive
+enumerator of weakly separated or strongly imbalanced classes, a trade-off we
+characterise. Code and data are released.
+\end{abstract}
+
+\noindent\textbf{Keywords:} number of clusters \textperiodcentered\ cluster
+validity \textperiodcentered\ spatial autocorrelation \textperiodcentered\
+effective sample size \textperiodcentered\ declustering \textperiodcentered\
+unsupervised classification \textperiodcentered\ remote sensing
+
+\input{sections/01_introduction}
+\input{sections/02_background}
+\input{sections/03_formulation}
+\input{sections/04_simulation}
+\input{sections/05_application}
+\input{sections/06_discussion}
+\input{sections/07_conclusions}
+\input{sections/08_availability}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\end{document}

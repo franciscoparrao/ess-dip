@@ -1,0 +1,128 @@
+\section{Application to land-cover imagery}\label{sec:application}
+
+We now turn to real scenes, where the question is no longer whether a method
+recovers a known $K$ but whether it behaves sensibly on data with genuine
+spatial autocorrelation, smooth illumination gradients, and spectrally
+overlapping classes. We use three benchmarks spanning two sensing modalities
+and report two experiments: a direct test of the specificity property of
+Section~\ref{subsec:prop} on regions known to contain a single class, and a
+full-scene estimate of the number of classes.
+
+\subsection{Data and preprocessing}\label{subsec:data}
+
+Two airborne hyperspectral scenes with per-pixel ground truth are used: the
+\emph{Indian Pines} ($145\times145$, $200$ bands after removal of
+water-absorption bands, $16$ classes; \citealp{Baumgardner2015}) and the
+\emph{Salinas} scene ($512\times217$, $204$ bands, $16$ classes), both standard
+in the classification literature. Each cube is standardised per band and
+reduced by principal components to ten dimensions, retaining $95.5\%$ and
+$99.6\%$ of the variance respectively. As a multispectral counterpart --- the
+common satellite setting --- we use a $246\times237$ Sentinel-2 Level-2A scene
+over the Po Valley with ten surface-reflectance bands (B02--B12), labelled by
+the ESA WorldCover product \citep{Zanaga2022}; four classes exceed $1\%$ of the
+scene (crop $83\%$, tree $9\%$, grass $5\%$, built $4\%$), so its nominal
+number of classes is four. Bands are standardised; no dimensionality reduction
+is needed.
+
+\subsection{Specificity on single-class regions}\label{subsec:realspec}
+
+A region covered by a single land-cover class is the real-data analogue of the
+null and trend worlds of Section~\ref{sec:simulation}: its pixels are
+autocorrelated and spectrally variable --- soil, moisture and illumination vary
+within a crop field --- yet the true number of classes is one. We extract all
+$16\times16$ windows in which a single ground-truth class covers at least
+$90\%$ of the pixels ($67$ windows across Indian Pines and Salinas, $60$ in the
+Sentinel-2 scene, all of the dominant crop class), and record the number of
+clusters each method reports. Table~\ref{tab:realspec} summarises the outcome;
+the proposed-family ablations of Section~\ref{subsec:methods} all behave like
+ESS-Dip here (specificity $\ge0.97$) and are omitted for brevity.
+
+\begin{table}[t]
+\centering
+\caption{Number of clusters reported on single-class windows (true $K=1$).
+A method calibrated for spatial autocorrelation should return $\hat K=1$.}
+\label{tab:realspec}
+\begin{tabular}{l cc cc}
+\toprule
+ & \multicolumn{2}{c}{Hyperspectral ($67$ win.)}
+ & \multicolumn{2}{c}{Sentinel-2 ($60$ win.)}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Method & $\hat K{=}1$ rate & mean $\hat K$ & $\hat K{=}1$ rate & mean $\hat K$\\
+\midrule
+Gap statistic       & 0.64 & 1.79 & 0.00 & 6.97\\
+Silhouette          & 0.00 & 2.27 & 0.00 & 2.35\\
+Calinski--Harabasz  & 0.00 & 2.70 & 0.00 & 3.20\\
+Davies--Bouldin     & 0.00 & 3.37 & 0.00 & 2.62\\
+\midrule
+ESS-Dip             & \textbf{0.99} & \textbf{1.01} & \textbf{1.00} & \textbf{1.00}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The simulation result reproduces on real imagery. The silhouette,
+Calinski--Harabasz and Davies--Bouldin indices split a single real land-cover
+class into two or more sub-clusters in \emph{every} window of both modalities;
+the gap statistic does so in all but the cleanest hyperspectral windows
+($\hat K{=}1$ rate $0.64$) and, on the multispectral crop fields, fragments a
+single class into nearly seven on average. ESS-Dip identifies the region as a
+single class in $99\%$ of the hyperspectral and $100\%$ of the multispectral
+windows. The within-field spectral variability that the standard indices read
+as structure is precisely what the effective-sample-size calibration discounts.
+The result is not an artefact of the preprocessing: on the Indian Pines windows
+ESS-Dip returns a single class in every window across principal-component
+truncations from five to thirty components, window sides from $12$ to $24$
+pixels, and purity thresholds from $0.85$ to $0.95$ (for those combinations that
+yield windows). The recursive Gaussian-simulation estimator,
+even with the multiple-testing correction of
+Section~\ref{subsec:geostat-ref}, is less reliable here --- it returns a single
+class in $0.82$ of the hyperspectral and $0.98$ of the multispectral windows,
+below ESS-Dip --- because its per-node plug-in variogram degrades on real,
+non-stationary support, the residual effect that the correction does not
+remove.
+
+\subsection{Full-scene estimation}\label{subsec:realfull}
+
+Applied to an entire labelled scene, the methods estimate the number of
+land-cover classes present (Table~\ref{tab:realfull}). No criterion approaches
+the nominal sixteen classes of the hyperspectral scenes: the labels include
+many small, spectrally similar agricultural classes that are not separable
+without supervision, and the best standard index reaches nine (the gap on
+Salinas) while the others return two to six. ESS-Dip is deliberately
+conservative, reporting two classes on Indian Pines and five on Salinas. On the
+crop-dominated Sentinel-2 scene, where a single class covers $83\%$ of the
+pixels, ESS-Dip returns that one dominant class, whereas the gap reports five.
+
+\begin{table}[t]
+\centering
+\caption{Estimated number of classes on full scenes; the nominal number of
+labelled classes is given in parentheses.}
+\label{tab:realfull}
+\begin{tabular}{l ccc}
+\toprule
+Method & Indian Pines (16) & Salinas (16) & Sentinel-2 (4)\\
+\midrule
+Gap statistic       & 3 & 9 & 5\\
+Silhouette          & 2 & 2 & 2\\
+Calinski--Harabasz  & 2 & 6 & 3\\
+Davies--Bouldin     & 2 & 6 & 2\\
+ESS-Dip             & 2 & 5 & 1\\
+SGS-Dip (corrected) & 2 & $\ge20$ & 6\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These full-scene figures should be read against the precision--recall
+trade-off of Section~\ref{subsec:simresults}. Exhaustive recovery of many
+overlapping classes from a single scene is beyond every criterion considered,
+and the conservatism of ESS-Dip is the price of its specificity: a procedure
+that refuses to invent structure will, on a scene dominated by one class or
+composed of weakly separated ones, under-report rather than over-report. The
+recursive simulation estimator errs in the opposite direction, over-detecting
+to the imposed cap on Salinas and to six classes on the crop-dominated
+Sentinel-2 scene even after the multiple-testing correction --- the plug-in
+variogram on the scene's irregular, non-stationary support compounding over a
+full-scene recursion. We
+regard the method's value as residing in that precision --- it answers
+reliably whether genuine class structure is present beyond spatial
+autocorrelation --- rather than in maximal class enumeration, and we return to
+this distinction, and to ways of relaxing it, in Section~\ref{sec:discussion}.

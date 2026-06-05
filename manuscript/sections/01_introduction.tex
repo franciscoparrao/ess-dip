@@ -1,0 +1,91 @@
+\section{Introduction}\label{sec:intro}
+
+Unsupervised classification partitions a data set into groups without labelled
+examples, and in doing so it must answer a prior question: how many groups are
+there? The choice of the number of clusters $K$ governs every downstream
+interpretation, and in the analysis of remotely sensed imagery --- where $K$ is
+the number of land-cover classes an analyst will map --- it is made routinely
+and consequentially. A mature toolkit exists to make it: the gap statistic
+\citep{Tibshirani2001}, the average silhouette \citep{Rousseeuw1987}, the
+Calinski--Harabasz \citep{CalinskiHarabasz1974} and Davies--Bouldin
+\citep{DaviesBouldin1979} indices each score a partition by its internal
+geometry and select the $K$ that optimises the score.
+
+These criteria share a hidden assumption: that the observations are
+independent. Their reference levels --- the uniform null of the gap statistic,
+the implicit baseline of a silhouette --- describe what the geometry would look
+like were the samples exchangeable draws. Spatial data are not exchangeable.
+Neighbouring pixels are autocorrelated \citep{Tobler1970}, so the effective
+number of independent observations is far below the nominal pixel count
+\citep{Cressie1993}, and a smooth illumination or topographic gradient spreads
+the feature cloud along a manifold that an independence null cannot
+distinguish from genuine groups. The consequence, which we quantify in
+Sections~\ref{sec:simulation}--\ref{sec:application}, is systematic
+\emph{over-detection}: on synthetic fields containing no discrete classes the
+gap statistic reports on average between seven and eight, and on real imagery
+the silhouette, Calinski--Harabasz and Davies--Bouldin indices fragment a
+single, homogeneous crop field into several sub-classes in every instance we
+examined. A criterion that cannot recognise the absence of clusters is a
+precarious foundation for deciding their number.
+
+Correcting this is not a matter of swapping in a better null. Because the
+within-cluster dispersion that these criteria minimise is a second-order
+quantity, a reference matched to the data's second-order spatial structure ---
+its variogram --- reproduces the same dispersion and explains the clusters
+away. Distinguishing real classes from autocorrelation therefore requires
+information beyond second order, namely the \emph{multimodality} of the feature
+distribution; and distinguishing real classes from a smooth trend requires
+separating a continuous drift from discrete structure, a separation the
+geostatistical decomposition into trend and residual makes natural. The idea of
+calibrating a clustering criterion against an autocorrelation-aware null is
+itself not new --- \citet{HennigLin2015} do exactly this for discrete
+presence--absence data --- but it has not been carried to the continuous-field
+setting of gridded imagery, nor has the confounding of trend with class been
+addressed in selecting $K$.
+
+This paper supplies both. We recast cluster-number selection as a test for
+\emph{multimodality in excess of spatial autocorrelation} and make it valid on
+autocorrelated fields by calibrating the test at the effective sample size. The
+construction rests on three geostatistical devices: the effective sample size
+itself \citep{Cressie1993,Dutilleul1993}, which sets the calibration; a
+\emph{local declustering} estimate of the within-class autocorrelation range
+\citep{IsaaksSrivastava1989,Deutsch1998}, which prevents the between-class
+mosaic from corrupting that calibration; and an adaptive trend--residual
+decomposition, which removes a smooth drift only when it is statistically
+resolvable. A recursive partitioning driven by the calibrated dip statistic
+\citep{HartiganHartigan1985} returns $K$. Our contributions are:
+
+\begin{itemize}
+  \item We document, on controlled ground truth, that the standard
+    number-of-clusters criteria over-detect under spatial autocorrelation
+    without exception, failing to recognise class-free scenes in every one of
+    $75$ realisations (Section~\ref{sec:simulation}).
+  \item We propose \emph{ESS-Dip}, an effective-sample-size-calibrated modality
+    test for $K$, combining a within-class range from local declustering with
+    adaptive trend removal (Section~\ref{sec:method}), and state an asymptotic
+    false-split-control property (Property~\ref{prop:fpr}) that the method
+    confirms empirically.
+  \item We evaluate thirteen criteria on a factorial simulation with known $K$,
+    including the calibrated-validity-index method of \citet{HennigLin2015} that
+    ESS-Dip generalises;
+    ESS-Dip is the only method to combine perfect specificity with competitive
+    recovery, attaining the best balanced score, and an ablation attributes the
+    gain to the local range and the adaptive detrending
+    (Section~\ref{sec:simulation}).
+  \item We confirm the behaviour on three real scenes spanning hyperspectral
+    and multispectral sensing --- Indian Pines, Salinas, and a Sentinel-2 scene
+    labelled by ESA WorldCover --- where ESS-Dip identifies single land-cover
+    regions as homogeneous where the standard criteria do not
+    (Section~\ref{sec:application}).
+\end{itemize}
+
+The remainder of the paper is organised as follows.
+Section~\ref{sec:background} reviews number-of-clusters criteria, the
+geostatistical notions of effective sample size and declustering, and
+modality-based clustering, and positions the contribution.
+Section~\ref{sec:method} develops the method and its calibration.
+Sections~\ref{sec:simulation} and~\ref{sec:application} report the simulation
+study and the application to land-cover imagery. Section~\ref{sec:discussion}
+discusses the precision--recall trade-off and limitations, and
+Section~\ref{sec:conclusions} concludes. Code and data are released to
+reproduce every result.

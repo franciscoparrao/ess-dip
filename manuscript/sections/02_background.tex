@@ -1,0 +1,93 @@
+\section{Background and related work}\label{sec:background}
+
+\subsection{Selecting the number of clusters}\label{subsec:bg-k}
+
+Choosing the number of clusters $K$ is a classical problem in unsupervised
+analysis, and a large family of \emph{internal} criteria address it by scoring
+a partition against the geometry of the data alone. The gap statistic
+\citep{Tibshirani2001} compares the within-cluster dispersion to its
+expectation under a reference distribution with no clustering, typically
+uniform over the data's bounding box; the average silhouette
+\citep{Rousseeuw1987}, the Calinski--Harabasz ratio
+\citep{CalinskiHarabasz1974} and the Davies--Bouldin index
+\citep{DaviesBouldin1979} balance within- against between-cluster scatter.
+Common to all is the assumption that the observations are exchangeable: the
+reference distribution, or the index's implicit baseline, treats the samples as
+independent draws. When this holds the criteria are well calibrated; when it
+fails they are not. Spatial data are the archetypal failure, because nearby
+locations are correlated --- ``everything is related to everything else, but
+near things are more related than distant things'' \citep{Tobler1970}.
+
+\subsection{Accounting for spatial dependence}\label{subsec:bg-spatial}
+
+That an independence reference over-detects structure in dependent data is
+known across several fields. In spatial epidemiology, \citet{Goovaerts2004}
+show that a complete-spatial-randomness null over-identifies disease clusters
+and propose, in its place, a geostatistical \emph{spatial neutral model} ---
+realisations reproducing the histogram and variogram of the data by sequential
+Gaussian simulation --- against which far fewer locations remain significant.
+In neuroimaging, \citet{Eklund2016} trace inflated false-positive rates in
+cluster-extent inference to a mis-specified parametric model of the spatial
+autocorrelation. The common remedy is a null that \emph{preserves} the
+second-order spatial structure while removing the effect being tested, realised
+either by geostatistical simulation \citep{Goovaerts2004} or by spatially
+constrained randomisation such as Moran spectral randomization
+\citep{WagnerDray2015}.
+
+The same logic has been brought to bear on $K$ itself.
+\citet{HennigLin2015} calibrate a validity index (the gap, silhouette or
+prediction strength) against its distribution under a problem-specific null
+that encodes non-clustering structure, including spatial autocorrelation, and
+use the calibrated index both to test for clustering and to estimate $K$; on a
+biogeographic example a plain Gaussian null favours eight clusters while the
+autocorrelation-aware null reduces this to two and renders the apparent
+clustering non-significant. Their framework is the conceptual basis of the
+present work. It is, however, formulated for discrete presence--absence data
+with an algorithmic disjunction-parameter null, and addresses neither the
+\emph{continuous-field} setting of gridded imagery nor the confounding of a
+smooth large-scale \emph{trend} with discrete classes. The present
+contribution supplies exactly these: a Gaussian-random-field null on the
+lattice, a within-class range obtained by local declustering, an adaptive
+trend--residual separation, and an effective-sample-size calibration of a
+modality statistic.
+
+The quantitative device that makes this possible is the \emph{effective
+sample size}: under spatial autocorrelation the variance of a sample statistic
+behaves as if computed from $\neff<n$ independent observations, a reduction
+governed by the integral of the autocorrelation \citep{Cressie1993}.
+\citet{Dutilleul1993} operationalised this idea to correct the degrees of
+freedom of a correlation test between two spatial processes; we use it to
+recalibrate, rather than to correct after the fact, the reference distribution
+of a clustering criterion. The autocorrelation scale it requires is the
+variogram range \citep{Matheron1963,Cressie1993}, and the safeguard against
+letting large homogeneous regions dominate its estimate is \emph{declustering},
+a standard geostatistical correction for spatially clustered support
+\citep{IsaaksSrivastava1989,Deutsch1998}.
+
+\subsection{Modality as a clustering signal}\label{subsec:bg-modality}
+
+Because $k$-means dispersion is itself a second-order quantity, a null matched
+to the data's second-order structure can explain away the very clusters one
+seeks; a criterion that survives such a null must use information beyond second
+order. Multimodality is the natural choice. The dip test of
+\citet{HartiganHartigan1985} measures the departure of a univariate sample from
+unimodality, and dip-means \citep{Kalogeratos2012} turns it into a
+divisive procedure that splits a cluster only when a projection of it is
+significantly multimodal, thereby estimating $K$. These methods assume
+independent observations; our contribution is to make the dip test valid under
+spatial autocorrelation by calibrating it at the effective sample size, and to
+pair it with the trend removal that prevents a smooth gradient from being read
+as two modes.
+
+\subsection{Distinction from spatially constrained clustering}\label{subsec:bg-constrained}
+
+A separate line of work \emph{imposes} spatial contiguity on the partition:
+regionalization methods such as SKATER \citep{Assuncao2006}, ClustGeo
+\citep{Chavent2018} and the max-$p$-regions problem \citep{Duque2012} constrain
+clusters to be spatially connected. These address a different question --- how
+to partition space into contiguous regions --- and still require the number of
+regions as an input or a tuning parameter. We do not constrain the partition;
+we correct the criterion that selects \emph{how many} groups are present, and
+the two are complementary: the effective-sample-size calibration developed here
+could in principle inform the stopping rule of a regionalization just as it
+informs the recursion of Section~\ref{sec:method}.

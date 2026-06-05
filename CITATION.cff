@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+title: >-
+  ESS-Dip: effective-sample-size calibration of a modality test for
+  selecting the number of clusters in spatially autocorrelated data
+message: >-
+  If you use this software, please cite both the software and the
+  accompanying paper.
+type: software
+authors:
+  - given-names: Francisco
+    family-names: Parra
+    email: gran.huja@gmail.com
+license: MIT
+repository-code: 'https://github.com/USERNAME/ess-dip'
+version: 1.0.0
+date-released: '2026-06-04'
+keywords:
+  - number of clusters
+  - cluster validity
+  - spatial autocorrelation
+  - effective sample size
+  - declustering
+  - unsupervised classification
+  - remote sensing
+preferred-citation:
+  type: article
+  title: >-
+    Effective-sample-size calibration of a modality test for selecting the
+    number of clusters in spatially autocorrelated data
+  authors:
+    - given-names: Francisco
+      family-names: Parra
+  journal: Mathematical Geosciences
+  year: 2026
+  notes: Under review.

@@ -1,0 +1,68 @@
+\section{Discussion}\label{sec:discussion}
+
+\paragraph{A precision-oriented criterion.}
+The results of Sections~\ref{sec:simulation} and~\ref{sec:application} draw a
+consistent picture across synthetic fields, hyperspectral scenes and
+multispectral imagery: standard internal criteria are powerful at recovering
+well-separated classes but cannot recognise their absence, whereas ESS-Dip
+controls the false-split rate at the cost of recall when classes are many or
+weakly separated. The two behaviours are not interchangeable failures of
+calibration but the two ends of a deliberate trade-off. By referring the dip
+statistic to the effective rather than the nominal sample size, the test is
+made conservative in exact proportion to the information the autocorrelation
+removes; the level $\alpha$ and the range $\ell$ are the knobs that set where on
+the precision--recall curve the method sits. We have fixed them once, without
+per-scene tuning, and the resulting operating point is one of high precision:
+ESS-Dip answers reliably whether discrete structure is present \emph{beyond}
+spatial autocorrelation, and is correspondingly cautious about enumerating
+structure that the data do not independently support. For the analyst this is
+the useful direction of error --- a guard against the over-segmentation that
+Section~\ref{subsec:realspec} documents for the standard indices --- but it is
+a genuine limitation when an exhaustive class inventory is the goal.
+
+\paragraph{Relation to geostatistical null models.}
+Assumption~\ref{ass:null} replaces the independence reference of the classical
+criteria by a unimodal Gaussian random field, the continuous-field counterpart
+of the spatial neutral models used in disease mapping \citep{Goovaerts2004} and
+of Moran spectral randomization \citep{WagnerDray2015}. We realise it
+implicitly, through the effective-sample-size calibration of the dip, rather
+than by simulating reference fields. A more explicit route would calibrate the
+statistic against an ensemble of sequential-Gaussian-simulation realisations
+conditioned on the empirical variogram; this would relax the isotropy built
+into our scalar range $\ell$ and accommodate anisotropic or nested
+autocorrelation structures at the cost of the simulation effort. We see the
+present scalar calibration and a full simulation-based null as two points on a
+spectrum trading fidelity against computation, and the near-linear cost of the
+former (Section~\ref{subsec:complexity}) as its principal practical advantage
+on megapixel scenes.
+
+\paragraph{Limitations.}
+Three limitations bound the method's applicability. First, when many spectrally
+overlapping classes coexist, as in the sixteen-class hyperspectral scenes, no
+unsupervised criterion --- ours included --- approaches the nominal class count
+(Section~\ref{subsec:realfull}); recovering such inventories requires
+supervision or auxiliary information that an internal criterion cannot supply.
+Second, strong class imbalance degrades recall: when one class dominates the
+scene, as the crop class does in the Sentinel-2 image, the leading split
+direction is governed by that majority and minority classes are not resolved.
+Third, the false-split control of Property~\ref{prop:fpr} is an asymptotic
+statement under a block-independence idealisation, not a finite-sample
+guarantee, and the projection onto the $2$-means direction, though effective in
+our experiments, is a heuristic rather than an optimal choice.
+
+\paragraph{Extensions.}
+Each limitation suggests a direction. A recall-oriented variant could revisit
+leaves at a relaxed level, or test minority modes against the residual of the
+majority, to mitigate imbalance without sacrificing the specificity of the
+first pass. Replacing the scalar range by an anisotropic variogram model, and
+the uniform dip null by conditional simulation, would extend the calibration to
+non-stationary autocorrelation --- although Section~\ref{subsec:aniso} shows the
+isotropic estimate is already robust to directional autocorrelation up to an
+eight-fold anisotropy ratio. The same effective-sample-size
+correction applies, unchanged, to spatio-temporal stacks, where the
+decorrelation ``area'' becomes a space--time volume. Finally, because our
+contribution is a stopping rule rather than a partitioning constraint, it
+composes naturally with spatially constrained clustering
+(Section~\ref{subsec:bg-constrained}): the calibrated test could decide when a
+regionalization has produced as many regions as the data independently
+support.

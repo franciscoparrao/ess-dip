@@ -1,0 +1,15 @@
+# Core: method, benchmark, hyperspectral application
+numpy>=1.26
+scipy>=1.11
+scikit-learn>=1.4
+pandas>=2.0
+diptest>=0.9
+matplotlib>=3.7        # only for the legacy/placeholder plots; final figures use R
+
+# Optional: fetching the Sentinel-2 scene from the Microsoft Planetary Computer
+# (not needed to reproduce the synthetic study or the hyperspectral application)
+# rasterio>=1.3
+# pystac-client>=0.7
+# planetary-computer>=1.0
+# stackstac>=0.5
+# rioxarray>=0.15

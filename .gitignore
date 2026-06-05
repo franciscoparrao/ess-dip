@@ -1,0 +1,26 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# Large / downloadable data (fetched by scripts; not redistributed)
+data/*.mat
+data/*.npy
+data/*.tif
+
+# LaTeX build artifacts
+manuscript/*.aux
+manuscript/*.log
+manuscript/*.bbl
+manuscript/*.blg
+manuscript/*.out
+manuscript/*.toc
+manuscript/*.synctex.gz
+
+# OS
+.DS_Store
+
+# Not part of this project (unrelated corpus / local session artifacts)
+revistas_bib_final/
+.claude/

@@ -1,0 +1,31 @@
+\section{Conclusions}\label{sec:conclusions}
+
+Selecting the number of clusters on spatial data is compromised by an
+assumption that the standard criteria make and that spatial data violate: that
+observations are independent. We have shown that the violation is not benign.
+Under spatial autocorrelation the gap statistic and the silhouette,
+Calinski--Harabasz and Davies--Bouldin indices over-detect without exception,
+inventing classes on featureless fields and fragmenting single land-cover
+regions on real imagery.
+
+We have proposed a remedy framed in geostatistical terms. Treating clustering
+as multimodality in excess of spatial autocorrelation, ESS-Dip tests the
+Hartigan dip along the locally optimal split direction and calibrates it
+against the \emph{effective} sample size, estimated from a within-class
+autocorrelation range obtained by local declustering, after removing a
+low-order trend whenever one is resolvable. The procedure carries an asymptotic
+false-split-control property and runs in near-linear time. On a factorial
+simulation with known ground truth it is the only criterion among thirteen to
+combine perfect specificity with competitive exact-$K$ recovery, attaining the
+best balanced score; on the Indian Pines, Salinas and Sentinel-2 scenes it
+identifies single land-cover regions as homogeneous where the standard criteria
+do not.
+
+The broader message is that number-of-clusters selection on autocorrelated data
+must be calibrated to the information the data actually contain, not to their
+nominal size, and that the signal distinguishing classes from autocorrelation
+is modality, not dispersion. The effective sample size and declustering ---
+long-standing tools of geostatistics --- supply exactly what is needed to make
+a classical clustering criterion honest about spatial dependence. All code and
+data required to reproduce the simulation study and the applications are
+released.
