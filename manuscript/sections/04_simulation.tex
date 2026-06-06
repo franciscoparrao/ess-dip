@@ -38,7 +38,7 @@ seeds, for $495$ scenes in total.
 
 \subsection{Methods and metrics}\label{subsec:methods}
 
-We compare thirteen criteria. Four are standard internal indices evaluated
+We compare fourteen criteria. Four are standard internal indices evaluated
 against an independence null over $K=1,\dots,8$: the gap statistic
 \citep{Tibshirani2001} with its Tibshirani rule, the average silhouette,
 Calinski--Harabasz, and Davies--Bouldin. (The latter three cannot return
@@ -50,7 +50,10 @@ bootstrap against a null model, run both with an \emph{i.i.d.} Gaussian null
 (phase-randomized surrogates preserving each band's variogram, their
 autocorrelation-aware variant adapted to the gridded setting); $K$ is taken
 where the calibrated index, in standard-deviation units, first exceeds a
-significance threshold. The seventh is the proposed method of
+significance threshold. A seventh baseline, plain \emph{dip-means}, applies the
+same modality test at the nominal sample size, without the effective-sample-size
+calibration, the local range, or the trend removal, isolating the contribution
+of that spatial machinery. The eighth is the proposed method of
 Section~\ref{sec:method}, denoted \textbf{ESS-Dip}:
 Algorithm~\ref{alg:essdip} with the local within-class integral range
 \eqref{eq:areamed}, adaptive trend removal \eqref{eq:detrendrule}, and a
@@ -63,10 +66,10 @@ image in place of the tile median); \emph{no trend removal}
 ($\tau=\infty$); \emph{forced trend removal} ($\tau=0$); and
 \emph{declustering}, the precursor that subsamples the scene to one pixel per
 decorrelation patch and applies the dip test to the thinned, approximately
-independent sample. The twelfth, \emph{SGS-Dip}, replaces the per-node
+independent sample. The thirteenth, \emph{SGS-Dip}, replaces the per-node
 effective-sample-size calibration by the recursive Gaussian-simulation
 reference \eqref{eq:sgstest} of Section~\ref{subsec:sgs} ($B=40$ simulations
-per node); the thirteenth adds a Bonferroni multiple-testing correction to it.
+per node); the fourteenth adds a Bonferroni multiple-testing correction to it.
 
 Three metrics summarise performance. \emph{Specificity} is the fraction of
 null and trend scenes (the $75$ scenes with $K=1$) for which $\hat K=1$; it is
@@ -105,6 +108,9 @@ Davies--Bouldin          & 0.00 & 0.70 & 0.41 & 0.20 & 0.299\\
 \multicolumn{6}{l}{\textit{Calibrated validity index} \citep{HennigLin2015}}\\
 \quad i.i.d.\ null       & 0.00 & 0.67 & 0.42 & 0.17 & 0.280\\
 \quad spatial null       & 0.80 & 0.72 & 0.38 & 0.17 & 0.561\\
+\midrule
+\multicolumn{6}{l}{\textit{Modality test without spatial calibration}}\\
+Dip-means (nominal)      & 0.52 & 0.92 & 0.09 & 0.02 & 0.486\\
 \midrule
 \multicolumn{6}{l}{\textit{Proposed}}\\
 ESS-Dip                  & \textbf{1.00} & 0.81 & 0.35 & \textbf{0.50} & \textbf{0.771}\\
@@ -159,7 +165,7 @@ On the structured scenes the gap statistic is most accurate
 and we do not. ESS-Dip reaches $0.81$, ahead of the silhouette ($0.76$),
 Davies--Bouldin ($0.70$) and close to Calinski--Harabasz ($0.85$), while being
 the \emph{only} method with non-zero specificity. On the realistic mixed
-scenes ESS-Dip is the \emph{best of all thirteen methods} ($0.50$ versus
+scenes ESS-Dip is the \emph{best of all fourteen methods} ($0.50$ versus
 $0.40$ for the next best), because the adaptive detrending removes the drift
 that collapses the others. The balanced score makes the overall picture plain:
 ESS-Dip scores $0.771$, far above the next method ($0.638$) and more than twice
@@ -225,7 +231,16 @@ unremoved drift inflates the range. Removing the drift \emph{only when present}
 attains both ($0.81$ structured, $0.50$ mixed). The declustering precursor,
 which discards all but one pixel per patch, matches the others on specificity
 but trails on accuracy ($0.08$ mixed), confirming the value of calibrating on
-the full pixel set rather than thinning it.
+the full pixel set rather than thinning it. At the opposite extreme, plain
+dip-means (Table~\ref{tab:bench}) removes the spatial apparatus entirely and
+applies the dip at the nominal size: the modality signal alone recovers
+structure well ($0.92$, second only to the gap statistic), but without the
+effective-sample-size calibration its specificity falls to $0.52$, and without
+trend removal its mixed accuracy collapses to $0.02$. The contribution of
+ESS-Dip is therefore not the modality test, which is already strong, but the
+spatial calibration and trend separation that turn it from a high-recall,
+low-specificity splitter into a precision-controlled homogeneity test, at a
+modest cost in structured recall ($0.92$ to $0.81$).
 
 \subsection{Geostatistical reference and the effective-sample-size
 approximation}\label{subsec:geostat-ref}

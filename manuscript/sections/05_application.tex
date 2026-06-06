@@ -127,3 +127,42 @@ regard the method's value as residing in that precision (it answers
 reliably whether genuine class structure is present beyond spatial
 autocorrelation) rather than in maximal class enumeration, and we return to
 this distinction, and to ways of relaxing it, in Section~\ref{sec:discussion}.
+
+The number of classes is only half the picture; the quality of the induced
+partition completes it. Table~\ref{tab:realari} reports the adjusted Rand index
+(ARI) and normalised mutual information (NMI) of each labelling against the
+ground-truth map. Two things stand out. First, unsupervised recovery of these
+partitions is hard for every method: no ARI exceeds $0.52$. Second, on the
+multi-class hyperspectral scenes ESS-Dip's partition quality trails the
+over-detecting gap statistic (Salinas ARI $0.32$ versus $0.52$), and on the
+crop-dominated Sentinel-2 scene, where it returns a single class, its ARI is
+zero. This is the partition-quality counterpart of the conservatism already
+visible in the class counts: a precision-oriented test that refuses to split
+does not, and is not meant to, maximise partition recovery. The numbers make
+the trade-off explicit and reinforce the reading of ESS-Dip as a homogeneity
+guard rather than a classifier.
+
+\begin{table}[t]
+\centering
+\caption{Partition quality on the full scenes: adjusted Rand index (ARI) and
+normalised mutual information (NMI) against the ground-truth land-cover map,
+with the number of classes each method returns. Computed on labelled pixels.}
+\label{tab:realari}
+\begin{tabular}{l l c cc}
+\toprule
+Scene & Method & $\hat K$ & ARI & NMI\\
+\midrule
+Indian Pines & Gap statistic & 3 & 0.21 & 0.36\\
+             & Silhouette    & 2 & 0.18 & 0.37\\
+             & ESS-Dip       & 2 & 0.18 & 0.37\\
+\midrule
+Salinas      & Gap statistic & 9 & \textbf{0.52} & \textbf{0.71}\\
+             & Silhouette    & 2 & 0.18 & 0.37\\
+             & ESS-Dip       & 5 & 0.32 & 0.57\\
+\midrule
+Sentinel-2   & Gap statistic & 5 & 0.10 & 0.14\\
+             & Silhouette    & 2 & 0.36 & 0.22\\
+             & ESS-Dip       & 1 & 0.00 & 0.00\\
+\bottomrule
+\end{tabular}
+\end{table}

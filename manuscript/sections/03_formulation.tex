@@ -216,7 +216,8 @@ integral range \eqref{eq:intrange} is derived for the variance of the sample
 \emph{mean}; the dip is a functional of the empirical \emph{distribution}, for
 which the appropriate effective size carries a different constant, so $\kappa$
 is best regarded as a calibration parameter rather than a fixed geometric
-factor. Second, it presumes isotropy. A reference that avoids both is the
+factor, one whose adequacy Section~\ref{subsec:prop} confirms empirically by
+showing the calibrated level controlled across the operating range of $\neff$. Second, it presumes isotropy. A reference that avoids both is the
 geostatistical \emph{neutral model} \citep{Goovaerts2004}: simulate, by the
 spectral (fast-Fourier) method \citep{DietrichNewsam1993,Lantuejoul2002}, an
 ensemble of unconditional Gaussian realisations
@@ -335,6 +336,33 @@ Section~\ref{sec:simulation} finds that, over the $75$ null and trend
 realisations with no discrete classes, the procedure returns $\hat K=1$ in
 every case, whereas the gap statistic and the silhouette, Calinski--Harabasz
 and Davies--Bouldin indices report spurious clusters in all of them.
+
+The calibration can be probed directly, in isolation from the recursion. On
+single-class Gaussian fields spanning effective sample sizes from $35$ to over
+$300$ (the regime the recursion visits), the per-node test of
+Section~\ref{subsec:ess} never produces a false split: its empirical
+false-split rate is $0.00$ at every $\neff$ (Figure~\ref{fig:level}a), at or
+below the nominal $\alpha$, and unchanged whether the projection direction is
+fixed or chosen by $2$-means, so the data-dependent direction does not inflate
+the level. Calibrating instead at the nominal size $n_C$ breaks this control
+(open symbols). The conservatism is not vacuous: on two-class fields the power
+rises with $\neff$ to one (Figure~\ref{fig:level}b). The effective size borrowed
+from sample-mean theory therefore calibrates the dip across the operating range,
+holding the level conservatively, even though its exact constant for the dip
+functional is left undetermined.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/level.pdf}
+\caption{Direct validation of the effective-sample-size calibration on a single
+homogeneity decision, $160$ realisations per cell. (a) On one-class Gaussian
+fields the false-split rate of the calibrated test stays at $0.00$, at or below
+the nominal $\alpha=0.05$, across effective sample sizes from $35$ to over $300$;
+calibrating at the nominal size instead exceeds $\alpha$ (open symbols). (b) On
+two-class fields the power rises with $\neff$ to one, so the level control is
+not the trivial conservatism of a test that never rejects.}
+\label{fig:level}
+\end{figure}
 
 \subsection{Computational considerations}\label{subsec:complexity}
 

@@ -1,0 +1,10 @@
+scene,method,k,ari,nmi
+IndianPines,ESS-Dip,2,0.176,0.372
+IndianPines,gap,3,0.21,0.358
+IndianPines,silhouette,2,0.176,0.372
+Salinas,ESS-Dip,5,0.323,0.571
+Salinas,gap,9,0.517,0.71
+Salinas,silhouette,2,0.18,0.374
+Sentinel-2,ESS-Dip,1,0.0,0.0
+Sentinel-2,gap,5,0.102,0.142
+Sentinel-2,silhouette,2,0.361,0.219
