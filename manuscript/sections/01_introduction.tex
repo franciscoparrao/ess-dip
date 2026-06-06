@@ -49,7 +49,10 @@ single class or instead carries \emph{multimodality in excess of spatial
 autocorrelation}, and make that test valid on autocorrelated fields by
 calibrating it at the effective sample size. The
 construction rests on three geostatistical devices: the effective sample size
-itself \citep{Cressie1993,Dutilleul1993}, which sets the calibration; a
+itself \citep{Cressie1993,Dutilleul1993}, evaluated at the indicator integral
+range appropriate to a functional of the distribution rather than the field
+integral range that governs the mean (Section~\ref{subsec:sgs}), which sets the
+calibration; a
 \emph{local} estimate of the within-class autocorrelation range, in the manner
 of declustering \citep{IsaaksSrivastava1989,Deutsch1998}, which prevents the
 between-class mosaic from corrupting that calibration; and an adaptive trend--residual

@@ -215,11 +215,19 @@ The effective-sample-size calibration \eqref{eq:test} is an approximation: it
 maps an autocorrelated sample of size $n_C$ to an independent sample of size
 $\neff$ and reads the dip quantile there. Two caveats attend it. First, the
 integral range \eqref{eq:intrange} is derived for the variance of the sample
-\emph{mean}; the dip is a functional of the empirical \emph{distribution}, for
-which the appropriate effective size carries a different constant, so $\kappa$
-is best regarded as a calibration parameter rather than a fixed geometric
-factor, one whose adequacy Section~\ref{subsec:prop} confirms empirically by
-showing the calibrated level controlled across the operating range of $\neff$. Second, it presumes isotropy. A reference that avoids both is the
+\emph{mean}, whereas the dip is a functional of the empirical
+\emph{distribution}, governed by the level-crossing indicators rather than the
+field itself. For a Gaussian field the median-level indicator correlogram is the
+arcsin transform $\rho_I(\bm h)=\tfrac{2}{\pi}\arcsin\rho(\bm h)\le\rho(\bm h)$,
+a standard result of indicator geostatistics \citep{Goovaerts2004}, so the
+decorrelation area appropriate to the dip is the \emph{indicator} integral range
+$a_I=\iint\rho_I\,d\bm h$, strictly below the field integral range
+($a_{\mathrm{int}}\approx1.45\,a_I$ on our fields). This is the geostatistical
+reason the mean-based integral range over-corrects
+(Section~\ref{subsec:geostat-ref}). The $1/e$ proxy $a=\ell^2$ lies in the same
+indicator-range regime, within which the recovered $\hat K$ is insensitive to
+the precise area, so we retain it; Section~\ref{subsec:prop} confirms the
+resulting level is controlled across the operating range of $\neff$. Second, it presumes isotropy. A reference that avoids both is the
 geostatistical \emph{neutral model} \citep{Goovaerts2004}: simulate, by the
 spectral (fast-Fourier) method \citep{DietrichNewsam1993,Lantuejoul2002}, an
 ensemble of unconditional Gaussian realisations
@@ -328,7 +336,8 @@ inflation is immaterial in practice.
 We label this a property rather than a theorem deliberately. A rigorous
 statement would require an empirical-process central limit theorem for the dip
 functional under a spatial mixing condition, together with control of the
-block-independence constant in \eqref{eq:intrange}, which we do not pursue. The
+block-independence constant in the decorrelation area \eqref{eq:areamed}, which
+we do not pursue. The
 Gaussian-simulation reference \eqref{eq:sgstest} controls the level exactly for
 a single homogeneity test and so provides an assumption-light check on the
 leading split, but, as Section~\ref{subsec:geostat-ref} shows, it does not yield
