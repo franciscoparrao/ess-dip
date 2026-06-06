@@ -16,8 +16,8 @@ water-absorption bands, $16$ classes; \citealp{Baumgardner2015}) and the
 \emph{Salinas} scene ($512\times217$, $204$ bands, $16$ classes), both standard
 in the classification literature. Each cube is standardised per band and
 reduced by principal components to ten dimensions, retaining $95.5\%$ and
-$99.6\%$ of the variance respectively. As a multispectral counterpart --- the
-common satellite setting --- we use a $246\times237$ Sentinel-2 Level-2A scene
+$99.6\%$ of the variance respectively. As a multispectral counterpart, the
+common satellite setting, we use a $246\times237$ Sentinel-2 Level-2A scene
 over the Po Valley with ten surface-reflectance bands (B02--B12), labelled by
 the ESA WorldCover product \citep{Zanaga2022}; four classes exceed $1\%$ of the
 scene (crop $83\%$, tree $9\%$, grass $5\%$, built $4\%$), so its nominal
@@ -28,8 +28,8 @@ is needed.
 
 A region covered by a single land-cover class is the real-data analogue of the
 null and trend worlds of Section~\ref{sec:simulation}: its pixels are
-autocorrelated and spectrally variable --- soil, moisture and illumination vary
-within a crop field --- yet the true number of classes is one. We extract all
+autocorrelated and spectrally variable (soil, moisture and illumination vary
+within a crop field), yet the true number of classes is one. We extract all
 $16\times16$ windows in which a single ground-truth class covers at least
 $90\%$ of the pixels ($67$ windows across Indian Pines and Salinas, $60$ in the
 Sentinel-2 scene, all of the dominant crop class), and record the number of
@@ -74,9 +74,9 @@ truncations from five to thirty components, window sides from $12$ to $24$
 pixels, and purity thresholds from $0.85$ to $0.95$ (for those combinations that
 yield windows). The recursive Gaussian-simulation estimator,
 even with the multiple-testing correction of
-Section~\ref{subsec:geostat-ref}, is less reliable here --- it returns a single
+Section~\ref{subsec:geostat-ref}, is less reliable here: it returns a single
 class in $0.82$ of the hyperspectral and $0.98$ of the multispectral windows,
-below ESS-Dip --- because its per-node plug-in variogram degrades on real,
+below ESS-Dip, because its per-node plug-in variogram degrades on real,
 non-stationary support, the residual effect that the correction does not
 remove.
 
@@ -119,10 +119,10 @@ that refuses to invent structure will, on a scene dominated by one class or
 composed of weakly separated ones, under-report rather than over-report. The
 recursive simulation estimator errs in the opposite direction, over-detecting
 to the imposed cap on Salinas and to six classes on the crop-dominated
-Sentinel-2 scene even after the multiple-testing correction --- the plug-in
+Sentinel-2 scene even after the multiple-testing correction, the plug-in
 variogram on the scene's irregular, non-stationary support compounding over a
 full-scene recursion. We
-regard the method's value as residing in that precision --- it answers
+regard the method's value as residing in that precision (it answers
 reliably whether genuine class structure is present beyond spatial
-autocorrelation --- rather than in maximal class enumeration, and we return to
+autocorrelation) rather than in maximal class enumeration, and we return to
 this distinction, and to ways of relaxing it, in Section~\ref{sec:discussion}.

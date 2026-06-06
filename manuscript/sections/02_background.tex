@@ -15,7 +15,7 @@ Common to all is the assumption that the observations are exchangeable: the
 reference distribution, or the index's implicit baseline, treats the samples as
 independent draws. When this holds the criteria are well calibrated; when it
 fails they are not. Spatial data are the archetypal failure, because nearby
-locations are correlated --- ``everything is related to everything else, but
+locations are correlated: ``everything is related to everything else, but
 near things are more related than distant things'' \citep{Tobler1970}.
 
 \subsection{Accounting for spatial dependence}\label{subsec:bg-spatial}
@@ -23,9 +23,9 @@ near things are more related than distant things'' \citep{Tobler1970}.
 That an independence reference over-detects structure in dependent data is
 known across several fields. In spatial epidemiology, \citet{Goovaerts2004}
 show that a complete-spatial-randomness null over-identifies disease clusters
-and propose, in its place, a geostatistical \emph{spatial neutral model} ---
-realisations reproducing the histogram and variogram of the data by sequential
-Gaussian simulation --- against which far fewer locations remain significant.
+and propose, in its place, a geostatistical \emph{spatial neutral model}
+(realisations reproducing the histogram and variogram of the data by sequential
+Gaussian simulation), against which far fewer locations remain significant.
 In neuroimaging, \citet{Eklund2016} trace inflated false-positive rates in
 cluster-extent inference to a mis-specified parametric model of the spatial
 autocorrelation. The common remedy is a null that \emph{preserves} the
@@ -84,8 +84,8 @@ as two modes.
 A separate line of work \emph{imposes} spatial contiguity on the partition:
 regionalization methods such as SKATER \citep{Assuncao2006}, ClustGeo
 \citep{Chavent2018} and the max-$p$-regions problem \citep{Duque2012} constrain
-clusters to be spatially connected. These address a different question --- how
-to partition space into contiguous regions --- and still require the number of
+clusters to be spatially connected. These address a different question, how
+to partition space into contiguous regions, and still require the number of
 regions as an input or a tuning parameter. We do not constrain the partition;
 we correct the criterion that selects \emph{how many} groups are present, and
 the two are complementary: the effective-sample-size calibration developed here

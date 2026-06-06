@@ -16,9 +16,15 @@ per-scene tuning, and the resulting operating point is one of high precision:
 ESS-Dip answers reliably whether discrete structure is present \emph{beyond}
 spatial autocorrelation, and is correspondingly cautious about enumerating
 structure that the data do not independently support. For the analyst this is
-the useful direction of error --- a guard against the over-segmentation that
-Section~\ref{subsec:realspec} documents for the standard indices --- but it is
-a genuine limitation when an exhaustive class inventory is the goal.
+the useful direction of error, a guard against the over-segmentation that
+Section~\ref{subsec:realspec} documents for the standard indices, but it is
+a genuine limitation when an exhaustive class inventory is the goal. This fixes
+the method's natural role: not a stand-alone classifier (on real multi-class
+scenes it under-reports), but a calibrated homogeneity test, a guard placed
+before an unsupervised classification or a stopping rule for a region-growing
+or regionalization procedure (Section~\ref{subsec:bg-constrained}), where a
+negative one can trust is worth more than an exhaustive but unreliable class
+count.
 
 \paragraph{Relation to geostatistical null models.}
 Assumption~\ref{ass:null} replaces the independence reference of the classical
@@ -39,7 +45,7 @@ on megapixel scenes.
 \paragraph{Limitations.}
 Three limitations bound the method's applicability. First, when many spectrally
 overlapping classes coexist, as in the sixteen-class hyperspectral scenes, no
-unsupervised criterion --- ours included --- approaches the nominal class count
+unsupervised criterion, ours included, approaches the nominal class count
 (Section~\ref{subsec:realfull}); recovering such inventories requires
 supervision or auxiliary information that an internal criterion cannot supply.
 Second, strong class imbalance degrades recall: when one class dominates the
@@ -56,7 +62,7 @@ leaves at a relaxed level, or test minority modes against the residual of the
 majority, to mitigate imbalance without sacrificing the specificity of the
 first pass. Replacing the scalar range by an anisotropic variogram model, and
 the uniform dip null by conditional simulation, would extend the calibration to
-non-stationary autocorrelation --- although Section~\ref{subsec:aniso} shows the
+non-stationary autocorrelation, although Section~\ref{subsec:aniso} shows the
 isotropic estimate is already robust to directional autocorrelation up to an
 eight-fold anisotropy ratio. The same effective-sample-size
 correction applies, unchanged, to spatio-temporal stacks, where the

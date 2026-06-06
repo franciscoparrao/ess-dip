@@ -3,8 +3,8 @@
 We assess the procedure on synthetic scenes with known ground truth, where the
 number of classes, the strength of spatial autocorrelation, the presence of a
 trend, and the class separability are all controlled. The design isolates the
-two failure modes of Section~\ref{subsec:null} --- autocorrelation and
-large-scale drift --- and lets us verify the false-split control of
+two failure modes of Section~\ref{subsec:null}, autocorrelation and
+large-scale drift, and lets us verify the false-split control of
 Property~\ref{prop:fpr} directly, by counting how often each method
 recovers a single class when the scene contains exactly one.
 
@@ -138,7 +138,7 @@ Table~\ref{tab:bench} are omitted.}
 \paragraph{Standard indices over-detect without exception.}
 On the $75$ class-free scenes every standard index reports spurious structure:
 the $\hat K{=}1$ rate is $0.00$ for all four. The failure is severe, not
-marginal --- the gap statistic returns on average $\hat K=7.7$ classes on
+marginal: the gap statistic returns on average $\hat K=7.7$ classes on
 fields that contain none, and the silhouette, Calinski--Harabasz and
 Davies--Bouldin indices average $2.9$, $3.6$ and $4.1$. This is the
 over-detection anticipated in Section~\ref{subsec:null}, now quantified: under
@@ -146,7 +146,7 @@ spatial autocorrelation an independence null cannot recognise the absence of
 clusters.
 
 \paragraph{The proposed family controls the false-split rate.}
-Every member of the proposed family --- ESS-Dip and all four ablations ---
+Every member of the proposed family, ESS-Dip and all four ablations,
 attains specificity $1.00$: in $75$ out of $75$ class-free scenes it returns a
 single class. This is the empirical content of Property~\ref{prop:fpr}, and
 it holds whether the class-free scene is stationary (null) or carries a smooth
@@ -170,25 +170,42 @@ structured scenes collapse once specificity is taken into account.
 The calibrated-validity-index framework of \citet{HennigLin2015} is
 instructive precisely because the present method generalises it. Applied with
 an independence (i.i.d.) null it inherits the over-detection of the standard
-indices --- specificity $0.00$, balanced score $0.280$ --- confirming that the
+indices (specificity $0.00$, balanced score $0.280$), confirming that the
 framework alone, without a spatial null, does not address the problem. With its
 autocorrelation-aware (spatial) null it recovers much of the lost specificity
 ($0.80$) and a comparable structured accuracy ($0.72$), a clear vindication of
 its central idea. Two differences remain, and they are the contribution of this
 paper. First, its specificity, at $0.80$, still admits one class-free scene in
 five as clustered, where the within-class calibration of ESS-Dip admits none.
-Second, and decisively, on the mixed regime its accuracy is only $0.17$ ---
-no better than the i.i.d.\ variant and far below ESS-Dip's $0.50$ --- because a
+Second, and decisively, on the mixed regime its accuracy is only $0.17$,
+no better than the i.i.d.\ variant and far below ESS-Dip's $0.50$, because a
 phase-randomized null preserves the trend along with the autocorrelation and so
 cannot separate a smooth drift from discrete classes. The explicit
 trend--residual decomposition of Section~\ref{subsec:detrend}, absent from the
 calibrated-index framework, is what closes this gap. This comparison is
 insensitive to the significance threshold: the value used, $V>1.96$ (the
 one-sided $2.5\%$ level for the calibrated index under approximate normality),
-and the alternatives $V>1.64$ and $V>2.33$ all leave the conclusion intact ---
+and the alternatives $V>1.64$ and $V>2.33$ all leave the conclusion intact:
 the i.i.d.\ null fails specificity ($0.00$) at every threshold, and the spatial
 null controls specificity ($0.77$--$0.83$) but not the mixed regime
-($\le0.08$) at every threshold.
+($\le0.08$) at every threshold. Figure~\ref{fig:recover} makes the mixed-scene
+behaviour concrete on one realisation: the gap statistic and the Hennig--Lin
+null fragment the scene into six and eight clusters, whereas ESS-Dip recovers
+the three true classes.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/recover.pdf}
+\caption{Recovery on a representative mixed scene (three classes plus a smooth
+trend). The gap statistic over-segments into six clusters (b) and the
+Hennig--Lin spatial null into eight (c), both reading the trend and the
+within-class autocorrelation as extra structure; ESS-Dip removes the trend and
+calibrates to the effective sample size, recovering the three true classes (d),
+whose partition matches the ground truth (a). Cluster colours in (b) and (c)
+are arbitrary; in (a) and (d) they are matched, so a correct recovery
+reproduces the colours of panel (a).}
+\label{fig:recover}
+\end{figure}
 
 \subsection{Ablation}\label{subsec:ablation}
 
@@ -197,9 +214,9 @@ The ablations isolate where ESS-Dip's accuracy comes from
 \emph{local within-class range} of Section~\ref{subsec:range}: replacing it by
 a scene-wide range drops structured accuracy from $0.81$ to $0.63$ and mixed
 accuracy from $0.50$ to $0.28$. This confirms the diagnosis of
-Section~\ref{subsec:range} --- a global range conflates the between-class
+Section~\ref{subsec:range} (a global range conflates the between-class
 mosaic with the within-class scale, inflating $\ell$, collapsing $\neff$, and
-starving the test of power --- while leaving specificity untouched.
+starving the test of power) while leaving specificity untouched.
 \emph{Adaptive} trend removal matters in both directions: forcing detrending on
 every scene ($\tau=0$) destroys structured accuracy ($0.19$), because the
 polynomial absorbs genuine between-class signal when no trend is present;
@@ -254,9 +271,9 @@ over-corrects a statistic of the empirical distribution.
 
 It is tempting to promote the exact reference to the estimator by calibrating
 \emph{every} node of the recursion against simulations on its support. A direct
-implementation (SGS-Dip, $B=40$) over-splits --- specificity $0.85$, structured
+implementation (SGS-Dip, $B=40$) over-splits: specificity $0.85$, structured
 accuracy $0.49$, balanced score $0.535$ against ESS-Dip's $0.771$
-(Table~\ref{tab:bench}) --- for two reasons. First, the per-node test is
+(Table~\ref{tab:bench}). This has two causes. First, the per-node test is
 repeated across the recursion without correction, so the per-node level no
 longer controls the family-wise false-split rate. Second, away from the leading
 split a node is a spatially scattered subset whose variogram must be fitted on a
@@ -264,13 +281,13 @@ masked, non-rectangular support, biasing the simulated null.
 
 The first cause is standard and correctable. A Bonferroni per-node level
 $\alpha/K_{\max}$, with the matching number of simulations, restores specificity
-to $0.99$ and lifts the balanced score to $0.710$ --- close to ESS-Dip's
+to $0.99$ and lifts the balanced score to $0.710$, close to ESS-Dip's
 $0.771$, the residual shortfall concentrated in the mixed regime
 ($0.35$ versus $0.50$; SGS-Dip\,+\,correction, Table~\ref{tab:bench}). So the
 simulation null is a viable recursive estimator once multiple testing is
 controlled. The second cause is more stubborn: on real imagery, where supports
-are irregular and non-stationary, even the corrected estimator trails ESS-Dip
---- single-class-window specificity $0.82$ and $0.98$ against $0.99$ and $1.00$
+are irregular and non-stationary, even the corrected estimator trails ESS-Dip:
+single-class-window specificity $0.82$ and $0.98$ against $0.99$ and $1.00$
 (Section~\ref{subsec:realspec}), and over-detection of full scenes. The
 conclusion is therefore measured rather than categorical: the recursive
 simulation null becomes competitive on controlled fields once corrected, but its
@@ -285,15 +302,15 @@ leading split.
 Figure~\ref{fig:timing} reports single-threaded wall-clock time on structured
 scenes. Across image sizes from $\sim\!2{,}300$ to $\sim\!66{,}000$ pixels,
 ESS-Dip scales with an empirical exponent
-$\mathrm{d}\log t/\mathrm{d}\log N = 0.86$ (panel~a) --- near-linear, consistent
-with Section~\ref{subsec:complexity} --- and is a constant factor (about
+$\mathrm{d}\log t/\mathrm{d}\log N = 0.86$ (panel~a), near-linear, consistent
+with Section~\ref{subsec:complexity}, and is a constant factor (about
 $1.2$--$2\times$) faster than the gap statistic, which scales similarly but
 carries the overhead of its reference replicates. Cost grows sub-linearly with
 the band count $p$ (panel~b: $0.31$\,s at $p=3$ to $1.02$\,s at $p=40$, at
 $N=128^2$). Peak memory at $256\times256\times6$ is $8.9$\,MB, about three times
 the input cube, so the method is memory-light at scene scale. The exact
 Gaussian-simulation homogeneity test \eqref{eq:sgstest} with $B=120$ costs
-$0.10$--$0.34$\,s over the same sizes --- comparable to a single ESS-Dip
+$0.10$--$0.34$\,s over the same sizes, comparable to a single ESS-Dip
 evaluation, as it concerns one node; a fully recursive simulation null would
 multiply this by the number of nodes, which is the cost the
 effective-sample-size calibration is designed to avoid.
@@ -316,6 +333,6 @@ factor of up to eight between the two axes, ESS-Dip retains specificity $1.00$
 and structured accuracy $1.00$ at every anisotropy ratio tested ($1,2,4,8$),
 whereas the gap statistic's specificity on the same class-free fields falls from
 $0.88$ to $0.12$ as the field elongates. The isotropic scalar is thus an
-adequate summary even under marked anisotropy --- the modality signal it feeds
-is direction-agnostic --- and a fully anisotropic variogram
+adequate summary even under marked anisotropy, the modality signal it feeds
+being direction-agnostic, and a fully anisotropic variogram
 (Section~\ref{sec:discussion}) is a refinement rather than a necessity.

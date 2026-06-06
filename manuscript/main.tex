@@ -32,38 +32,39 @@
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 
-\title{Effective-sample-size calibration of a modality test for selecting
-the number of clusters in spatially autocorrelated data}
+\title{Effective-sample-size calibration of a modality test for cluster
+homogeneity and the number of classes in spatially autocorrelated data}
 \author{F. Parra \and [co-authors]}
-\date{Draft --- \today}
+\date{Draft, \today}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
 Selecting the number of clusters $K$ is a basic step in unsupervised
-classification. The standard internal criteria --- the gap statistic, the
-average silhouette, the Calinski--Harabasz and Davies--Bouldin indices ---
-assume independent observations and are therefore miscalibrated on spatial
-data, where neighbouring locations are autocorrelated and the effective sample
-size is far below the nominal one, and where a smooth large-scale trend mimics
-discrete structure. We show that the consequence is systematic over-detection:
+classification. The standard internal criteria (the gap statistic, the
+average silhouette, the Calinski--Harabasz and Davies--Bouldin indices)
+assume independent observations, and so are miscalibrated on spatial data.
+There, neighbouring locations are autocorrelated, the effective sample size is
+far below the nominal one, and a smooth large-scale trend mimics discrete
+structure. We show that the consequence is systematic over-detection:
 on autocorrelated fields without discrete classes these criteria report
 spurious clusters in every one of $75$ controlled realisations, and on real
-imagery they fragment single land-cover regions. We recast cluster-number
-selection as a test for \emph{multimodality in excess of spatial
-autocorrelation}. The proposed method, ESS-Dip, evaluates the Hartigan dip
-statistic along the locally optimal split direction and calibrates it against
-the effective sample size derived from a within-class autocorrelation range,
-which a local declustering estimator separates from the between-class scale; a
-low-order trend is removed adaptively. A recursive partitioning returns $K$,
+imagery they fragment single land-cover regions. We recast the choice of $K$ as a recursive homogeneity test: at each step,
+whether a region is a single class or carries \emph{multimodality in excess of
+spatial autocorrelation}. The proposed method, ESS-Dip, evaluates the Hartigan dip
+statistic along the locally optimal split direction. It calibrates the statistic
+against the effective sample size derived from a within-class autocorrelation
+range, which a local declustering estimator separates from the between-class
+scale; a low-order trend is removed adaptively. A recursive partitioning returns $K$,
 and the test carries an asymptotic false-split-control property. On a factorial
 simulation with known ground truth, ESS-Dip is the only criterion among thirteen to
 combine perfect specificity with competitive exact-$K$ recovery and attains the
-best balanced score; on the Indian Pines, Salinas and Sentinel-2 scenes it
+best balanced score. On the Indian Pines, Salinas and Sentinel-2 scenes it
 identifies single land-cover regions as homogeneous where the standard criteria
-do not. The method is conservative by design --- a guard against the
-over-segmentation the standard criteria exhibit rather than an exhaustive
+do not. The method is conservative by design, and its negatives are reliable:
+when it reports a single class that verdict can be trusted, suiting ESS-Dip to
+use as a homogeneity guard or a stopping rule rather than as an exhaustive
 enumerator of weakly separated or strongly imbalanced classes, a trade-off we
 characterise. Code and data are released.
 \end{abstract}
