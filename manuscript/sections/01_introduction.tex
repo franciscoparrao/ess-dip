@@ -50,9 +50,9 @@ autocorrelation}, and make that test valid on autocorrelated fields by
 calibrating it at the effective sample size. The
 construction rests on three geostatistical devices: the effective sample size
 itself \citep{Cressie1993,Dutilleul1993}, which sets the calibration; a
-\emph{local declustering} estimate of the within-class autocorrelation range
-\citep{IsaaksSrivastava1989,Deutsch1998}, which prevents the between-class
-mosaic from corrupting that calibration; and an adaptive trend--residual
+\emph{local} estimate of the within-class autocorrelation range, in the manner
+of declustering \citep{IsaaksSrivastava1989,Deutsch1998}, which prevents the
+between-class mosaic from corrupting that calibration; and an adaptive trend--residual
 decomposition, which removes a smooth drift only when it is statistically
 resolvable. A recursive partitioning driven by the calibrated dip statistic
 \citep{HartiganHartigan1985} returns $K$. Because the test is tuned for
@@ -69,7 +69,7 @@ conservative estimator of $K$. Our contributions are:
   \item We propose \emph{ESS-Dip}, an effective-sample-size-calibrated test of
     cluster homogeneity (whether a region holds discrete structure beyond its
     spatial autocorrelation), combining a within-class range from local
-    declustering with adaptive trend removal (Section~\ref{sec:method}); applied
+    range estimation with adaptive trend removal (Section~\ref{sec:method}); applied
     recursively it returns a conservative $K$, and we state an asymptotic
     false-split-control property (Property~\ref{prop:fpr}) that the method
     confirms empirically.

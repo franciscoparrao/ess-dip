@@ -55,14 +55,14 @@ same modality test at the nominal sample size, without the effective-sample-size
 calibration, the local range, or the trend removal, isolating the contribution
 of that spatial machinery. The eighth is the proposed method of
 Section~\ref{sec:method}, denoted \textbf{ESS-Dip}:
-Algorithm~\ref{alg:essdip} with the local within-class integral range
+Algorithm~\ref{alg:essdip} with the local within-class range
 \eqref{eq:areamed}, adaptive trend removal \eqref{eq:detrendrule}, and a
 $B=5$ ensemble; we fix $\alpha=0.05$, $\tau=0.25$, tile side $t=24$, and
 $\nu=12$ throughout, with no per-scene tuning. The remaining four are
 ablations of ESS-Dip that disable one component each, to attribute the
 contribution of every ingredient:
-\emph{global range} (the scene-wide estimate \eqref{eq:intrange} for the whole
-image in place of the tile median); \emph{no trend removal}
+\emph{global range} (the $\ell^2$ range estimated over the whole image rather
+than as a tile median); \emph{no trend removal}
 ($\tau=\infty$); \emph{forced trend removal} ($\tau=0$); and
 \emph{declustering}, the precursor that subsamples the scene to one pixel per
 decorrelation patch and applies the dip test to the thinned, approximately
@@ -245,8 +245,9 @@ modest cost in structured recall ($0.92$ to $0.81$).
 \subsection{Geostatistical reference and the effective-sample-size
 approximation}\label{subsec:geostat-ref}
 
-Section~\ref{subsec:range} replaces the $1/e$ range by a fitted variogram and
-its integral range, and Section~\ref{subsec:sgs} offers the exact
+Section~\ref{subsec:range} offers, alongside the default $1/e$-range proxy, a
+fitted variogram and its integral range, and Section~\ref{subsec:sgs} offers the
+exact
 Gaussian-simulation reference \eqref{eq:sgstest} in place of the
 effective-sample-size shortcut \eqref{eq:test}. Table~\ref{tab:geostat}
 compares the three on one realisation of each world (six seeds, medians).

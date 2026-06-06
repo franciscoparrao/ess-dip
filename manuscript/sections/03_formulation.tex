@@ -139,7 +139,7 @@ significance threshold (through a smaller $\neff$) without discarding data: the
 statistic $\hat D_C$ is still computed from all $n_C$ pixels, retaining full
 detection power.
 
-\subsection{Within-class decorrelation area by local variogram fitting}
+\subsection{Within-class decorrelation area by local range estimation}
 \label{subsec:range}
 
 The calibration \eqref{eq:neff} requires the decorrelation area \eqref{eq:area}
@@ -147,38 +147,40 @@ of the \emph{within-class} residual $\bm\varepsilon$, not of the between-class
 mosaic. Estimating it from the whole scene conflates the two: large contiguous
 classes inflate the apparent range, $a$ grows, $\neff$ collapses, and the test
 loses all power, the field-scale rather than the within-class autocorrelation
-being measured. We avoid this conflation by estimating $a$ \emph{locally}, in
-the spirit of declustering corrections for spatially clustered support
-\citep{IsaaksSrivastava1989,Deutsch1998}.
+being measured. We avoid this conflation by estimating $a$ \emph{locally} over small tiles, the
+principle that also motivates declustering, where spatially clustered support is
+kept from dominating a statistic \citep{IsaaksSrivastava1989,Deutsch1998}.
 
 Partition $D$ into square tiles $\{T_j\}$ of side $t$; most tiles fall
 \emph{within} a single class, so their second-order structure reflects
-$\bm\varepsilon$ alone. For each tile we form the radially averaged empirical
-semivariogram $\hat\gamma_j(h)$ of the first principal component of
-$\{\bm z(s)\}_{s\in T_j}$ (obtained in $O(t^2\log t)$ from the fast Fourier
-transform autocovariance) and fit, by weighted least squares, the
-best of an exponential, spherical and Gaussian model with nugget $c_{0}$,
-partial sill $c$ and range parameter $a_j$. For an isotropic model the integral
-range \eqref{eq:area} is available in closed form,
+$\bm\varepsilon$ alone. For each tile we take the first principal component of
+$\{\bm z(s)\}_{s\in T_j}$, form its autocorrelation by the fast Fourier
+transform ($O(t^2\log t)$), and record the lag $\ell_j$ at which it first falls
+below $1/e$, averaged over the two axes. The within-class decorrelation area is
+the squared median range,
+\begin{equation}\label{eq:areamed}
+  a=\bigl(\operatorname{median}_j\,\ell_j\bigr)^{2},
+\end{equation}
+the median being robust to the minority of tiles that straddle a class boundary,
+and the square turning a correlation length into the area of one decorrelation
+patch. This $1/e$-range proxy leaves the geometric constant relating range to
+area implicit. A more explicit route fits, by weighted least squares, the best
+of an exponential, spherical and Gaussian variogram model (nugget $c_0$, partial
+sill $c$, range $a_j$) to each tile and uses its closed-form integral range
 \begin{equation}\label{eq:intrange}
   a_j \;=\; 2\pi\,\frac{c}{c_{0}+c}\!\int_0^\infty\! r\,\rho(r)\,dr
        \;=\; \kappa\,\frac{c}{c_{0}+c}\,a_j^{2},
 \end{equation}
 with $\kappa=2\pi,\ \pi,\ 0.2\pi$ for the exponential, Gaussian and spherical
-models respectively (the radial integral contributing $a_j^{2}$, $a_j^{2}/2$
-and $0.1\,a_j^{2}$ to the common angular factor $2\pi$); the nugget fraction
-$c_{0}/(c_{0}+c)$, being uncorrelated,
-enlarges the effective sample size. The within-class decorrelation area is the
-tile median,
-\begin{equation}\label{eq:areamed}
-  a=\operatorname{median}_j\,a_j ,
-\end{equation}
-robust to the minority of tiles that straddle a class boundary. The constant
-$\kappa$ is exactly what an isotropic $1/e$-range proxy $a\approx\ell^2$ leaves
-implicit; the variogram makes it explicit and model-dependent, which matters
-because $\kappa$ rescales $\neff$ and hence the calibration. We return to the
-sensitivity of the test to this constant, and to an assumption-free
-alternative, in Section~\ref{subsec:sgs}.
+models respectively (the radial integral contributing $a_j^{2}$, $a_j^{2}/2$ and
+$0.1\,a_j^{2}$ to the common angular factor $2\pi$), the nugget fraction
+$c_0/(c_0+c)$ enlarging the effective sample size. This integral range is
+derived for the variance of the sample \emph{mean}; applied to the dip, a
+functional of the empirical distribution, it over-corrects, and
+Section~\ref{subsec:geostat-ref} finds it markedly more conservative than the
+$\ell^2$ proxy, which we therefore retain as the default. An assumption-free
+alternative, the Gaussian-simulation reference, is taken up in
+Section~\ref{subsec:sgs}.
 
 \subsection{Adaptive trend--residual separation}\label{subsec:detrend}
 
@@ -264,7 +266,7 @@ the median of $\{\hat K^{(b)}\}_{b=1}^B$ is reported.
 \If{$R^2_{\mathrm{poly}}(\bm z)>\tau$}\Comment{Eq.~\eqref{eq:r2}--\eqref{eq:detrendrule}}
   \State $\bm z\gets \bm z-\hat{\bm m}$\Comment{trend removal}
 \EndIf
-\State $a\gets\operatorname{median}_j a_j$ \Comment{local integral range, Eq.~\eqref{eq:intrange}--\eqref{eq:areamed}}
+\State $a\gets(\operatorname{median}_j \ell_j)^2$ \Comment{local $1/e$-range area, Eq.~\eqref{eq:areamed}}
 \State stack $\gets\{D\}$;\quad leaves $\gets 0$
 \While{stack $\neq\emptyset$}
   \State pop $C$ from stack;\quad $\neff\gets n_C/a$
