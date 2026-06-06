@@ -8,18 +8,21 @@ Calinski--Harabasz and Davies--Bouldin indices over-detect without exception,
 inventing classes on featureless fields and fragmenting single land-cover
 regions on real imagery.
 
-We have proposed a remedy framed in geostatistical terms. Treating clustering
-as multimodality in excess of spatial autocorrelation, ESS-Dip tests the
+We have proposed a remedy framed in geostatistical terms. Recast as a
+calibrated test of cluster homogeneity, asking whether a region carries
+multimodality in excess of spatial autocorrelation, ESS-Dip evaluates the
 Hartigan dip along the locally optimal split direction and calibrates it
 against the \emph{effective} sample size, estimated from a within-class
 autocorrelation range obtained by local declustering, after removing a
 low-order trend whenever one is resolvable. The procedure carries an asymptotic
 false-split-control property and runs in near-linear time. On a factorial
-simulation with known ground truth it is the only criterion among thirteen to
-combine perfect specificity with competitive exact-$K$ recovery, attaining the
-best balanced score; on the Indian Pines, Salinas and Sentinel-2 scenes it
+simulation with known ground truth it attains the best balanced score of
+thirteen criteria, with the highest exact-$K$ recovery among those that reach
+unit specificity; on the Indian Pines, Salinas and Sentinel-2 scenes it
 identifies single land-cover regions as homogeneous where the standard criteria
-do not.
+do not. Its reliable negatives suit it to use as a homogeneity guard or a
+stopping rule for region-growing as much as to conservative cluster-number
+selection.
 
 The broader message is that number-of-clusters selection on autocorrelated data
 must be calibrated to the information the data actually contain, not to their

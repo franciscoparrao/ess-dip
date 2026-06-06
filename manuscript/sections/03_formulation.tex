@@ -165,7 +165,9 @@ range \eqref{eq:area} is available in closed form,
        \;=\; \kappa\,\frac{c}{c_{0}+c}\,a_j^{2},
 \end{equation}
 with $\kappa=2\pi,\ \pi,\ 0.2\pi$ for the exponential, Gaussian and spherical
-models respectively; the nugget fraction $c_{0}/(c_{0}+c)$, being uncorrelated,
+models respectively (the radial integral contributing $a_j^{2}$, $a_j^{2}/2$
+and $0.1\,a_j^{2}$ to the common angular factor $2\pi$); the nugget fraction
+$c_{0}/(c_{0}+c)$, being uncorrelated,
 enlarges the effective sample size. The within-class decorrelation area is the
 tile median,
 \begin{equation}\label{eq:areamed}
@@ -313,7 +315,12 @@ $\hat D_C$ is approximately distributed as $\dip(F_{\neff})$ under independence,
 and comparison with the matched quantile $q_{1-\alpha}(\lfloor\neff\rceil)$
 yields rejection probability $\alpha+o(1)$. The split direction $\bm u$ is
 data-dependent, but under $H_0$ the cloud is unimodal in every direction, so
-optimising the cut over $\bm u$ does not create a mode.
+optimising the cut over $\bm u$ does not create a mode. At finite $\neff$ this
+selection can still inflate the empirical dip relative to a fixed direction, an
+effect the uniform null behind \eqref{eq:test} does not model and that we do not
+correct analytically; that the procedure nonetheless returns $\hat K=1$ on all
+$75$ class-free scenes (Section~\ref{sec:simulation}) is the evidence that the
+inflation is immaterial in practice.
 
 We label this a property rather than a theorem deliberately. A rigorous
 statement would require an empirical-process central limit theorem for the dip
