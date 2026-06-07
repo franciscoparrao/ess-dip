@@ -57,10 +57,12 @@ guarantee, and the projection onto the $2$-means direction, though effective in
 our experiments, is a heuristic rather than an optimal choice.
 
 \paragraph{Extensions.}
-Each limitation suggests a direction. A recall-oriented variant could revisit
-leaves at a relaxed level, or test minority modes against the residual of the
-majority, to mitigate imbalance without sacrificing the specificity of the
-first pass. Replacing the scalar range by an anisotropic variogram model, and
+Each limitation suggests a direction. The recall-oriented variant ESS-Dip-R
+realises one: trading the distribution-free uniform null for the model's
+Gaussian one recovers more structure at the same specificity (eleven classes on
+Salinas against five). Further recall could come from revisiting leaves at a
+relaxed level, or testing minority modes against the residual of the majority,
+to mitigate the imbalance that bounds the Sentinel-2 result. Replacing the scalar range by an anisotropic variogram model, and
 the uniform dip null by conditional simulation, would extend the calibration to
 non-stationary autocorrelation, although Section~\ref{subsec:aniso} shows the
 isotropic estimate is already robust to directional autocorrelation up to an

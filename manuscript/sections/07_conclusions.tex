@@ -16,13 +16,14 @@ against the \emph{effective} sample size, estimated from a within-class
 autocorrelation range obtained by local range estimation, after removing a
 low-order trend whenever one is resolvable. The procedure carries an asymptotic
 false-split-control property and runs in near-linear time. On a factorial
-simulation with known ground truth it attains the best balanced score of
-fourteen criteria, with the highest exact-$K$ recovery among those that reach
-unit specificity; on the Indian Pines, Salinas and Sentinel-2 scenes it
-identifies single land-cover regions as homogeneous where the standard criteria
-do not. Its reliable negatives suit it to use as a homogeneity guard or a
-stopping rule for region-growing as much as to conservative cluster-number
-selection.
+simulation with known ground truth it reaches unit specificity, and its recall
+variant ESS-Dip-R attains the best balanced score of fifteen criteria at the
+same specificity; on the Indian Pines, Salinas and Sentinel-2 scenes both
+identify single land-cover regions as homogeneous where the standard criteria
+do not. Their reliable negatives suit the family to use as a homogeneity guard
+or a stopping rule for region-growing as much as to cluster-number selection,
+spanning a precision--recall axis from the conservative distribution-free null
+to the higher-recall Gaussian one.
 
 The broader message is that number-of-clusters selection on autocorrelated data
 must be calibrated to the information the data actually contain, not to their

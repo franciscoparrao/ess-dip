@@ -139,6 +139,17 @@ significance threshold (through a smaller $\neff$) without discarding data: the
 statistic $\hat D_C$ is still computed from all $n_C$ pixels, retaining full
 detection power.
 
+The quantile $q_{1-\alpha}$ uses the \emph{uniform} law, the least-favourable
+unimodal distribution \citep{HartiganHartigan1985}: it bounds the level for any
+unimodal within-class law, but is conservative when that law is the Gaussian of
+Assumption~\ref{ass:null}. A recall-oriented variant, \textbf{ESS-Dip-R},
+calibrates instead against the Gaussian null, drawing the reference dips from
+$\lfloor\neff\rceil$ standard-normal samples; the two are the distribution-free
+and the model-matched ends of one calibration. The Gaussian reference is less
+conservative and recovers more structure while empirically preserving unit
+specificity (Sections~\ref{subsec:simresults} and~\ref{subsec:realspec}); we
+report both and take the conservative uniform null as the default.
+
 \subsection{Within-class decorrelation area by local range estimation}
 \label{subsec:range}
 

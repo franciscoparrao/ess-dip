@@ -88,7 +88,11 @@ Silhouette          & 0.00 & 2.27 & 0.00 & 2.35\\
 Calinski--Harabasz  & 0.00 & 2.70 & 0.00 & 3.20\\
 Davies--Bouldin     & 0.00 & 3.37 & 0.00 & 2.62\\
 \midrule
+Hennig--Lin (spatial) & 0.72 & 2.36 & 0.07 & 4.77\\
+Dip-means (nominal)   & 0.84 & 1.24 & 0.63 & 1.55\\
+\midrule
 ESS-Dip             & \textbf{0.99} & \textbf{1.01} & \textbf{1.00} & \textbf{1.00}\\
+ESS-Dip-R (recall)  & 0.99 & 1.01 & 1.00 & 1.00\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -102,6 +106,14 @@ single class into nearly seven on average. ESS-Dip identifies the region as a
 single class in $99\%$ of the hyperspectral and $100\%$ of the multispectral
 windows. The within-field spectral variability that the standard indices read
 as structure is precisely what the effective-sample-size calibration discounts.
+The two closer baselines confirm the attribution on real data: the Hennig--Lin
+spatial null, calibrated for autocorrelation, improves on the standard indices
+over the hyperspectral windows ($0.72$) but collapses on the crop-dominated
+Sentinel-2 fields ($0.07$, mean $\hat K=4.8$), where within-field variation
+defeats its phase-randomized reference; plain dip-means, the modality test
+without the effective-sample-size calibration, reaches $0.84$ and $0.63$. Both
+trail ESS-Dip's $0.99$ and $1.00$, isolating the contribution of the spatial
+calibration on real imagery.
 The result is not an artefact of the preprocessing: on the Indian Pines windows
 ESS-Dip returns a single class in every window across principal-component
 truncations from five to thirty components, window sides from $12$ to $24$
@@ -125,6 +137,12 @@ Salinas) while the others return two to six. ESS-Dip is deliberately
 conservative, reporting two classes on Indian Pines and five on Salinas. On the
 crop-dominated Sentinel-2 scene, where a single class covers $83\%$ of the
 pixels, ESS-Dip returns that one dominant class, whereas the gap reports five.
+The recall variant ESS-Dip-R recovers more where the structure is separable,
+reporting eleven classes on Salinas at the same single-class-window specificity
+(Table~\ref{tab:realspec}), while remaining conservative where it cannot help:
+two on the spectrally overlapping Indian Pines and one on the imbalanced
+Sentinel-2, which are limited by separability and dominance, not by the
+calibration's conservatism.
 
 \begin{table}[t]
 \centering
@@ -141,6 +159,7 @@ Silhouette          & 2 & 2 & 2\\
 Calinski--Harabasz  & 2 & 6 & 3\\
 Davies--Bouldin     & 2 & 6 & 2\\
 ESS-Dip             & 2 & 5 & 1\\
+ESS-Dip-R (recall)  & 2 & 11 & 1\\
 SGS-Dip (corrected) & 2 & $\ge20$ & 6\\
 \bottomrule
 \end{tabular}

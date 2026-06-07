@@ -38,7 +38,7 @@ seeds, for $495$ scenes in total.
 
 \subsection{Methods and metrics}\label{subsec:methods}
 
-We compare fourteen criteria. Four are standard internal indices evaluated
+We compare fifteen criteria. Four are standard internal indices evaluated
 against an independence null over $K=1,\dots,8$: the gap statistic
 \citep{Tibshirani2001} with its Tibshirani rule, the average silhouette,
 Calinski--Harabasz, and Davies--Bouldin. (The latter three cannot return
@@ -58,7 +58,11 @@ Section~\ref{sec:method}, denoted \textbf{ESS-Dip}:
 Algorithm~\ref{alg:essdip} with the local within-class range
 \eqref{eq:areamed}, adaptive trend removal \eqref{eq:detrendrule}, and a
 $B=5$ ensemble; we fix $\alpha=0.05$, $\tau=0.25$, tile side $t=24$, and
-$\nu=12$ throughout, with no per-scene tuning. The remaining four are
+$\nu=12$ throughout, with no per-scene tuning. The ninth, \textbf{ESS-Dip-R}, is
+its recall-oriented variant: it calibrates the dip against the Gaussian null of
+Assumption~\ref{ass:null} rather than the uniform least-favourable null, which is
+less conservative and recovers more structure at the same specificity
+(Section~\ref{subsec:simresults}). The remaining four are
 ablations of ESS-Dip that disable one component each, to attribute the
 contribution of every ingredient:
 \emph{global range} (the $\ell^2$ range estimated over the whole image rather
@@ -66,10 +70,10 @@ than as a tile median); \emph{no trend removal}
 ($\tau=\infty$); \emph{forced trend removal} ($\tau=0$); and
 \emph{declustering}, the precursor that subsamples the scene to one pixel per
 decorrelation patch and applies the dip test to the thinned, approximately
-independent sample. The thirteenth, \emph{SGS-Dip}, replaces the per-node
+independent sample. The fourteenth, \emph{SGS-Dip}, replaces the per-node
 effective-sample-size calibration by the recursive Gaussian-simulation
 reference \eqref{eq:sgstest} of Section~\ref{subsec:sgs} ($B=40$ simulations
-per node); the fourteenth adds a Bonferroni multiple-testing correction to it.
+per node); the fifteenth adds a Bonferroni multiple-testing correction to it.
 
 Three metrics summarise performance. \emph{Specificity} is the fraction of
 null and trend scenes (the $75$ scenes with $K=1$) for which $\hat K=1$; it is
@@ -113,7 +117,8 @@ Davies--Bouldin          & 0.00 & 0.70 & 0.41 & 0.20 & 0.299\\
 Dip-means (nominal)      & 0.52 & 0.92 & 0.09 & 0.02 & 0.486\\
 \midrule
 \multicolumn{6}{l}{\textit{Proposed}}\\
-ESS-Dip                  & \textbf{1.00} & 0.81 & 0.35 & \textbf{0.50} & \textbf{0.771}\\
+ESS-Dip                  & \textbf{1.00} & 0.81 & 0.35 & 0.50 & 0.771\\
+ESS-Dip-R (recall)       & \textbf{1.00} & 0.89 & 0.19 & \textbf{0.72} & \textbf{0.868}\\
 \midrule
 \multicolumn{6}{l}{\textit{Ablations of ESS-Dip}}\\
 \quad global range       & 1.00 & 0.63 & 0.87 & 0.28 & 0.638\\
@@ -165,11 +170,17 @@ On the structured scenes the gap statistic is most accurate
 and we do not. ESS-Dip reaches $0.81$, ahead of the silhouette ($0.76$),
 Davies--Bouldin ($0.70$) and close to Calinski--Harabasz ($0.85$), while being
 the \emph{only} method with non-zero specificity. On the realistic mixed
-scenes ESS-Dip is the \emph{best of all fourteen methods} ($0.50$ versus
-$0.40$ for the next best), because the adaptive detrending removes the drift
-that collapses the others. The balanced score makes the overall picture plain:
-ESS-Dip scores $0.771$, far above the next method ($0.638$) and more than twice
-the best standard index ($0.418$). Standard indices that look strong on pure
+scenes ESS-Dip reaches $0.50$, ahead of every standard index ($0.40$ for the
+best), because the adaptive detrending removes the drift that collapses them.
+The recall variant ESS-Dip-R does better still: calibrating against the Gaussian
+null of Assumption~\ref{ass:null} rather than the conservative uniform one, it
+raises structured accuracy to $0.89$ and mixed accuracy to $0.72$ at the same
+unit specificity, for a balanced score of $0.868$, the best of any method.
+ESS-Dip itself scores $0.771$, already far above the next non-proposed method
+($0.638$) and more than twice the best standard index ($0.418$). These synthetic
+fields are Gaussian, so the model-matched ESS-Dip-R is favoured here; its
+specificity and recall gains carry to the real scenes of
+Section~\ref{sec:application}. Standard indices that look strong on pure
 structured scenes collapse once specificity is taken into account.
 
 \paragraph{Comparison with the method ESS-Dip extends.}

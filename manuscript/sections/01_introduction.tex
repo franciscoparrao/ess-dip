@@ -75,13 +75,14 @@ conservative estimator of $K$. Our contributions are:
     range estimation with adaptive trend removal (Section~\ref{sec:method}); applied
     recursively it returns a conservative $K$, and we state an asymptotic
     false-split-control property (Property~\ref{prop:fpr}) that the method
-    confirms empirically.
-  \item We evaluate fourteen criteria on a factorial simulation with known $K$,
+    confirms empirically; a recall-oriented variant, ESS-Dip-R, trades the
+    distribution-free uniform null for the model's Gaussian null to recover more
+    structure at the same specificity.
+  \item We evaluate fifteen criteria on a factorial simulation with known $K$,
     including the calibrated-validity-index method of \citet{HennigLin2015} that
-    ESS-Dip generalises;
-    ESS-Dip attains the best balanced score, with the highest exact-$K$ recovery
-    among the methods that reach unit specificity, and an ablation attributes the
-    gain to the local range and the adaptive detrending
+    ESS-Dip generalises; ESS-Dip reaches unit specificity, its recall variant
+    ESS-Dip-R attains the best balanced score at the same specificity, and an
+    ablation attributes the gain to the local range and the adaptive detrending
     (Section~\ref{sec:simulation}).
   \item We confirm the behaviour on three real scenes spanning hyperspectral
     and multispectral sensing (Indian Pines, Salinas, and a Sentinel-2 scene

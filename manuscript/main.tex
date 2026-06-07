@@ -58,10 +58,11 @@ against the effective sample size derived from a within-class autocorrelation
 range, which a local declustering estimator separates from the between-class
 scale; a low-order trend is removed adaptively. A recursive partitioning returns $K$,
 and the test carries an asymptotic false-split-control property. On a factorial
-simulation with known ground truth, ESS-Dip attains the best balanced score of
-fourteen criteria, with the highest exact-$K$ recovery among those that reach
-unit specificity. On the Indian Pines, Salinas and Sentinel-2 scenes it
-identifies single land-cover regions as homogeneous where the standard criteria
+simulation with known ground truth, ESS-Dip reaches unit specificity with
+competitive recovery; its recall-oriented variant ESS-Dip-R, calibrated against
+the model's Gaussian null, attains the best balanced score of fifteen criteria
+at the same specificity. On the Indian Pines, Salinas and Sentinel-2 scenes both
+identify single land-cover regions as homogeneous where the standard criteria
 do not. The method is conservative by design, and its negatives are reliable:
 when it reports a single class that verdict can be trusted, suiting ESS-Dip to
 use as a homogeneity guard or a stopping rule rather than as an exhaustive
