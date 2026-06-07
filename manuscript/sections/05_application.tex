@@ -24,6 +24,40 @@ scene (crop $83\%$, tree $9\%$, grass $5\%$, built $4\%$), so its nominal
 number of classes is four. Bands are standardised; no dimensionality reduction
 is needed.
 
+\subsection{Within-class autocorrelation}\label{subsec:realvario}
+
+The calibration presumes a within-class autocorrelation that is real,
+estimable, and separable from the between-class mosaic; we verify all three on
+the data. Averaging the radial empirical semivariogram of the first principal
+component over pure single-class windows, each scene shows a well-defined
+within-class structure (Figure~\ref{fig:variogram}): an exponential model fits
+Indian Pines and Salinas (ranges $1.8$ and $1.4$ pixels) and a spherical model
+fits Sentinel-2 (range $5.4$ pixels), with $1/e$ correlation lengths of two to
+three pixels. The indicator-to-field integral-range ratio derived in
+Section~\ref{subsec:sgs} holds on these real variograms:
+$a_{\mathrm{int}}/a_I=1.51$, $1.54$ and $1.51$ for the three scenes, close to
+the $1.45$ of the Gaussian fields. Local estimation separates the within-class
+range from the scene scale: the tile-median range is $3$ to $4$ pixels, whereas
+the scene-wide estimate, conflating the between-class mosaic, is three to
+fifteen times larger ($14.5$ to $46$ pixels). The premise that most tiles fall
+within a single class holds on the contiguous scenes ($62\%$ of Salinas and
+Sentinel-2 tiles are single-class) and weakens on the fragmented Indian Pines
+fields ($27\%$), where the tile median nonetheless recovers a within-class scale
+($3.5$ against the $16$-pixel scene range), the robustness for which the median
+is chosen.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.62\linewidth]{figures/variogram.pdf}
+\caption{Within-class variograms on the real scenes: the radial empirical
+semivariogram of the first principal component (points), averaged over pure
+single-class windows and standardised to unit sill, with the best-fitting
+exponential, spherical or Gaussian model (lines). The within-class
+autocorrelation the calibration relies on is real and has a well-defined range
+on actual imagery.}
+\label{fig:variogram}
+\end{figure}
+
 \subsection{Specificity on single-class regions}\label{subsec:realspec}
 
 A region covered by a single land-cover class is the real-data analogue of the

@@ -1,0 +1,25 @@
+scene,lag,gamma,fit,model,range
+Indian Pines,0,0.0,0.0,exponential,1.82
+Indian Pines,1,0.4079,0.4224,exponential,1.82
+Indian Pines,2,0.6326,0.6663,exponential,1.82
+Indian Pines,3,0.7724,0.8073,exponential,1.82
+Indian Pines,4,0.8993,0.8887,exponential,1.82
+Indian Pines,5,0.9773,0.9357,exponential,1.82
+Indian Pines,6,1.0489,0.9629,exponential,1.82
+Indian Pines,7,1.0701,0.9785,exponential,1.82
+Salinas,0,0.0,0.0,exponential,1.35
+Salinas,1,0.4956,0.5222,exponential,1.35
+Salinas,2,0.7565,0.7717,exponential,1.35
+Salinas,3,0.8957,0.8909,exponential,1.35
+Salinas,4,0.9765,0.9479,exponential,1.35
+Salinas,5,1.0215,0.9751,exponential,1.35
+Salinas,6,1.045,0.9881,exponential,1.35
+Salinas,7,1.0501,0.9943,exponential,1.35
+Sentinel-2,0,0.0,0.0,spherical,5.37
+Sentinel-2,1,0.3029,0.2761,spherical,5.37
+Sentinel-2,2,0.5427,0.5328,spherical,5.37
+Sentinel-2,3,0.7342,0.7508,spherical,5.37
+Sentinel-2,4,0.9016,0.9107,spherical,5.37
+Sentinel-2,5,1.004,0.993,spherical,5.37
+Sentinel-2,6,1.0706,1.0,spherical,5.37
+Sentinel-2,7,1.1064,1.0,spherical,5.37
