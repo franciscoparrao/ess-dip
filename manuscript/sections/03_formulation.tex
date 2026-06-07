@@ -309,46 +309,62 @@ the median of $\{\hat K^{(b)}\}_{b=1}^B$ is reported.
 
 \subsection{False-split control}\label{subsec:prop}
 
-The calibration \eqref{eq:test} is designed so that, in the absence of
-discrete structure, the recursion does not split. We state this as a heuristic
-property of the per-node test, made exact by the simulation reference
-\eqref{eq:sgstest}, whose consequence for $\hat K$ follows by induction over
-the (finite) recursion.
+The calibration \eqref{eq:test} is designed so that, in the absence of discrete
+structure, the recursion does not split. We give conditions under which the
+per-node test controls its level asymptotically. Write \textnormal{(C1)} for the
+assumption that on $C$ the residual $\bm\varepsilon$ is a stationary Gaussian
+random field whose correlogram $\rho$ is nonnegative and absolutely summable,
+$\sum_{\bm h}\rho(\bm h)<\infty$; \textnormal{(C2)} for the projection
+direction $\bm u$ being fixed; and \textnormal{(C3)} for the hypothesis that the
+projected empirical process obeys a functional central limit theorem,
+$\sqrt{n_C/a_I}\,(\hat F_C-\Phi)\Rightarrow\mathbb{G}$, a Gaussian process, with
+$\Phi$ the projected Gaussian law and $a_I=\iint\tfrac{2}{\pi}\arcsin\rho\,d\bm h$
+the indicator integral range (Section~\ref{subsec:sgs}).
 
-\begin{property}[Heuristic false-split control]\label{prop:fpr}
-Let a node $C$ satisfy Assumption~\ref{ass:null}, and let $\neff=n_C/a\to\infty$
-with $a$ fixed. Then, to the order of the block-independence approximation
-below, the probability that the test \eqref{eq:test} rejects unimodality is at
-most $\alpha+o(1)$; consequently, if every node of the recursion satisfies
-Assumption~\ref{ass:null} (the scene contains a single class), then
+\begin{proposition}[Asymptotic false-split control]\label{prop:fpr}
+Under \textnormal{(C1)--(C3)}, as $C$ grows with $\rho$ fixed and
+$\neff=n_C/a\to\infty$ with $a$ proportional to the indicator integral range
+$a_I$ \textnormal{(Section~\ref{subsec:sgs})}, the rejection probability of the
+test \eqref{eq:test} tends to at most $\alpha$. Consequently, if every node of
+the recursion satisfies \textnormal{(C1)} (the scene is a single class), then
 $\Prob(\hat K=1)\to1$.
-\end{property}
+\end{proposition}
 
-\noindent\textit{Heuristic argument.}\;
-Under Assumption~\ref{ass:null} the projected field $y=\bm u^{\!\top}
-\bm\varepsilon$ has, for any fixed $\bm u$, a Gaussian marginal, so its
-population dip is zero. We approximate the information content of the $n_C$
-spatially dependent values in $\hat F_C$ by that of $\neff$ independent ones:
-partitioning $C$ into $\approx\neff$ blocks of area $a$, one effectively
-independent observation per block, the fluctuations of $\hat F_C$ about the
-Gaussian population law have, to first order, the magnitude of an
-$\neff$-sample empirical process \citep{Cressie1993,Dutilleul1993}. Then
-$\hat D_C$ is approximately distributed as $\dip(F_{\neff})$ under independence,
-and comparison with the matched quantile $q_{1-\alpha}(\lfloor\neff\rceil)$
-yields rejection probability $\alpha+o(1)$. The split direction $\bm u$ is
-data-dependent, but under $H_0$ the cloud is unimodal in every direction, so
-optimising the cut over $\bm u$ does not create a mode. At finite $\neff$ this
-selection can still inflate the empirical dip relative to a fixed direction, an
-effect the uniform null behind \eqref{eq:test} does not model and that we do not
-correct analytically; that the procedure nonetheless returns $\hat K=1$ on all
-$75$ class-free scenes (Section~\ref{sec:simulation}) is the evidence that the
-inflation is immaterial in practice.
+\begin{proof}
+Under (C3) the projected empirical process converges,
+$\sqrt{n_C/a_I}\,(\hat F_C-\Phi)\Rightarrow\mathbb{G}$. The dip is $1$-Lipschitz
+in the supremum norm,
+$\lvert\dip(F)-\dip(F')\rvert\le\sup_x\lvert F(x)-F'(x)\rvert$
+\citep{HartiganHartigan1985}, so by the continuous mapping theorem
+$\sqrt{n_C/a_I}\,\hat D_C\Rightarrow\dip(\mathbb{G})$; as $\Phi$ is unimodal the
+limiting population dip is zero and $\hat D_C=O_p\bigl((n_C/a_I)^{-1/2}\bigr)$.
+The independent dip quantile satisfies $q_{1-\alpha}(m)=O(m^{-1/2})$
+\citep{HartiganHartigan1985}, so comparing $\hat D_C$ with
+$q_{1-\alpha}(\lfloor\neff\rceil)$ at $\neff\propto n_C/a_I$ caps the asymptotic
+rejection probability at $\alpha$. The recursion visits finitely many nodes, and
+a union bound gives $\Prob(\hat K=1)\to1$.
+\end{proof}
 
-We label this a property rather than a theorem deliberately. A rigorous
-statement would require an empirical-process central limit theorem for the dip
-functional under a spatial mixing condition, together with control of the
-block-independence constant in the decorrelation area \eqref{eq:areamed}, which
-we do not pursue. The
+\begin{remark}
+Condition (C3) carries the analytic weight. It is the empirical-process
+counterpart, at the indicator integral range, of the effective-sample-size
+heuristic; functional central limit theorems of this form are established for the
+empirical processes of strongly mixing and of associated sequences and fields,
+and (C1) places $\bm\varepsilon$ in the latter class through
+\citet{Pitt1982,BulinskiShashkin2007}. A complete verification for the lattice
+empirical process under our exact conditions is beyond the present scope, so we
+state (C3) as a hypothesis rather than derive it. The proportionality constant of
+the supremum functional is set through the $\ell^2$ proxy
+(Section~\ref{subsec:range}), which lies in the indicator-range regime ($\ell^2$
+of the order of $a_I$) and whose level Figure~\ref{fig:level} confirms. Two
+further idealisations remain: the split direction is data-dependent in practice,
+(C2) being the fixed-direction relaxation under which Figure~\ref{fig:level}
+shows no inflation; and non-Gaussian within-class laws fall outside (C1), where
+the distribution-free uniform null of ESS-Dip is the safer reference and
+ESS-Dip-R is not licensed.
+\end{remark}
+
+The
 Gaussian-simulation reference \eqref{eq:sgstest} controls the level exactly for
 a single homogeneity test and so provides an assumption-light check on the
 leading split, but, as Section~\ref{subsec:geostat-ref} shows, it does not yield

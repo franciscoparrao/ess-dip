@@ -51,10 +51,11 @@ supervision or auxiliary information that an internal criterion cannot supply.
 Second, strong class imbalance degrades recall: when one class dominates the
 scene, as the crop class does in the Sentinel-2 image, the leading split
 direction is governed by that majority and minority classes are not resolved.
-Third, the false-split control of Property~\ref{prop:fpr} is an asymptotic
-statement under a block-independence idealisation, not a finite-sample
-guarantee, and the projection onto the $2$-means direction, though effective in
-our experiments, is a heuristic rather than an optimal choice.
+Third, the false-split control of Proposition~\ref{prop:fpr} is an asymptotic
+statement resting on the empirical-process hypothesis (C3) and a fixed
+projection, not a finite-sample guarantee, and the $2$-means direction it uses,
+though effective in our experiments, is a heuristic rather than an optimal
+choice.
 
 \paragraph{Extensions.}
 Each limitation suggests a direction. The recall-oriented variant ESS-Dip-R
