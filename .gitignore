@@ -24,3 +24,7 @@ manuscript/*.synctex.gz
 # Not part of this project (unrelated corpus / local session artifacts)
 revistas_bib_final/
 .claude/
+
+# Submission bundle (derived from source)
+manuscript/submission/
+manuscript/*.zip
