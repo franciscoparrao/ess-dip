@@ -28,3 +28,7 @@ revistas_bib_final/
 # Submission bundle (derived from source)
 manuscript/submission/
 manuscript/*.zip
+
+# Unzipped bundle copy + journal-generated PDFs
+manuscript/ess-dip_MG_submission/
+manuscript/MATG-*.pdf
