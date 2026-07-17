@@ -32,3 +32,10 @@ manuscript/*.zip
 # Unzipped bundle copy + journal-generated PDFs
 manuscript/ess-dip_MG_submission/
 manuscript/MATG-*.pdf
+
+# Clean-copy derivatives (regenerable from marked sources)
+manuscript/*_clean.*
+
+# Confidential reviewer reports (never publish)
+Review_for_Math_Geo_Journal.pdf
+Review_*.pdf

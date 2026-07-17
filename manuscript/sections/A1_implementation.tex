@@ -1,0 +1,76 @@
+\section{Implementation specification}\label{app:impl}
+
+\begin{revblock}
+This appendix specifies the deployed procedure completely, so that it
+can be re-implemented from the paper alone; the released code
+(Section~``Code and data availability'') is the executable reference and
+fixes every random seed used in the experiments.
+
+\paragraph{Inputs and preprocessing.}
+The method takes a feature image $\bm z$ on a lattice $D$ (any $p$); no
+preprocessing is part of the method itself. In all real-data experiments the
+bands are standardised to zero mean and unit variance per band, and the
+hyperspectral cubes are reduced by principal components to $p=10$
+(Section~\ref{subsec:data}); Section~\ref{subsec:realspec} reports the
+insensitivity of the results to that truncation ($5$ to $30$ components).
+
+\paragraph{Fixed constants.}
+All constants are fixed once, across every experiment in the paper; none is
+tuned per scene.
+\begin{center}
+\small
+\begin{tabular}{llp{4.2cm}l}
+\toprule
+Symbol & Value & Role & Where it enters\\
+\midrule
+$\alpha$ & $0.05$ & test level & Eq.~\eqref{eq:test}\\
+$\tau$   & $0.25$ & detrend threshold & Eq.~\eqref{eq:detrendrule}\\
+--       & $2$    & polynomial degree of the drift & Eq.~\eqref{eq:r2}\\
+$t$      & $24$   & tile side in pixels (reduced to
+                    $\min(24,\lfloor H/2\rfloor,\lfloor W/2\rfloor)$ on
+                    small domains) & Eq.~\eqref{eq:areamed}\\
+$\nu$    & $12$   & minimum effective size to test a node &
+                    Algorithm~\ref{alg:essdip}\\
+$B$      & $5$    & ensemble size (median of $\hat K$) &
+                    Section~\ref{subsec:algo}\\
+--       & $300$  & Monte Carlo draws per null quantile &
+                    Section~\ref{subsec:ess}\\
+--       & $[12,2000]$ & clamp of the rounded $\neff$ before quantile lookup &
+                    Section~\ref{subsec:ess}\\
+--       & $8$ / $20$ & recursion cap on $\hat K$ (factorial study / full
+                    scenes) & Algorithm~\ref{alg:essdip}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Null quantile.}
+For a node with effective size $\neff$, let
+$m=\operatorname{clamp}(\lfloor\neff\rceil,12,2000)$. The critical value
+$q_{1-\alpha}(m)$ is the empirical $(1-\alpha)$ quantile of $300$ dip
+statistics, each computed from $m$ pseudo-random draws of the reference null:
+$\mathrm{U}(0,1)$ for ESS-Dip (least-favourable, distribution-free) and
+$\mathrm{N}(0,1)$ for ESS-Dip-R (the null of Assumption~\ref{ass:null}).
+Quantiles are memoised by $m$ (and by reference law), so each distinct size is
+simulated once per run.
+
+\paragraph{Split proposal.}
+At a node $C$, $2$-means is run on the feature vectors of $C$ ($k$-means with
+$k=2$, five restarts); the split direction $\bm u$ is the normalised
+difference of the two cluster means, Eq.~\eqref{eq:proj}, and the dip is
+computed on $\{\bm u^{\!\top}\bm z(s)\}_{s\in C}$ by the algorithm of
+\citet{HartiganHartigan1985}. A significant test splits $C$ into the two
+$2$-means children, each retained only if its pixel count is at least the
+decorrelation area $a$ (so that $\neff\ge1$).
+
+\paragraph{Range estimation.}
+The decorrelation area $a=\ell^2$ is estimated once per scene (not per node),
+on the detrended field when Eq.~\eqref{eq:detrendrule} activates: per tile,
+the first principal component's sample autocorrelation is computed by FFT and
+its $1/e$ crossing recorded, averaged over the two axes; $\ell$ is the median
+over tiles, Eq.~\eqref{eq:areamed}.
+
+\paragraph{Ensemble.}
+The recursion is run $B=5$ times with independent seeds (the only stochastic
+elements are the $k$-means initialisations and the null-quantile Monte Carlo);
+the reported $\hat K$ is the ensemble median.
+\end{revblock}

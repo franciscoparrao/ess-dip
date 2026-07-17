@@ -11,10 +11,19 @@ uniform over the data's bounding box; the average silhouette
 \citep{Rousseeuw1987}, the Calinski--Harabasz ratio
 \citep{CalinskiHarabasz1974} and the Davies--Bouldin index
 \citep{DaviesBouldin1979} balance within- against between-cluster scatter.
-Common to all is the assumption that the observations are exchangeable: the
-reference distribution, or the index's implicit baseline, treats the samples as
-independent draws. When this holds the criteria are well calibrated; when it
-fails they are not. Spatial data are the archetypal failure, because nearby
+\revtext{Comparative studies cover the many further variants
+\citep{Arbelaitz2013}. A second family selects $K$ through a probabilistic
+model: model-based clustering fits a finite mixture and chooses the number of
+components by an information criterion such as the BIC
+\citep{GormleyMurphyRaftery2023}. None of these criteria was proposed with a
+distribution theory that requires independent observations. What they share is
+that the dependence between observations plays no role in their construction:
+the reference distribution of the gap statistic, the implicit baselines of the
+ratio indices, and the mixture likelihood treat the sample as exchangeable
+draws, and so ignore spatial dependence rather than model it. When
+observations are nearly independent the criteria are well calibrated; under
+strong dependence they are not.} Spatial data are the archetypal failure,
+because nearby
 locations are correlated: ``everything is related to everything else, but
 near things are more related than distant things'' \citep{Tobler1970}.
 
@@ -29,7 +38,7 @@ Gaussian simulation), against which far fewer locations remain significant.
 In neuroimaging, \citet{Eklund2016} trace inflated false-positive rates in
 cluster-extent inference to a mis-specified parametric model of the spatial
 autocorrelation. The common remedy is a null that \emph{preserves} the
-second-order spatial structure while removing the effect being tested, realised
+spatial covariance structure while removing the effect being tested, realised
 either by geostatistical simulation \citep{Goovaerts2004} or by spatially
 constrained randomisation such as Moran spectral randomization
 \citep{WagnerDray2015}.
@@ -42,19 +51,41 @@ use the calibrated index both to test for clustering and to estimate $K$; on a
 biogeographic example a plain Gaussian null favours eight clusters while the
 autocorrelation-aware null reduces this to two and renders the apparent
 clustering non-significant. Their framework is the conceptual basis of the
-present work. It is, however, formulated for discrete presence--absence data
+present work. \revtext{Its guiding principle, that all structure not
+attributable to clustering belongs in the null model, is exactly the principle
+the present method instantiates for spatially autocorrelated continuous
+fields; the two contributions differ in how the calibration is obtained and in
+the data setting they treat. First, \citet{HennigLin2015} calibrate by
+simulation, so every decision requires an ensemble of null datasets, whereas
+the calibration developed here is analytic, through the effective sample size,
+which is what makes the near-linear full-scene cost of
+Section~\ref{subsec:complexity} possible. Second, their construction} is
+formulated for discrete presence--absence data
 with an algorithmic disjunction-parameter null, and addresses neither the
 \emph{continuous-field} setting of gridded imagery nor the confounding of a
 smooth large-scale \emph{trend} with discrete classes. The present
 contribution supplies exactly these: a Gaussian-random-field null on the
 lattice, a within-class range obtained by local range estimation, an adaptive
 trend--residual separation, and an effective-sample-size calibration of a
-modality statistic.
+modality statistic. \revtext{Throughout the comparisons of
+Sections~\ref{sec:simulation} and~\ref{sec:application}, the label
+Hennig--Lin accordingly denotes their published null-model construction
+applied to our setting, not this general framework, of which the proposed
+method is itself an instance.}
 
 The quantitative device that makes this possible is the \emph{effective
 sample size}: under spatial autocorrelation the variance of a sample statistic
 behaves as if computed from $\neff<n$ independent observations, a reduction
-governed by the integral of the autocorrelation \citep{Cressie1993}.
+governed by the integral of the autocorrelation \citep{Cressie1993}\revtext{,
+a quantity formalised as the \emph{integral range} in the theory of ergodic
+random functions \citep{Lantuejoul1991,Lantuejoul2002}}.
+\revtext{The concept recurs across statistics whenever dependent data carry
+less information than their count suggests: \citet{Griffith2005} develops
+effective geographic sample sizes for spatial sampling design,
+\citet{Berger2014} formalise the notion for general parametric inference,
+\citet{VallejosOsorio2014} define and study it for spatial process models, and
+\citet{Acosta2021} extend its computation to large spatial datasets through
+block likelihoods.}
 \citet{Dutilleul1993} operationalised this idea to correct the degrees of
 freedom of a correlation test between two spatial processes; we use it to
 recalibrate, rather than to correct after the fact, the reference distribution
@@ -66,10 +97,10 @@ a standard geostatistical correction for spatially clustered support
 
 \subsection{Modality as a clustering signal}\label{subsec:bg-modality}
 
-Because $k$-means dispersion is itself a second-order quantity, a null matched
-to the data's second-order structure can explain away the very clusters one
-seeks; a criterion that survives such a null must use information beyond second
-order. Multimodality is the natural choice. The dip test of
+Because $k$-means dispersion is itself a variance-based quantity, a null
+matched to the data's covariance structure can explain away the very clusters one
+seeks; a criterion that survives such a null must use information beyond the
+covariance. Multimodality is the natural choice. The dip test of
 \citet{HartiganHartigan1985} measures the departure of a univariate sample from
 unimodality, and dip-means \citep{Kalogeratos2012} turns it into a
 divisive procedure that splits a cluster only when a projection of it is

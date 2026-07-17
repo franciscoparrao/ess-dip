@@ -10,9 +10,19 @@ and consequentially. A mature toolkit exists to make it: the gap statistic
 Calinski--Harabasz \citep{CalinskiHarabasz1974} and Davies--Bouldin
 \citep{DaviesBouldin1979} indices each score a partition by its internal
 geometry and select the $K$ that optimises the score.
+\revtext{The stakes are concrete. An analyst mapping land cover from a
+satellite scene must fix $K$ before any unsupervised classifier runs, and
+every downstream product (class areas, change statistics, sampling strata,
+training masks) inherits the choice. Set $K$ too high and single crop fields
+fragment into spurious sub-classes that propagate into those products; set it
+too low and real classes merge. The same prior decision arises when
+delineating geochemical domains, zoning a mineral deposit, or partitioning a
+scene into regions for stratified field sampling: in each case the analyst
+must first ask how many classes the data actually support.}
 
-These criteria share a hidden assumption: that the observations are
-independent. Their reference levels, the uniform null of the gap statistic and
+\revtext{These criteria share a blind spot: none of them takes the dependence
+between observations into account.} Their reference levels, the uniform null
+of the gap statistic and
 the implicit baseline of a silhouette, describe what the geometry would look
 like were the samples exchangeable draws. Spatial data are not exchangeable.
 Neighbouring pixels are autocorrelated \citep{Tobler1970}, so the effective
@@ -21,7 +31,11 @@ number of independent observations is far below the nominal pixel count
 the feature cloud along a manifold that an independence null cannot
 distinguish from genuine groups. The consequence, which we quantify in
 Sections~\ref{sec:simulation}--\ref{sec:application}, is systematic
-\emph{over-detection}. On synthetic fields containing no discrete classes the
+\emph{over-detection}\revtext{ (throughout, the partitions the criteria
+score are produced by $k$-means, the dominant choice in this setting;
+statements about a criterion's behaviour are therefore statements about the
+criterion--$k$-means pair, a dependence Section~\ref{subsec:methods} makes
+explicit)}. On synthetic fields containing no discrete classes the
 gap statistic reports on average between seven and eight; on real imagery
 the silhouette, Calinski--Harabasz and Davies--Bouldin indices fragment a
 single, homogeneous crop field into several sub-classes in every instance we
@@ -29,11 +43,11 @@ examined. A criterion that cannot recognise the absence of clusters is a
 precarious foundation for deciding their number.
 
 Correcting this is not a matter of swapping in a better null. Because the
-within-cluster dispersion that these criteria minimise is a second-order
-quantity, a reference matched to the data's second-order spatial structure,
+within-cluster dispersion that these criteria minimise is a variance-based
+quantity, a reference matched to the data's spatial covariance structure,
 its variogram, reproduces the same dispersion and explains the clusters
 away. Distinguishing real classes from autocorrelation therefore requires
-information beyond second order, namely the \emph{multimodality} of the feature
+information beyond the covariance, namely the \emph{multimodality} of the feature
 distribution; and distinguishing real classes from a smooth trend requires
 separating a continuous drift from discrete structure, a separation the
 geostatistical decomposition into trend and residual makes natural. The idea of
@@ -48,16 +62,16 @@ sequence of homogeneity decisions: at each node we test whether a region is a
 single class or instead carries \emph{multimodality in excess of spatial
 autocorrelation}, and make that test valid on autocorrelated fields by
 calibrating it at the effective sample size. The
-construction rests on three geostatistical devices: the effective sample size
-itself \citep{Cressie1993,Dutilleul1993}, evaluated at the indicator integral
-range appropriate to a functional of the distribution rather than the field
-integral range that governs the mean (Section~\ref{subsec:sgs}), which sets the
-calibration; a
-\emph{local} estimate of the within-class autocorrelation range, in the manner
-of declustering \citep{IsaaksSrivastava1989,Deutsch1998}, which prevents the
-between-class mosaic from corrupting that calibration; and an adaptive trend--residual
-decomposition, which removes a smooth drift only when it is statistically
-resolvable. A recursive partitioning driven by the calibrated dip statistic
+construction rests on three geostatistical devices. The first is the effective
+sample size itself \citep{Cressie1993,Dutilleul1993}, which sets the
+calibration; it is evaluated at the indicator integral range appropriate to a
+functional of the distribution, not at the field integral range that governs
+the mean (Section~\ref{subsec:sgs}). The second is a \emph{local} estimate of
+the within-class autocorrelation range, in the manner of declustering
+\citep{IsaaksSrivastava1989,Deutsch1998}, which prevents the between-class
+mosaic from corrupting that calibration. The third is an adaptive
+trend--residual decomposition, which removes a smooth drift only when it is
+statistically resolvable. A recursive partitioning driven by the calibrated dip statistic
 \citep{HartiganHartigan1985} returns $K$. Because the test is tuned for
 specificity, its negatives are trustworthy: when it declares a region
 homogeneous that verdict can be relied on, which makes ESS-Dip as useful as a
@@ -72,13 +86,15 @@ conservative estimator of $K$. Our contributions are:
   \item We propose \emph{ESS-Dip}, an effective-sample-size-calibrated test of
     cluster homogeneity (whether a region holds discrete structure beyond its
     spatial autocorrelation), combining a within-class range from local
-    range estimation with adaptive trend removal (Section~\ref{sec:method}); applied
-    recursively it returns a conservative $K$, and we state an asymptotic
-    false-split-control property (Proposition~\ref{prop:fpr}) that the method
-    confirms empirically; a recall-oriented variant, ESS-Dip-R, trades the
-    distribution-free uniform null for the model's Gaussian null to recover more
-    structure at the same specificity.
-  \item We evaluate fifteen criteria on a factorial simulation with known $K$,
+    range estimation with adaptive trend removal (Section~\ref{sec:method}).
+    Applied recursively it returns a conservative $K$, and we state an
+    asymptotic false-split-control property (Proposition~\ref{prop:fpr}) that
+    the method confirms empirically. A recall-oriented variant, ESS-Dip-R,
+    trades the distribution-free uniform null for the model's Gaussian null to
+    recover more structure at the same specificity.
+  \item We evaluate \revtext{sixteen} criteria on a factorial simulation with known $K$\revtext{,
+    including the most direct spatial adaptation of a standard index (the gap
+    statistic with an autocorrelation-matched reference)},
     including the calibrated-validity-index method of \citet{HennigLin2015} that
     ESS-Dip generalises; ESS-Dip reaches unit specificity, its recall variant
     ESS-Dip-R attains the best balanced score at the same specificity, and an

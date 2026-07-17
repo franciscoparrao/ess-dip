@@ -16,6 +16,11 @@
 \usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{bm}
+\usepackage{xcolor}
+% Tracked changes for revision R1: \revtext{...} inline, revblock for paragraphs.
+% For the clean copy, redefine \revtext to expand to its argument uncoloured.
+\newcommand{\revtext}[1]{\textcolor{blue}{#1}}
+\newenvironment{revblock}{\par\begingroup\color{blue}}{\endgroup\par}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{booktabs}
@@ -55,7 +60,7 @@ and the number of classes in spatially autocorrelated data}
 Selecting the number of clusters $K$ is a basic step in unsupervised
 classification. The standard internal criteria (the gap statistic, the
 average silhouette, the Calinski--Harabasz and Davies--Bouldin indices)
-assume independent observations, and so are miscalibrated on spatial data.
+\revtext{take no account of the dependence between observations, and so are miscalibrated on spatial data.}
 There, neighbouring locations are autocorrelated, the effective sample size is
 far below the nominal one, and a smooth large-scale trend mimics discrete
 structure. We show that the consequence is systematic over-detection:
@@ -72,7 +77,7 @@ low-order trend is removed adaptively. A recursive partitioning returns $K$, and
 carries an asymptotic false-split-control property. On a factorial simulation
 with known ground truth, ESS-Dip reaches unit specificity with competitive
 recovery; its recall-oriented variant ESS-Dip-R, calibrated against the model's
-Gaussian null, attains the best balanced score of fifteen criteria at the same
+Gaussian null, attains the best balanced score of \revtext{sixteen} criteria at the same
 specificity. On the Indian Pines, Salinas and Sentinel-2 scenes both identify
 single land-cover regions as homogeneous where the standard criteria do not. The method is conservative by design, and its negatives are reliable:
 when it reports a single class that verdict can be trusted, suiting ESS-Dip to
@@ -95,6 +100,10 @@ remote sensing}
 \input{sections/07_conclusions}
 \input{sections/08_availability}
 \input{sections/09_declarations}
+
+\begin{appendices}
+\input{sections/A1_implementation}
+\end{appendices}
 
 \bibliography{refs}
 

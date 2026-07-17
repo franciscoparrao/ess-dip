@@ -129,7 +129,13 @@ remove.
 \subsection{Full-scene estimation}\label{subsec:realfull}
 
 Applied to an entire labelled scene, the methods estimate the number of
-land-cover classes present (Table~\ref{tab:realfull}). No criterion approaches
+land-cover classes present (Table~\ref{tab:realfull}). \revtext{Two caveats
+frame the reading of the table. First, $\hat K$ estimates the number of
+classes \emph{distinguishable from the autocorrelation null at the effective
+sample size}, not the nominal label count; failing to reject does not certify
+that finer labelled classes are absent, only that the data do not support them
+against the null, so a testing-based $\hat K$ is conservative by
+construction. Second,} no criterion approaches
 the nominal sixteen classes of the hyperspectral scenes: the labels include
 many small, spectrally similar agricultural classes that are not separable
 without supervision, and the best standard index reaches nine (the gap on
