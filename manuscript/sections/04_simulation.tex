@@ -417,7 +417,7 @@ $f\in\{\tfrac14,\tfrac12,\tfrac34,1,\tfrac32,2,4\}$ (the decorrelation area
 scales as $f^2$) and the full pipeline is re-run with the perturbed value, on
 the null world (specificity) and on the structured world with $K=4$
 (recovery), $15$ paired scenes each. Table~\ref{tab:misspec} reports the
-outcome. The level is essentially indifferent to the error: overestimating the
+exact values and Figure~\ref{fig:misspec} the response curves. The level is essentially indifferent to the error: overestimating the
 range only makes the test more conservative, and even a four-fold
 \emph{under}estimate, which inflates the effective sample size sixteen-fold,
 raises the false-split rate merely to $0.07$, near the nominal $\alpha$,
@@ -449,6 +449,19 @@ Structured ($K{=}4$): $\Prob(\hat K{=}4)$ & $1.00$ & $0.93$ & $0.93$ & $0.80$ & 
 \end{tabular}
 \end{table}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/misspec.pdf}
+\caption{Robustness to a multiplicative error $f$ in the estimated range
+(area scaling as $f^2$; dotted line marks the unperturbed estimate). (a)~The
+false-split rate on the one-class world stays at zero under any overestimate
+and reaches only $0.07$, near the nominal $\alpha$, under a four-fold
+underestimate. (b)~Recovery on the four-class world (mean $\hat K\pm1$~sd)
+survives underestimation unharmed and degrades only under overestimation,
+collapsing to silence ($\hat K=1$), never to invention.}
+\label{fig:misspec}
+\end{figure}
+
 \subsection{Class imbalance}\label{subsec:imbalance}
 
 The Sentinel-2 result (Section~\ref{subsec:realfull}) suggests that a dominant
@@ -459,7 +472,8 @@ controlled proportion $\pi\in\{0.50,0.30,0.20,0.10,0.05,0.02\}$ of the domain
 drawn as in Section~\ref{subsec:design}), $15$ replicates at each of two
 separations ($\mathrm{sep}=3,4$), pooled, with the same scene shown to every
 method. Table~\ref{tab:imbalance} reports the minority-detection rate
-$\Prob(\hat K\ge2)$ and the mean $\hat K$. ESS-Dip detects the minority
+$\Prob(\hat K\ge2)$ and the mean $\hat K$; Figure~\ref{fig:imbalance}
+displays the degradation curves. ESS-Dip detects the minority
 reliably down to $\pi=0.20$ ($0.90$), degrades at $\pi=0.10$ ($0.73$) and is
 blind below $\pi=0.05$; the recall variant ESS-Dip-R extends the reliable
 regime to $\pi=0.10$ ($0.93$) and detects half the cases at $\pi=0.05$. The
@@ -503,4 +517,18 @@ $0.02$ & $0.00$ & $1.00$ & $0.00$ & $1.00$ & $0.40$ & $1.60$ & $1.00$ & $2.97$\\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/imbalance.pdf}
+\caption{Detection of a contiguous minority class of proportion $\pi$ (true
+$K=2$; identical scenes across methods; dashed curves mark the baselines,
+whose apparent detection is not creditable given their near-one false-split
+rate on class-free scenes). (a)~ESS-Dip detects the minority reliably down to
+$\pi=0.20$ and ESS-Dip-R extends the regime to $\pi=0.10$. (b)~At extreme
+imbalance the silhouette reports $\hat K\approx3$ by fragmenting the
+majority class, whereas the calibrated family degrades to silence
+($\hat K=1$).}
+\label{fig:imbalance}
+\end{figure}
 \end{revblock}
