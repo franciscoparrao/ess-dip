@@ -36,6 +36,56 @@ released code is the executable reference and fixes every seed.
 
 \section{What Proposition 1 does and does not establish}\label{sec:supp-prop}
 
+\subsection*{Proof of Proposition 1}
+
+For convenience we restate what is proved. Under (C1)--(C3), with $C$
+increasing to $\Z^{2}$ along a sequence of rectangles and the test calibrated
+at $\neff=n_C/a_I$, the rejection probability of the per-node test tends to
+zero, and hence to at most $\alpha$; consequently $\Prob(\hat K=1)\to1$ when
+every node visited satisfies (C1).
+
+\begin{proof}
+The argument reduces the dependent problem to the independent one; the
+spatial dependence enters only through \textnormal{(C3)}, and the properties
+of the dip that are used involve no assumption on the dependence structure of
+the data. First, since $\Phi$ is unimodal, the deterministic inequality
+$\hat D_C=\dip(\hat F_C)\le\sup_x\lvert\hat F_C(x)-\Phi(x)\rvert$
+\citep{HartiganHartigan1985} together with condition (C3) shows that
+$\sqrt{\neff}\,\hat D_C$ is tight: the dip vanishes at least at the
+$\neff^{-1/2}$ rate. Second, at a strictly unimodal law the rate is strictly
+faster. Fluctuations of size $\epsilon$ about a distribution function with
+strictly curved branches can be absorbed into the unimodal class to within
+$o(\epsilon)$, an absorption that uses only the uniform continuity of the
+limiting process. For independent samples this is known in two forms:
+\citet[Theorem~5]{HartiganHartigan1985} prove $\sqrt m\,D_m\to0$ in
+probability for unimodal laws possessing a nonzero derivative of some order
+$k\ge2$ at the mode and an exponentially decreasing density, a class they note
+contains the normal; and \citet[Theorem~2]{ChengHall1998} sharpen the rate to
+$D_m=O_p(m^{-3/5})=o_p(m^{-1/2})$ under their condition~(4.2), which the
+Gaussian also satisfies. Under (C3) the same absorption gives
+$\sqrt{\neff}\,\hat D_C\to0$ in probability. Third, the calibration
+quantile inherits $q_{1-\alpha}(m)=c_\alpha m^{-1/2}(1+o(1))$, with
+$c_\alpha>0$, from the uniform law, for which $\sqrt m\,D_m$ converges to the
+nondegenerate dip of a Brownian bridge
+\citep[Theorem~3]{HartiganHartigan1985}. Hence
+$\Prob\bigl(\hat D_C>q_{1-\alpha}(\lfloor\neff\rceil)\bigr)\to0$, which
+gives the bound of the proposition, and indeed a limiting rejection probability of zero;
+the same conclusion holds for any projected law in the class of
+\citet[Theorem~5]{HartiganHartigan1985}. The bound $\alpha$ itself is
+approached only in the flat-topped boundary case, where linear stretches of the
+distribution function leave no curvature to absorb the fluctuations; that the
+uniform is least favourable among \emph{all} unimodal laws, and not only
+within that class, is stated asymptotically by
+\citet{HartiganHartigan1985} but proved by them only for laws with
+exponentially decreasing densities, so we invoke the bound in the form their
+theorems establish. Under the single-class
+hypothesis every node visited by the recursion satisfies \textnormal{(C1)};
+the recursion visits finitely many nodes, so a union bound over their
+(vanishing) rejection probabilities gives $\Prob(\hat K=1)\to1$.
+\end{proof}
+
+\subsection*{Scope}
+
 Proposition~1 concerns a stylised version of the test: the projection direction
 is held fixed, the detrending step is switched off, and the decorrelation area
 is the indicator integral range $a_I$ rather than the deployed $\ell^{2}$

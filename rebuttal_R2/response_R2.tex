@@ -1,0 +1,571 @@
+\documentclass[11pt]{article}
+\usepackage[margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{parskip}
+\usepackage{microtype}
+\newcommand{\neff}{n_{\mathrm{eff}}}
+\newcommand{\R}[1]{\medskip\noindent\textbf{#1}\quad}
+\newenvironment{rquote}{\begin{quote}\itshape}{\end{quote}}
+\begin{document}
+\begin{center}
+{\LARGE\bfseries Response to Reviewers}\\[6pt]
+{\large Manuscript MATG-D-26-00180 --- \emph{Mathematical Geosciences},
+second revision}\\[4pt]
+``Effective-sample-size calibration of a modality test for cluster homogeneity
+and the number of classes in spatially autocorrelated data''\\[4pt]
+Francisco Parra \,\textperiodcentered\, Universidad de Santiago de Chile
+\end{center}
+\medskip
+
+I thank Reviewer~2 for a second reading and for closing the file, and
+Reviewer~1 for a report that is, once again, more useful than comfortable.
+Reviewer comments are quoted in italics; section, equation and table numbers
+below refer to the revised manuscript.
+
+Three structural changes answer the report's opening paragraph, and much of
+the detail follows from them.
+
+\emph{A supplement.} As asked, twice, there is now a supplementary document. It
+carries the full discussion of what Proposition~1 does and does not establish,
+together with its proof (Section~S1); a complete specification of all sixteen
+benchmarked criteria and their tuning constants (Section~S2); and an
+implementation description that replaces, and considerably exceeds, the
+appendix the reviewer found uninformative (Section~S3). The appendix is gone
+from the paper.
+
+\emph{A relativised framing.} The paper no longer suggests, anywhere I could
+find it, that a clustering is uniquely determined or that the standard criteria
+are wrong on spatial data. This was the report's most valuable criticism and it
+has changed the abstract, the introduction, Section~2, Section~3.2, the
+paragraph headings in Section~4.3 and the conclusions.
+
+\emph{Less promised.} Claims of guarantee, verification, exactness and reliable
+negatives are removed throughout, and Section~3.9 now opens by stating that no
+result covers the deployed procedure.
+
+The paper is one page shorter than the version reviewed despite the added
+explanations, and the supplement takes six pages of material out of it.
+
+\section*{General points}
+
+\R{G1. There is no uniquely true clustering.}
+\begin{rquote}
+``The paper implicitly suggests in many places that there is a uniquely true
+clustering of a dataset. This is not the case, see Hennig (2015). \dots\ any
+wording that suggests that clusterings can only be valid if spatial
+autocorrelation is taken into account should be changed (starting from the
+abstract `miscalibrated on spatial data'). Indexes like the Silhouette index
+may well be fine for spatial data if the application doesn't require what is
+required here.''
+\end{rquote}
+I accept this without reservation, and it has improved the paper. The claim
+that the standard criteria are miscalibrated on spatial data was doing work it
+could not support, and removing it makes the contribution easier to state, not
+harder. The abstract now says that those criteria ``take no account of the
+dependence between observations, so on spatial data they leave one question
+unanswered: whether an apparent grouping reflects discrete classes, or is
+already produced by the autocorrelation of a single class.''
+
+The introduction states the position explicitly, in a new paragraph:
+\begin{rquote}
+``None of this makes those criteria wrong. A clustering is not a fact waiting
+to be uncovered: which groupings count as clusters depends on what the analysis
+is for (Hennig 2015), and an analyst may have good reason to partition an
+autocorrelated field into contiguous units whether or not the partition could
+be explained by the autocorrelation alone. What these criteria cannot do is
+answer one particular question, and it is the question this paper addresses:
+does a region contain discrete classes, over and above the variation that a
+single autocorrelated class already produces?''
+\end{rquote}
+Hennig (2015) is now cited there. The specific instances the reviewer names are
+gone: ``a criterion that cannot recognise the absence of clusters is a
+precarious foundation'' has been deleted; the conclusions no longer speak of
+``inventing classes on featureless fields'' but of reporting several classes on
+fields simulated with one; and the paragraph heading ``Standard indices
+over-detect without exception'' is now ``Standard indices report classes on
+every class-free scene.'' Where the simulation results are described, the claim
+is now about what was simulated rather than about what exists: the criteria
+report more than one class on scenes generated without discrete classes. That
+is a statement about a known generating model, which is the only version of the
+claim I am entitled to make.
+
+\R{G2. Two-means may cut through a cluster when more than two are present.}
+\begin{rquote}
+``I don't think the authors have commented on the possibility that 2-means may
+cut through a cluster in situations with more than 2 clusters in an early stage
+of the algorithm.''
+\end{rquote}
+Correct, and the omission mattered, because this failure is not symmetric with
+the other one. Section~3.3 now says so:
+\begin{rquote}
+``If an early split cuts through a class, the two fragments of that class are
+handed to different subtrees, and no later test can reunite them: the damage is
+permanent, and shows up as an over-estimate of $K$ or as a partition that
+misplaces boundaries even when $\hat K$ is right. What the recursion does
+repair is the opposite error, a split that leaves two classes on the same side,
+since the child is tested again.''
+\end{rquote}
+The passage goes on to note that this is one reason the paper reports partition
+quality alongside $\hat K$, and that recovery holding for $K$ up to five bounds
+how often the failure is severe at these separations without showing that it
+does not occur. The corresponding limitation in Section~6 is stated in the same
+terms.
+
+\section*{Detailed points}
+
+\R{1. Fixing $K$ before any classifier runs.}
+\begin{rquote}
+``An analyst mapping land cover from a satellite scene must fix K before any
+unsupervised classifier runs'' -- not true in general. There are clustering
+methods (such as DBSCAN) that estimate K on the fly.''
+\end{rquote}
+Corrected. The sentence now reads that the analyst ``must commit to $K$ for the
+large family of methods that take it as input, among them $k$-means and finite
+mixtures; methods that instead determine the number of groups on the fly, such
+as DBSCAN (Ester et al.\ 1996), replace that choice by tuning parameters that
+govern it.''
+
+\R{2. Swapping in a better null.}
+\begin{rquote}
+``Correcting this is not a matter of swapping in a better null.'' Isn't this
+what you are doing (at least in some sense)? I don't really see what's wrong
+with ``swapping in a better null''.
+\end{rquote}
+The sentence was wrong as written, since the paper does swap the null. What I
+meant, and now say, is that swapping the null is not \emph{sufficient} while
+the statistic stays the same, and the reason is worth spelling out: if the
+reference is matched to the covariance estimated from the data, the
+between-class contrast is itself part of that covariance, so the reference
+reproduces the observed dispersion whether or not classes are present. The text
+now reads ``the null must change, but so must the statistic'', with the
+argument given in full in Section~2.3 (see also point~9).
+
+\R{3. Terminology introduced and then varied.}
+\begin{rquote}
+``Terms like `scene', `mosaic', `MiniBatch' are used without explicit
+introduction \dots\ Later you use terms like `$\ell^2$ proxy', `$1/e$ proxy'
+again without having explicitly defined what you mean.''
+\end{rquote}
+Section~3.1 now defines both terms at first use: ``we call one such image over
+$D$ a \emph{scene}, and the spatial pattern the classes form across it the
+\emph{mosaic}''. The two names for the same object have been reduced to one:
+the manuscript now says ``the $\ell^{2}$ proxy'' everywhere, and ``$1/e$''
+appears only where the crossing itself is described. MiniBatch $k$-means is
+introduced with a citation in Section~4.2 and specified in Section~S2.
+
+\R{4. Reliable negatives.}
+\begin{rquote}
+``its negatives are trustworthy: when it declares a region homogeneous that
+verdict can be relied on''. Not so. In general if a statistical test doesn't
+reject a null hypothesis, it never means that the null hypothesis is true
+\dots\ don't write as if it were different.
+\end{rquote}
+Removed, both in the introduction and in the abstract, and I am glad to be rid
+of it. The introduction now reads: ``Because the test is tuned for specificity,
+it seldom divides a region that the null can account for; as with any test,
+failing to reject is not evidence that a region is homogeneous, only that the
+data do not contradict homogeneity at the effective sample size.'' The abstract
+speaks of the trade-off rather than of trustworthy verdicts, and the
+conclusions of ``the asymmetry between its two kinds of error''.
+
+\R{5, 29, 30, 32. What the Proposition does not establish.}
+\begin{rquote}
+``As Proposition 1 is `stylised', it doesn't guarantee anything for the
+proposed method. There is no such thing as a proven `asymptotic
+false-split-control property' for the method as a whole.'' \dots\ ``The
+result is deliberately stylised'' -- this is sugarcoating the fact that you
+apparently don't have a better one \dots\ The result is of purely heuristic
+value.
+\end{rquote}
+The reviewer is right, and I have stopped hedging around it. Section~3.9 now
+opens: ``We have no result covering the deployed procedure. What follows
+concerns a stylised version of the test \dots\ It is a consistency check on the
+calibration principle rather than a statement about the method as applied.''
+The phrase ``asymptotic false-split-control property'' no longer appears in the
+abstract, the introduction, or the conclusions; each says instead that for a
+stylised version of the test we prove that the probability of dividing a
+homogeneous region vanishes. Section~3.9 also states, where the reviewer asked
+for it, that ``nothing above establishes a property of the procedure as
+deployed; its adequacy is a matter of evidence''. The sentence claiming the
+calibration ``is designed so that \dots\ the recursion does not split'' has
+been replaced by one saying what is intended and what is actually shown.
+
+On whether to keep the Proposition at all, which the reviewer left to me: I
+have kept it, but moved its proof and the detailed discussion of its scope to
+Section~S1 and cut Remark~1 from fifty-seven lines to sixteen. My reason for
+keeping it is that the reduction it performs is the only place where the
+paper's central premise is stated in a form that can be checked, and a reader
+who doubts (C3) can now see precisely where the doubt bites. My reason for
+moving it out is the reviewer's, that it does not deserve the space it took.
+
+\R{6. Which criteria assume independence.}
+\begin{rquote}
+``None of these criteria was proposed with a distribution theory that requires
+independent observations.'' Well, some yes (mixture/BIC, gap), some no (ASW,
+DB). Be precise.
+\end{rquote}
+That sentence was simply wrong and has been replaced by a precise one in
+Section~2.1: the gap statistic and model-based selection by BIC do rest on
+assumptions treating observations as independent, the gap through its reference
+distribution and the BIC through a likelihood that is a product over
+observations; the silhouette, Calinski--Harabasz and Davies--Bouldin indices
+assume no probability model at all, ``and on dependent data they are neither
+correct nor incorrect, because they make no probabilistic claim that dependence
+could violate.'' The same distinction is now made in Section~3.2 and in
+Section~6, where the phrase ``the independence reference of the classical
+criteria'' has been corrected (point~47).
+
+\R{7. Spatial mixture models.}
+\begin{rquote}
+``By the way, there is also mixture model-based clustering taking spatial
+autocorrelation into account, see, e.g., Vanhatalo et al. (2021).''
+\end{rquote}
+Added in Section~2.1, immediately after the mixture and BIC sentence.
+
+\R{8. A reference is a model, not a method.}
+\begin{rquote}
+``That an independence reference over-detects structure in dependent data is
+known across several fields.'' Be precise. Structure is detected by methods for
+detecting structure. A reference is not a method but a model.
+\end{rquote}
+Reworded: ``That methods comparing data against an independence reference
+report structure which the dependence alone can account for is known across
+several fields.''
+
+\R{9. The dispersion argument.}
+\begin{rquote}
+``Because k-means dispersion is itself a variance-based quantity, a null
+matched to the data's covariance structure can explain away the very clusters
+one seeks'' -- I don't understand the logic.
+\end{rquote}
+It was underexplained. Section~2.3 now gives the argument in steps: keep a
+dispersion-based index and improve only the null, matching it to the covariance
+estimated from the data; ``the contrast between classes contributes to the very
+covariance the null now reproduces; the null therefore generates reference
+datasets of much the same dispersion as the data whether or not classes are
+present, and the comparison loses what it was meant to detect.'' Hence a
+criterion able to survive such a null must read something the covariance does
+not determine.
+
+\R{10. Not all the listed criteria use a reference distribution.}
+\begin{rquote}
+``Internal validity criteria for K, namely the gap statistic \dots\ the average
+silhouette, Calinski-Harabasz and Davies-Bouldin, compare a within-cluster
+dispersion against the value expected with no clustering, under an independent
+reference distribution.'' This is true for the gap statistic but not for the
+other criteria listed here.
+\end{rquote}
+Corrected in Section~3.2, which now attributes the reference distribution to
+the gap alone and describes the other three as optimising a ratio of within- to
+between-cluster scatter over $K$ with no reference distribution at all.
+
+\R{11. There are no independent observations to reduce.}
+\begin{rquote}
+``autocorrelation reduces the number of independent observations far below N''
+-- as a standard there aren't any independent observations here.
+\end{rquote}
+Reworded: ``autocorrelation means the sample carries the information of far
+fewer than $N$ independent observations''.
+
+\R{12. Drift and dependence are separate failures.}
+\begin{rquote}
+``You could have an independence null that takes drift into account but not
+dependence.''
+\end{rquote}
+Section~3.2 now says exactly that: the two failures ``are distinct, and a
+reference could model the drift while still ignoring the dependence, or the
+reverse.''
+
+\R{13, 15, 18, 35. Small definitional points.}
+``The null $H_0$'' is now ``the null hypothesis $H_0$''. ``Bimodality'' has
+been replaced by ``a genuine departure from unimodality'' where more than two
+modes are possible. The tile index $j$ is introduced explicitly in Section~3.5.
+The separation $\delta$ is defined where the power panel first uses it, as the
+standard deviation of the class mean vectors introduced in Section~4.1.
+
+\R{14. Where Assumption 1 is needed.}
+\begin{rquote}
+``Chances are you should state already here that you sometimes require
+Assumption 1 and sometimes not.''
+\end{rquote}
+A paragraph now follows the assumption saying which parts of the paper use it:
+the default ESS-Dip uses only unimodality, through the distribution-free
+uniform calibration, whereas the Gaussian form licenses ESS-Dip-R, the
+indicator integral range, the simulation reference and condition (C1). Each of
+those places repeats the dependence.
+
+\R{16. In what sense the uniform is least favourable.}
+\begin{rquote}
+``least-favourable $>$ least favourable (also elsewhere) By the way \dots\ It
+is unclear here in which sense the uniform is least favourable.''
+\end{rquote}
+The sense is now stated where the term is introduced: the uniform ``is least
+favourable among unimodal laws in the sense that it maximises the asymptotic
+distribution of the rescaled dip, so that a critical value taken from it bounds
+the level for the others''. The predicative uses are unhyphenated. I should add
+that the previous revision already narrowed this claim: Hartigan and Hartigan
+prove it for laws with exponentially decreasing densities and conjecture it in
+general, and the paper says so.
+
+\R{17. The two ends of one calibration.}
+\begin{rquote}
+``the two are the distribution-free and the model-matched ends of one
+calibration.'' Unclear.
+\end{rquote}
+Replaced by a plain statement of what each protects against: ``The two differ
+only in the reference law, and so in what they protect against: ESS-Dip against
+any within-class law in the class for which the uniform bound is proved,
+ESS-Dip-R against the Gaussian of Assumption~1 specifically.''
+
+\R{19, 21. The 27 per cent.}
+\begin{rquote}
+``27\%? Wasn't it supposed to be the majority?'' \dots\ ``There are only two
+numbers `above', one of which is 27\% (for the non-straddling tiles \dots)!?''
+\end{rquote}
+The reviewer caught a real inconsistency: the text asserted that most tiles fall
+within a single class and then reported a figure showing that on one of the
+three scenes they do not. Section~3.5 now says so plainly, and explains why the
+estimator survives it:
+\begin{rquote}
+``We check it, and it holds on some scenes but not all: 62\% of tiles are
+single-class on Salinas and on the Sentinel-2 image, against 27\% on the
+fragmented Indian Pines fields. Where the premise fails the estimate does not
+collapse, because a tile straddling a boundary is not thereby uninformative:
+most of its area still lies in one class, and its $1/e$ crossing is lengthened
+rather than replaced by the scene scale. On Indian Pines the tile median still
+returns 3.5 pixels against a scene-wide estimate of 16. We therefore treat the
+premise as a condition under which the estimate is clean, not one the method
+requires.''
+\end{rquote}
+I have removed the appeal to the median's breakdown point that stood here
+before, since with 27 per cent single-class tiles the contaminated fraction
+exceeds one half and the argument does not apply.
+
+\R{20. ``Exact for the exponential model''.}
+\begin{rquote}
+``I don't understand the use of `exact' here -- a definition that is not exact
+is not a proper definition.''
+\end{rquote}
+The word was attached to the wrong noun. The passage now separates the
+convention from the model: ``Taking the $1/e$ crossing as the range is a
+convention: it reproduces the range parameter of the exponential model, for
+which $\rho(h)=\exp(-h/\ell)$ gives $\rho(\ell)=e^{-1}$, and approximates it for
+the other models.''
+
+\R{22, 23. Equation (8).}
+\begin{rquote}
+``(8): How is $r_j^2=\int r\rho(r)dr$, the latter apparently not dependent on
+j?'' \dots\ ``The fitted parameters'' -- fitted how?
+\end{rquote}
+The correlogram in the integral is the model fitted to tile $j$ and does depend
+on $j$; it is now written $\rho_j$ and identified as such in the following
+line. The fitting is now specified in place: the parameters are fitted ``by
+ordinary least squares to the tile's empirical variogram with the model of
+smallest residual sum of squares retained''.
+
+\R{24. Simulating from a Gaussian is not assumption-free.}
+\begin{rquote}
+``Simulating from a Gaussian is for sure not `assumption-free'.''
+\end{rquote}
+Agreed and corrected: the alternative is now described as one ``that dispenses
+with the geometric constant, at the price of assuming a Gaussian model
+explicitly''.
+
+\R{25. A smooth drift is not unimodal.}
+\begin{rquote}
+``A smooth drift $\mu$ is itself unimodal'' -- how so?
+\end{rquote}
+That was a category error. What matters is that the drift adds no modes while
+still distorting the range estimate, and the text now says that: ``A smooth
+drift contributes no modes of its own: it displaces the feature vectors
+continuously across the scene rather than gathering them at distinct locations.
+Left in place, however, it lengthens the estimated range $\ell$, deflating
+$\neff$ and biasing the test against splitting.''
+
+\R{26. ``The trend world''.}
+\begin{rquote}
+``from the trend world of the factorial design'' -- I don't understand this.
+\end{rquote}
+The term was used before its definition. It now reads ``on the class-free
+scenes carrying a drift that Section~4.1 calls the \emph{trend} world''.
+
+\R{27. Two meanings of $B$.}
+\begin{rquote}
+``B in Sec. 3.7 and 3.8 is not the same thing.''
+\end{rquote}
+Correct. The simulations per node in Section~3.7 are now $M$; $B$ is reserved
+for the ensemble size, as in the notation table.
+
+\R{28. The $k$-means ensemble.}
+\begin{rquote}
+``k-means is about optimising the k-means objective function, so if you get B
+solutions from B initialisations, some of these are good and some aren't. You
+shouldn't just use the median or mean of K derived from these. The way I think
+it should be done is that you run B initialisations for each K and then for
+each K you use the best solution according to the objective function.''
+\end{rquote}
+This is done, and the fault is mine for not saying so: within each node the
+binary split already retains the best of five random starts by the $k$-means
+objective, exactly as the reviewer describes. The ensemble is a second and
+different thing, and Section~3.8 now distinguishes them:
+\begin{rquote}
+``The choice among $k$-means initialisations \emph{within} a node is made in
+the usual way, by the $k$-means objective: each binary split retains the best
+of five random starts. What the objective cannot settle is which of several
+near-equivalent splits the recursion then follows, since a different split at
+one node changes the nodes its descendants see. To absorb that residual path
+dependence the recursion is repeated $B$ times.''
+\end{rquote}
+Section~S3 repeats the distinction where the constants are listed.
+
+\R{31. The consequence does not follow from the bound.}
+\begin{rquote}
+``Consequently \dots'' This does not follow from (13) unless $\alpha$ is 0.
+\end{rquote}
+Quite so; it follows from the sharper statement in the same sentence, not from
+the bound. The Proposition now says: ``and, under the same conditions, that
+limit is in fact zero. It is this last statement, not the bound (13), which
+yields the following \dots''
+
+\R{33. Verification.}
+\begin{rquote}
+``Empirical verification'' is not a verification in any generality and
+shouldn't be called ``verification''. I'd accept ``validated''.
+\end{rquote}
+All three uses are changed: the tile premise is now ``checked'', the empirical
+level is ``validated'', and the simulation study ``measures how far the
+calibration keeps the recursion from splitting''. The one remaining use of
+``verification'' refers to verifying condition (C3) mathematically, which is
+the sense the reviewer would allow.
+
+\R{34. Simulation-based tests do not control levels exactly.}
+\begin{rquote}
+``A simulation-based test does not control levels `exactly' unless you have
+infinitely many simulation runs.''
+\end{rquote}
+Corrected in both places: the reference now controls the level ``up to Monte
+Carlo error, and up to the fitted variogram''.
+
+\R{36. Figure 1(b) depends on the alternative.}
+\begin{rquote}
+``this will depend on the exact alternative, which at the very least needs
+specification of $\delta$ if not more.''
+\end{rquote}
+The separation is now given both in the text and in the caption, with the
+dependence stated: ``the curve is specific to that separation and moves with
+it.''
+
+\R{37. References in Section 3.10.}
+\begin{rquote}
+``Give references for the claims made here.''
+\end{rquote}
+Added: Cooley and Tukey (1965) for the transform, Sculley (2010) for the
+mini-batch update, and Hartigan and Hartigan (1985) for the cost of the dip.
+
+\R{38, 39, 41. Wording.}
+``the spatial gap next'' is now ``the autocorrelation-matched gap described
+next''; ``the respective later work'' is now ``the work that introduced each of
+those calibrations, not \dots\ the papers that introduced the indices
+themselves''; and the heading now reads ``Comparison with the method that
+ESS-Dip extends.''
+
+\R{40. Scaled to which standard deviation?}
+\begin{rquote}
+``scaled to each band's standard deviation'' -- true or estimated, if
+estimated how? If true, does this make sense given that in reality this
+information isn't available?
+\end{rquote}
+Estimated, and the text now says so and why: ``as estimated from the scene
+itself, since no deployable version of the criterion has access to the true
+value''. Section~S2 gives the construction, including the bandwidth
+$\sigma=\ell/2$ at which the generator's correlogram crosses $1/e$ at $\ell$.
+
+\R{42. Tuning choices for all methods.}
+\begin{rquote}
+``In a Supplement there needs be an explanation of all tuning choices for
+*all* methods simulated \dots\ (``scenes subsampled to 1200 pixels'' -- how
+exactly? Reference? ``Bonferroni correction'' was how exactly applied? Note
+that as a standard this needs a prespecification of the number of tests run,
+and I don't think you can do that as it is not clear in advance when the
+splitting process will end.)
+\end{rquote}
+Section~S2 of the supplement now specifies every criterion: the partitions and
+their initialisations, the gap's reference construction and one-standard-error
+rule, the subsample sizes and why the indices requiring pairwise distances need
+them (the subsample is uniform without replacement, drawn once per scene rather
+than per $K$, and shared across the three indices), the calibrated validity
+index with its $B=20$ null datasets and threshold, the two nulls that
+distinguish its variants, and the ablations.
+
+On the Bonferroni correction the reviewer's objection is well taken and the
+supplement concedes it before answering it. Prespecification is possible here
+only because the recursion is capped: a binary recursion returning at most
+$K_{\max}$ leaves performs at most $K_{\max}-1$ splits and therefore visits at
+most $2K_{\max}-1$ nodes, so $\alpha/K_{\max}$ is a valid, if conservative,
+level for the family of tests actually run. The supplement states plainly that
+without the cap the number of tests would not be bounded in advance and the
+correction would have no prespecified denominator.
+
+\R{43. Table 4.}
+\begin{rquote}
+``Say explicitly what the entries are.''
+\end{rquote}
+The caption now identifies each row: the proportion of one-class scenes divided
+at all, the mean of $\hat K$ over the four-class scenes, and the proportion of
+those on which $\hat K$ equalled four.
+
+\R{44. Must the autocorrelation be real?}
+\begin{rquote}
+``The calibration presumes a within-class autocorrelation that is real'' -- is
+that so? In principle everything should go through if the autocorrelation is
+zero, in which case $\neff=n$, shouldn't it?
+\end{rquote}
+It should, and the sentence was misleading. Section~5.2 now opens: ``Nothing in
+the calibration requires the within-class autocorrelation to be non-zero: were
+it absent, $\ell$ would be one pixel, $a=1$ and $\neff=n_C$, and the test would
+reduce to the ordinary dip test at the nominal size. What the calibration does
+require is that the range be estimable and separable from the between-class
+mosaic, since it is the \emph{ratio} $n_C/a$ that the test consumes.''
+
+\R{45. ``The true number of classes is one''.}
+\begin{rquote}
+``if the `true number of classes' is defined according to (1), there is no
+guarantee that in a real situation with a single land-cover class the true
+number of classes is indeed one \dots\ You can say something like `in such a
+situation the desirable outcome is one class'.''
+\end{rquote}
+Adopted, with the reasoning made explicit: ``the desirable outcome is a single
+class. The phrase is deliberate: the ground truth records one land-cover label,
+which need not mean that the model of Equation~(1) holds there with $K=1$, and
+a window whose dominant class covers less than all of its pixels could
+legitimately support a second. What we can say is that a criterion reporting
+several classes on such a window is reporting structure the label map does not
+recognise.''
+
+\R{46. References for ARI and NMI.}
+Added: Hubert and Arabie (1985) and Vinh et al.\ (2010). I have kept both
+indices rather than dropping the second, as the reviewer suggested might be
+enough, because they disagree in an informative way on the Sentinel-2 scene;
+but I would drop NMI without regret if the editor prefers.
+
+\R{47. The independence reference of the classical criteria.}
+Corrected in Section~6, which now says that Assumption~1 ``replaces the
+independence reference of the gap statistic, and supplies one where the ratio
+indices have none''.
+
+\R{48, 49. The conclusions.}
+The closing paragraph has been rewritten and shortened, and no longer restates
+the effective-sample-size argument for a third time. ``Inventing classes on
+featureless fields'' is gone, along with the rest of the absolute language, as
+described under G1.
+
+\bigskip
+\noindent
+I am grateful for the care in this report. Several of its points were things I
+had written without noticing that I could not support them, and the paper is
+more honest for their removal.
+
+\end{document}
