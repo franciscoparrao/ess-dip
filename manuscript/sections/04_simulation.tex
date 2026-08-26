@@ -4,8 +4,8 @@ We assess the procedure on synthetic scenes with known ground truth, where the
 number of classes, the strength of spatial autocorrelation, the presence of a
 trend, and the class separability are all controlled. The design isolates the
 two failure modes of Section~\ref{subsec:null}, autocorrelation and
-large-scale drift, and lets us verify the false-split control of
-Proposition~\ref{prop:fpr} directly, by counting how often each method
+large-scale drift, and lets us \revtext{measure how far the calibration keeps
+the recursion from splitting}, by counting how often each method
 recovers a single class when the scene contains exactly one.
 
 \subsection{Generative model}\label{subsec:design}
@@ -38,45 +38,45 @@ seeds, for $495$ scenes in total.
 
 \subsection{Methods and metrics}\label{subsec:methods}
 
-We compare \revtext{sixteen} criteria\revtext{; the exact decision rule of each is
+We compare sixteen criteria; the exact decision rule of each is
 given here or in Section~\ref{sec:method}, and every implementation, with its
-seeds, is in the released code}. Four are standard internal indices evaluated
-over $K=1,\dots,8$ \revtext{on MiniBatch $k$-means partitions}: the gap
-statistic \citep{Tibshirani2001} \revtext{with eight uniform reference
-datasets over the bounding box and the one-standard-error rule}, the average
-silhouette, Calinski--Harabasz, and Davies--Bouldin \revtext{(each maximised,
-or minimised for Davies--Bouldin, over $K$)}. \revtext{These four are the
+seeds, is in the released code. Four are standard internal indices evaluated
+over $K=1,\dots,8$ on MiniBatch $k$-means partitions: the gap
+statistic \citep{Tibshirani2001} with eight uniform reference
+datasets over the bounding box and the one-standard-error rule, the average
+silhouette, Calinski--Harabasz, and Davies--Bouldin (each maximised,
+or minimised for Davies--Bouldin, over $K$). These four are the
 original formulations, with no null model added by us; the null-calibrated
 criteria in this benchmark are the spatial gap next, the Hennig--Lin variants,
 and the proposed family, and in each case the null is an addition of the
-respective later work, not of the original index papers.} \revtext{A fifth is the most
+respective later work, not of the original index papers. A fifth is the most
 direct spatial adaptation of an existing index, the \emph{gap with an
 autocorrelated reference}: identical to the gap statistic except that the
 eight reference datasets are drawn not uniformly over the bounding box but as
 per-band Gaussian random fields whose $1/e$ range matches the tile-median
 estimate of Section~\ref{subsec:range}, scaled to each band's standard
 deviation, with the same one-standard-error rule. It isolates how far
-correcting only the reference's autocorrelation goes.} (The latter three cannot return
-$K=1$ by construction, an asymmetry we return to below.) \revtext{Two more} are the
+correcting only the reference's autocorrelation goes. (The latter three cannot return
+$K=1$ by construction, an asymmetry we return to below.) Two more are the
 calibrated-validity-index method of \citet{HennigLin2015}, the procedure
 ESS-Dip extends: the average silhouette width calibrated by parametric
 bootstrap against a null model, run both with an \emph{i.i.d.} Gaussian null
 (the autocorrelation-blind application) and with a \emph{spatial} null
 (phase-randomized surrogates preserving each band's variogram, their
-autocorrelation-aware variant adapted to the gridded setting)\revtext{. The
+autocorrelation-aware variant adapted to the gridded setting). The
 calibrated index is
 $V(K)=\bigl(\mathrm{ASW}(K)-\overline{\mathrm{ASW}}_{\mathrm{null}}(K)\bigr)/
 \mathrm{sd}_{\mathrm{null}}(K)$, computed from $B=20$ null datasets (scenes
 subsampled to $1200$ pixels for tractability); $\hat K$ is the maximiser of
-$V$ when $\max_K V(K)>1.96$ and $\hat K=1$ otherwise}. \revtext{An eighth} baseline, plain \emph{dip-means}, applies the
+$V$ when $\max_K V(K)>1.96$ and $\hat K=1$ otherwise. An eighth baseline, plain \emph{dip-means}, applies the
 same modality test at the nominal sample size, without the effective-sample-size
 calibration, the local range, or the trend removal, isolating the contribution
-of that spatial machinery. The \revtext{ninth} is the proposed method of
+of that spatial machinery. The ninth is the proposed method of
 Section~\ref{sec:method}, denoted \textbf{ESS-Dip}:
 Algorithm~\ref{alg:essdip} with the local within-class range
 \eqref{eq:areamed}, adaptive trend removal \eqref{eq:detrendrule}, and a
 $B=5$ ensemble; we fix $\alpha=0.05$, $\tau=0.25$, tile side $t=24$, and
-$\nu=12$ throughout, with no per-scene tuning. The \revtext{tenth}, \textbf{ESS-Dip-R}, is
+$\nu=12$ throughout, with no per-scene tuning. The tenth, \textbf{ESS-Dip-R}, is
 its recall-oriented variant: it calibrates the dip against the Gaussian null of
 Assumption~\ref{ass:null} rather than the uniform least-favourable null, which is
 less conservative and recovers more structure at the same specificity
@@ -88,10 +88,10 @@ than as a tile median); \emph{no trend removal}
 ($\tau=\infty$); \emph{forced trend removal} ($\tau=0$); and
 \emph{declustering}, the precursor that subsamples the scene to one pixel per
 decorrelation patch and applies the dip test to the thinned, approximately
-independent sample. The \revtext{fifteenth}, \emph{SGS-Dip}, replaces the per-node
+independent sample. The fifteenth, \emph{SGS-Dip}, replaces the per-node
 effective-sample-size calibration by the recursive Gaussian-simulation
 reference \eqref{eq:sgstest} of Section~\ref{subsec:sgs} ($B=40$ simulations
-per node); the \revtext{sixteenth} adds a Bonferroni multiple-testing correction to it.
+per node); the sixteenth adds a Bonferroni multiple-testing correction to it.
 
 Three metrics summarise performance. \emph{Specificity} is the fraction of
 null and trend scenes (the $75$ scenes with $K=1$) for which $\hat K=1$; it is
@@ -131,8 +131,8 @@ Davies--Bouldin          & 0.00 & 0.70 & 0.41 & 0.20 & 0.299\\
 \quad i.i.d.\ null       & 0.00 & 0.67 & 0.42 & 0.17 & 0.280\\
 \quad spatial null       & 0.80 & 0.72 & 0.38 & 0.17 & 0.561\\
 \midrule
-\multicolumn{6}{l}{\revtext{\textit{Spatial adaptation of an existing index}}}\\
-\revtext{Gap (autocorrelated ref.)} & \revtext{0.21} & \revtext{\textbf{0.97}} & \revtext{0.04} & \revtext{0.10} & \revtext{0.427}\\
+\multicolumn{6}{l}{\textit{Spatial adaptation of an existing index}}\\
+Gap (autocorrelated ref.) & 0.21 & \textbf{0.97} & 0.04 & 0.10 & 0.427\\
 \midrule
 \multicolumn{6}{l}{\textit{Modality test without spatial calibration}}\\
 Dip-means (nominal)      & 0.52 & 0.92 & 0.09 & 0.02 & 0.486\\
@@ -167,7 +167,7 @@ Table~\ref{tab:bench} are omitted.}
 \label{fig:bench}
 \end{figure}
 
-\paragraph{Standard indices over-detect without exception.}
+\paragraph{\revtext{Standard indices report classes on every class-free scene.}}
 On the $75$ class-free scenes every standard index reports spurious structure:
 the $\hat K{=}1$ rate is $0.00$ for all four. The failure is severe, not
 marginal: the gap statistic returns on average $\hat K=7.7$ classes on
@@ -175,7 +175,7 @@ fields that contain none, and the silhouette, Calinski--Harabasz and
 Davies--Bouldin indices average $2.9$, $3.6$ and $4.1$. This is the
 over-detection anticipated in Section~\ref{subsec:null}, now quantified: under
 spatial autocorrelation an independence null cannot recognise the absence of
-clusters. \revtext{Nor is the failure repaired by the simplest spatial
+clusters. Nor is the failure repaired by the simplest spatial
 correction: the gap with an autocorrelation-matched reference lifts
 specificity only to $0.21$, because matching the reference's autocorrelation
 addresses one of the two failure modes but not the other, the smooth drift.
@@ -183,9 +183,9 @@ On trend scenes its reference fields carry no drift and the criterion reads
 the gradient as structure ($\hat K\approx7$ on average), and in the mixed
 regime its accuracy collapses to $0.10$; its balanced score, $0.427$, sits far
 below the proposed family's. Fixing the reference is not enough; the
-dispersion statistic itself, and the trend, must both be addressed.}
+dispersion statistic itself, and the trend, must both be addressed.
 
-\paragraph{The proposed family controls the false-split rate.}
+\paragraph{\revtext{The proposed family leaves the class-free scenes undivided.}}
 Every member of the proposed family, ESS-Dip and all four ablations,
 attains specificity $1.00$: in $75$ out of $75$ class-free scenes it returns a
 single class. This is the empirical content of Proposition~\ref{prop:fpr}, and
@@ -326,12 +326,12 @@ Section~\ref{subsec:sgs}: an integral range derived for the sample mean
 over-corrects a statistic of the empirical distribution, whose appropriate scale
 is the smaller indicator integral range.
 
-\revtext{Because the simulation reference \eqref{eq:sgstest} controls the
-level exactly for a single test on a full rectangular domain, one may hope to
+Because the simulation reference \eqref{eq:sgstest} controls the
+level \revtext{up to Monte Carlo error} for a single test on a full rectangular domain, one may hope to
 obtain a fully assumption-light estimator of $K$ by using it at every node:
 that is, replacing the effective-sample-size quantile in
 Algorithm~\ref{alg:essdip} by a fresh simulated quantile, computed from $B$
-Gaussian realisations fitted to each candidate cluster's own support.} A direct
+Gaussian realisations fitted to each candidate cluster's own support. A direct
 implementation (SGS-Dip, $B=40$) over-splits: specificity $0.85$, structured
 accuracy $0.49$, balanced score $0.535$ against ESS-Dip's $0.771$
 (Table~\ref{tab:bench}). This has two causes. First, the per-node test is
@@ -346,7 +346,7 @@ to $0.99$ and lifts the balanced score to $0.710$, close to ESS-Dip's
 $0.771$, the residual shortfall concentrated in the mixed regime
 ($0.35$ versus $0.50$; SGS-Dip\,+\,correction, Table~\ref{tab:bench}). So the
 simulation null is a viable recursive estimator once multiple testing is
-controlled. \revtext{One aspect of the corrected results deserves a remark,
+controlled. One aspect of the corrected results deserves a remark,
 because it can read as a paradox: the correction raises the exact-$K$
 accuracy on structured worlds (from $0.49$ to $0.79$), which seems to say
 that testing more conservatively finds \emph{more} structure. It does not.
@@ -355,7 +355,7 @@ mean $\hat K$ in every world (from $5.02$ to $4.33$ on the four-class
 structured world, from $1.78$ to $1.04$ on the null); what rises is accuracy,
 because the uncorrected recursion overshoots the truth and pruning splits
 moves $\hat K$ toward $K$. Conservatism is monotone in $\hat K$; exact-$K$
-accuracy is not monotone in conservatism when the starting point over-detects.} The second cause is more stubborn: on real imagery, where supports
+accuracy is not monotone in conservatism when the starting point over-detects. The second cause is more stubborn: on real imagery, where supports
 are irregular and non-stationary, even the corrected estimator trails ESS-Dip:
 single-class-window specificity $0.82$ and $0.98$ against $0.99$ and $1.00$
 (Section~\ref{subsec:realspec}), and over-detection of full scenes. The
@@ -407,7 +407,6 @@ adequate summary even under marked anisotropy, the modality signal it feeds
 being direction-agnostic, and a fully anisotropic variogram
 (Section~\ref{sec:discussion}) is a refinement rather than a necessity.
 
-\begin{revblock}
 \subsection{Robustness to misestimation of the range}\label{subsec:misspec}
 
 The calibration consumes a single estimated scale, so the practical question
@@ -531,4 +530,3 @@ majority class, whereas the calibrated family degrades to silence
 ($\hat K=1$).}
 \label{fig:imbalance}
 \end{figure}
-\end{revblock}

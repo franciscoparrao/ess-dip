@@ -20,17 +20,17 @@ $N=\lvert D\rvert$ pixels, and let
   \bm z(s)=\bigl(z_1(s),\dots,z_p(s)\bigr)^{\!\top},
 \]
 be a multivariate field assigning to each site $s\in D$ a $p$-dimensional
-feature \revtext{(for imagery, the spectral signature, whose components
-$z_b$, $b=1,\dots,p$, we call \emph{bands})}. \revtext{The objects being
+feature (for imagery, the spectral signature, whose components
+$z_b$, $b=1,\dots,p$, we call \emph{bands}). The objects being
 clustered are the $N$ feature vectors $\{\bm z(s)\}_{s\in D}$; the sites $s$
-carry the spatial dependence but are not themselves clustered.} Unsupervised
+carry the spatial dependence but are not themselves clustered. Unsupervised
 classification seeks a partition of $D$
 into $K$ groups whose feature vectors are internally homogeneous. Our object
-of interest is the \emph{number} of groups $K$, not the partition itself\revtext{;
+of interest is the \emph{number} of groups $K$, not the partition itself;
 the quality of the partitions induced along the way is nonetheless evaluated,
-against ground truth, in Section~\ref{subsec:realfull}}.
+against ground truth, in Section~\ref{subsec:realfull}.
 
-\revtext{We model $\bm z$ as the superposition of a class component, a smooth
+We model $\bm z$ as the superposition of a class component, a smooth
 drift and a stationary residual,
 \begin{equation}\label{eq:decomp}
   \bm z(s)=\bm c_{L(s)}+\bm\mu(s)+\bm\varepsilon(s),
@@ -48,25 +48,25 @@ The \emph{true number of classes} is the number of distinct labels present,
 $K=\lvert L(D)\rvert$; a scene is \emph{homogeneous} when $K=1$, in which case
 \eqref{eq:decomp} reduces to the classical geostatistical trend--residual
 decomposition. We denote by $\hat K$ the estimate returned by the recursive
-procedure of Section~\ref{subsec:algo}.}
+procedure of Section~\ref{subsec:algo}.
 The spatial dependence of $\bm\varepsilon$ is summarised by its
-correlogram $\rho(\bm h)$\revtext{, where $\bm h\in\mathbb{R}^2$ denotes the
-spatial lag vector}, or equivalently its variogram, and condensed into a
+correlogram $\rho(\bm h)$, where $\bm h\in\mathbb{R}^2$ denotes the
+spatial lag vector, or equivalently its variogram, and condensed into a
 single scalar by the \emph{decorrelation area}, the integral range
-\revtext{\citep{Lantuejoul1991,Lantuejoul2002,Cressie1993}},
+\citep{Lantuejoul1991,Lantuejoul2002,Cressie1993},
 \begin{equation}\label{eq:area}
-  a=\revtext{\int_{\mathbb{R}^2}} \rho(\bm h)\,d\bm h,
+  a=\int_{\mathbb{R}^2} \rho(\bm h)\,d\bm h,
 \end{equation}
 the area occupied by one spatially independent observation. Estimating $a$ from
 a fitted variogram is the subject of Section~\ref{subsec:range}; for a subset
 $C\subseteq D$ we write $n_C=\lvert C\rvert$.
-\revtext{Table~\ref{tab:notation} collects the notation; in particular, three
+Table~\ref{tab:notation} collects the notation; in particular, three
 related decorrelation areas appear in the paper, and the table states the role
-of each.}
+of each.
 
 \begin{table}[t]
 \centering
-\revtext{%
+%
 \caption{Notation. Three decorrelation areas appear: the deployed method uses
 the $\ell^2$ proxy, while $a_{\mathrm{int}}$ and $a_I$ are the theoretical
 field and indicator integral ranges that Sections~\ref{subsec:sgs}
@@ -95,23 +95,27 @@ $q_{1-\alpha}(m)$ & $(1-\alpha)$ dip quantile for $m$ independent draws\\
 $\alpha,\;\tau,\;t,\;\nu,\;B$ & level, detrend threshold, tile side, minimum
   $\neff$, ensemble size\\
 \bottomrule
-\end{tabular}}
+\end{tabular}
 \end{table}
 
 \subsection{Clusters as excess multimodality}\label{subsec:null}
 
-Internal validity criteria for $K$, namely the gap statistic
-\citep{Tibshirani2001}, the average silhouette, Calinski--Harabasz and
-Davies--Bouldin, compare a within-cluster dispersion against the value
-expected with \emph{no} clustering, under an \emph{independent} reference
-distribution. Two features of spatial data invalidate this comparison. First,
-autocorrelation reduces the number of independent observations far below $N$,
-so dispersion-based statistics are evaluated as if the sample were much larger
-than its information content \citep{Cressie1993,Dutilleul1993}. Second, a
-smooth drift $\bm\mu$ spreads the feature cloud along a low-dimensional manifold
-and is read as structure by an independence null. The combined effect is a
-systematic \emph{over-detection} of clusters, which we document empirically in
-Section~\ref{sec:simulation}.
+\revtext{The gap statistic \citep{Tibshirani2001} compares a within-cluster
+dispersion against the value expected with \emph{no} clustering, under a
+reference distribution of independently scattered points; the average
+silhouette, Calinski--Harabasz and Davies--Bouldin indices use no reference
+distribution, and simply optimise over $K$ a ratio of within- to
+between-cluster scatter. Two features of spatial data defeat both routes when
+the question is whether discrete classes are present. First, autocorrelation
+means the sample carries the information of far fewer than $N$ independent
+observations, so a dispersion computed from all $N$ is read as though it came
+from a correspondingly larger independent sample
+\citep{Cressie1993,Dutilleul1993}. Second, a smooth drift $\bm\mu$ spreads the
+feature cloud along a low-dimensional manifold, which a criterion blind to the
+drift reads as structure; the two failures are distinct, and a reference could
+model the drift while still ignoring the dependence, or the reverse. Their
+combined effect is the systematic over-reporting of classes that
+Section~\ref{sec:simulation} documents.}
 
 We therefore replace the dispersion comparison by a test of \emph{modality}.
 Discrete classes manifest as a \emph{multimodal} feature distribution; a
@@ -163,7 +167,7 @@ it must license makes the procedure sensitive to the bimodality $k$-means
 detects, while preserving its calibration under $H_0$: projecting a unimodal
 (Gaussian) cloud onto any fixed direction returns a unimodal sample,
 regardless of where $k$-means places the cut.
-\revtext{The role of $2$-means is thus confined to proposing the direction
+The role of $2$-means is thus confined to proposing the direction
 $\bm u$: the homogeneity decision itself is made by the modality test on the
 projection, which detects bimodality irrespective of unequal mode variances,
 and a node is actually partitioned only when the test licenses it. The
@@ -174,7 +178,7 @@ cut through a class. The recursion re-tests each child, which recovers many
 such cases (the structured-world recovery of Section~\ref{sec:simulation}
 spans $K$ up to $5$); a poor direction costs recall, never level (the
 fixed-direction check of Figure~\ref{fig:level}). Section~\ref{sec:discussion}
-discusses mode-seeking directions as the natural refinement.}
+discusses mode-seeking directions as the natural refinement.
 
 \subsection{Effective-sample-size calibration}\label{subsec:ess}
 
@@ -197,20 +201,20 @@ when
   \hat D_C \;>\; q_{1-\alpha}\!\bigl(\,\lfloor\neff\rceil\,\bigr),
 \end{equation}
 with $\lfloor\cdot\rceil$ the nearest integer. The quantile
-$q_{1-\alpha}(\cdot)$ has no closed form and is obtained by Monte Carlo\revtext{:
+$q_{1-\alpha}(\cdot)$ has no closed form and is obtained by Monte Carlo:
 for each requested size $m$, first rounded to the nearest integer and clamped
 to $[12,2000]$, the quantile is estimated from $300$ simulated dips of uniform
 samples of size $m$, and the result is memoised, so each distinct size is
 simulated only once across the whole recursion and ensemble. The calibration
-therefore adds negligible computational cost.} Autocorrelation thus raises the
+therefore adds negligible computational cost. Autocorrelation thus raises the
 significance threshold (through a smaller $\neff$) without discarding data: the
 statistic $\hat D_C$ is still computed from all $n_C$ pixels, retaining full
 detection power.
 
 The quantile $q_{1-\alpha}$ uses the \emph{uniform} law, the asymptotically
-least-favourable unimodal distribution \citep{HartiganHartigan1985}\revtext{,
+least-favourable unimodal distribution \citep{HartiganHartigan1985},
 a property those authors establish for unimodal laws with exponentially
-decreasing densities and conjecture for the whole unimodal class}: it bounds
+decreasing densities and conjecture for the whole unimodal class: it bounds
 the level for the within-class laws in that class, but is conservative when
 that law is the Gaussian of Assumption~\ref{ass:null}. A recall-oriented variant, \textbf{ESS-Dip-R},
 calibrates instead against the Gaussian null, drawing the reference dips from
@@ -219,13 +223,13 @@ and the model-matched ends of one calibration. The Gaussian reference is less
 conservative and recovers more structure while empirically preserving unit
 specificity (Sections~\ref{subsec:simresults} and~\ref{subsec:realspec}); we
 report both and take the conservative uniform null as the default.
-\revtext{Two caveats attend the Gaussian reference: it may reject a
+Two caveats attend the Gaussian reference: it may reject a
 homogeneous but skewed or heavy-tailed within-class law, reading the asymmetry
 as a second mode, which is the price of its extra recall; and it is licensed
 by Assumption~\ref{ass:null} rather than distribution-free. Conversely, the
 least-favourable property of the uniform null is an independent-sample result;
 what carries it to the effective-sample-size calibration under dependence is
-discussed in Section~\ref{subsec:prop} (Remark~\ref{rem:prop}).}
+discussed in Section~\ref{subsec:prop} (Remark~\ref{rem:prop}).
 
 \subsection{Within-class decorrelation area by local range estimation}
 \label{subsec:range}
@@ -239,49 +243,49 @@ being measured. We avoid this conflation by estimating $a$ \emph{locally} over s
 principle that also motivates declustering, where spatially clustered support is
 kept from dominating a statistic \citep{IsaaksSrivastava1989,Deutsch1998}.
 
-Partition $D$ into square tiles $\{T_j\}$ of side $t$ \revtext{pixels
-($t\times t$ sites each)}. \revtext{The premise is that most tiles fall
+Partition $D$ into square tiles $\{T_j\}$ of side $t$ pixels
+($t\times t$ sites each). The premise is that most tiles fall
 \emph{within} a single class, so that their autocorrelation structure
-reflects $\bm\varepsilon$ alone; we verify it empirically on the real scenes
+reflects $\bm\varepsilon$ alone; we \revtext{check} it empirically on the real scenes
 ($62\%$ of tiles are single-class on the contiguous Salinas and Sentinel-2
 scenes, $27\%$ on the fragmented Indian Pines fields,
 Section~\ref{subsec:realvario}), and the median aggregation below supplies
-the robustness where it weakens.} For each tile we take the first principal component of
-$\{\bm z(s)\}_{s\in T_j}$, \revtext{compute its sample autocorrelation
+the robustness where it weakens. For each tile we take the first principal component of
+$\{\bm z(s)\}_{s\in T_j}$, compute its sample autocorrelation
 function as the inverse Fourier transform of the periodogram (the
-Wiener--Khinchin relation, at $O(t^2\log t)$ cost per tile)}, and record the
-lag $\ell_j$ at which it first falls below $1/e$\revtext{, with $e$ the base
+Wiener--Khinchin relation, at $O(t^2\log t)$ cost per tile), and record the
+lag $\ell_j$ at which it first falls below $1/e$, with $e$ the base
 of the natural logarithm: $\rho(\ell)=e^{-1}$ is the conventional definition
-of the correlation range, exact for the exponential model,} averaged over the
+of the correlation range, exact for the exponential model, averaged over the
 two axes. The within-class decorrelation area is
 the squared median range,
 \begin{equation}\label{eq:areamed}
-  a=\ell^{2},\qquad \revtext{\ell=\operatorname{median}_j\,\ell_j,}
+  a=\ell^{2},\qquad \ell=\operatorname{median}_j\,\ell_j,
 \end{equation}
-the median being robust to the tiles that straddle a class boundary\revtext{
+the median being robust to the tiles that straddle a class boundary
 (it tolerates up to half the tiles being contaminated, and the single-class
 fractions quoted above make the straddling tiles a minority on all three real
-scenes)}, and the square turning a correlation length into the area of one
-decorrelation patch. \revtext{We reuse the symbol $a$ because this is the
+scenes), and the square turning a correlation length into the area of one
+decorrelation patch. We reuse the symbol $a$ because this is the
 quantity the calibration \eqref{eq:neff} consumes; it is an operational proxy
 for a decorrelation area in the indicator-range regime of
 Section~\ref{subsec:sgs}, not an estimate of the theoretical integral range
-\eqref{eq:area} itself.} This $1/e$-range proxy leaves the geometric constant
+\eqref{eq:area} itself. This $1/e$-range proxy leaves the geometric constant
 relating range to area implicit. A more explicit route fits, by least squares, the best
-of an exponential, spherical and Gaussian variogram model \revtext{(nugget
-$c_0$, partial sill $c$, range parameter $r_j$)} to each tile and uses its
+of an exponential, spherical and Gaussian variogram model (nugget
+$c_0$, partial sill $c$, range parameter $r_j$) to each tile and uses its
 closed-form integral range
 \begin{equation}\label{eq:intrange}
-  \revtext{a^{\mathrm{int}}_j \;=\; 2\pi\,\frac{c}{c_{0}+c}\!\int_0^\infty\! r\,\rho(r)\,dr
-       \;=\; \kappa\,\frac{c}{c_{0}+c}\,r_j^{2},}
+  a^{\mathrm{int}}_j \;=\; 2\pi\,\frac{c}{c_{0}+c}\!\int_0^\infty\! r\,\rho(r)\,dr
+       \;=\; \kappa\,\frac{c}{c_{0}+c}\,r_j^{2},
 \end{equation}
 with $\kappa=2\pi,\ \pi,\ 0.2\pi$ for the exponential, Gaussian and spherical
-models respectively\revtext{; the radial integral contributes $r_j^{2}$,
+models respectively; the radial integral contributes $r_j^{2}$,
 $r_j^{2}/2$ and $0.1\,r_j^{2}$ to the common angular factor $2\pi$, and the
-nugget fraction $c_0/(c_0+c)$ enlarges the effective sample size}.
-\revtext{The fitted parameters $(c_0,c,r_j)$ determine $a^{\mathrm{int}}_j$
+nugget fraction $c_0/(c_0+c)$ enlarges the effective sample size.
+The fitted parameters $(c_0,c,r_j)$ determine $a^{\mathrm{int}}_j$
 in closed form; the scene value $a_{\mathrm{int}}$ aggregates the
-$a^{\mathrm{int}}_j$ over tiles by the same median as \eqref{eq:areamed}.} This integral range is
+$a^{\mathrm{int}}_j$ over tiles by the same median as \eqref{eq:areamed}. This integral range is
 derived for the variance of the sample \emph{mean}; applied to the dip, a
 functional of the empirical distribution, it over-corrects, and
 Section~\ref{subsec:geostat-ref} finds it markedly more conservative than the
@@ -310,13 +314,13 @@ $\bm z$ whenever
 \begin{equation}\label{eq:detrendrule}
   R^2_{\mathrm{poly}}>\tau,
 \end{equation}
-and test $\bm z$ unchanged otherwise. \revtext{The rule is a decision with
+and test $\bm z$ unchanged otherwise. The rule is a decision with
 two error types, leaving a weak trend in place and needlessly detrending a
 trend-free scene; the threshold trades them off and cannot guarantee either
 outcome. Its value $\tau=0.25$ is fixed once, from the trend world of the
 factorial design, and is not tuned per scene; the fixed-versus-adaptive
 detrending ablation of Section~\ref{sec:simulation} quantifies the
-consequences of both error types.} Detrending only when the drift is
+consequences of both error types. Detrending only when the drift is
 resolvable protects the power of the test on trend-free scenes, where
 detrending would needlessly strip signal. Equation~\eqref{eq:decomp} together with
 \eqref{eq:detrendrule} is the universal-kriging decomposition restricted to
@@ -376,10 +380,10 @@ significant and both children retain at least one decorrelation patch
 ($n\ge a$, so that $\neff\ge1$); otherwise it becomes a leaf. The estimate
 $\hat K$ is the number of leaves. To absorb the variability of the $k$-means
 initialisation the recursion is repeated $B$ times with independent seeds and
-the median of $\{\hat K^{(b)}\}_{b=1}^B$ is reported\revtext{ (the median
+the median of $\{\hat K^{(b)}\}_{b=1}^B$ is reported (the median
 rather than the mode: the two coincide when the small integer-valued ensemble
 concentrates, and the median resolves split ensembles without a tie-breaking
-rule)}.
+rule).
 
 \begin{algorithm}[t]
 \caption{ESS-calibrated modality test for $K$ (single ensemble member)}
@@ -414,15 +418,18 @@ rule)}.
 
 \subsection{False-split control}\label{subsec:prop}
 
-The calibration \eqref{eq:test} is designed so that, in the absence of discrete
-structure, the recursion does not split. We give conditions under which the
-per-node test controls its level asymptotically.
-\revtext{The result is deliberately stylised: it concerns the test itself, with
-the projection direction held fixed, the detrending step of
-Section~\ref{subsec:detrend} switched off, and the decorrelation area equal to
-the indicator integral range $a_I$. The distance between this stylised setting
-and the deployed procedure is made explicit in Remark~\ref{rem:prop} and
-quantified empirically below.}
+\revtext{The calibration \eqref{eq:test} is meant to leave the recursion
+reluctant to split where no discrete structure is present. Whether it succeeds
+for the procedure as deployed is an empirical question, taken up in
+Sections~\ref{sec:simulation} and~\ref{sec:application}; what can be
+established analytically is narrower, and we set out here exactly how much
+narrower. We have no result covering the deployed procedure. What follows
+concerns a stylised version of the test, with the projection direction held
+fixed, the detrending step of Section~\ref{subsec:detrend} switched off, and
+the decorrelation area equal to the indicator integral range $a_I$. It is a
+consistency check on the calibration principle rather than a statement about
+the method as applied; Remark~\ref{rem:prop} sets out each element the result
+leaves out.}
 Write \textnormal{(C1)} for the
 assumption that on $C$ the residual $\bm\varepsilon$ is a stationary Gaussian
 random field whose correlogram $\rho$ is nonnegative and absolutely summable,
@@ -430,7 +437,7 @@ $\sum_{\bm h}\rho(\bm h)<\infty$, and \textnormal{(C2)} for the projection
 direction $\bm u$ being fixed. Write \textnormal{(C3)} for the hypothesis that the
 projected empirical process obeys a functional central limit theorem at the
 indicator integral range,
-\revtext{%
+%
 \begin{equation}\label{eq:c3}
 \sqrt{n_C/a_I}\,\bigl(\hat F_C-\Phi\bigr)\;\rightsquigarrow\;\mathbb{B}\circ\Phi
 \qquad\text{in } \ell^\infty(\mathbb{R}),
@@ -443,26 +450,27 @@ indicator integral range of Section~\ref{subsec:sgs}. Hypothesis
 \textnormal{(C3)} is the exact formal statement of the effective-sample-size
 heuristic for a distributional statistic: it asserts that the empirical process
 of the $n_C$ autocorrelated observations behaves, to first order, like that of
-$n_C/a_I$ independent draws from $\Phi$.}
+$n_C/a_I$ independent draws from $\Phi$.
 
 \begin{proposition}[Asymptotic false-split control]\label{prop:fpr}
-Assume \textnormal{(C1)--(C3)}\revtext{, let $C$ increase to $\Z^2$ along a
+Assume \textnormal{(C1)--(C3)}, let $C$ increase to $\Z^2$ along a
 sequence of rectangles (increasing-domain asymptotics: $n_C\to\infty$ with
-the correlogram $\rho$ held fixed)}, and calibrate
+the correlogram $\rho$ held fixed), and calibrate
 the test \eqref{eq:test} at $\neff=n_C/a_I\to\infty$. Then
-\revtext{%
+%
 \begin{equation}\label{eq:limsup}
 \limsup_{n_C\to\infty}\;
 \Prob\Bigl(\hat D_C > q_{1-\alpha}\bigl(\lfloor\neff\rceil\bigr)\Bigr)
 \;\le\;\alpha,
 \end{equation}
-and the limit is in fact zero.} Consequently, if every node visited by the
-recursion satisfies \textnormal{(C1)} (the scene is a single class), then
-$\Prob(\hat K=1)\to1$.
+\revtext{and, under the same conditions, that limit is in fact zero. It is
+this last statement, not the bound \eqref{eq:limsup}, which yields the
+following: if every node visited by the recursion satisfies \textnormal{(C1)}
+(the scene is a single class), then $\Prob(\hat K=1)\to1$.}
 \end{proposition}
 
 \begin{proof}
-\revtext{The argument reduces the dependent problem to the independent one; the
+The argument reduces the dependent problem to the independent one; the
 spatial dependence enters only through \textnormal{(C3)}, and the properties
 of the dip that are used involve no assumption on the dependence structure of
 the data. First, since $\Phi$ is unimodal, the deterministic inequality
@@ -498,11 +506,11 @@ exponentially decreasing densities, so we invoke the bound in the form their
 theorems establish. Under the single-class
 hypothesis every node visited by the recursion satisfies \textnormal{(C1)};
 the recursion visits finitely many nodes, so a union bound over their
-(vanishing) rejection probabilities gives $\Prob(\hat K=1)\to1$.}
+(vanishing) rejection probabilities gives $\Prob(\hat K=1)\to1$.
 \end{proof}
 
 \begin{remark}\label{rem:prop}
-\revtext{Four observations delimit what the proposition does and does not
+Four observations delimit what the proposition does and does not
 establish.
 (i) \emph{Condition (C3) carries the analytic weight.} It is the
 empirical-process counterpart, at the indicator integral range, of the
@@ -535,7 +543,7 @@ Section~\ref{subsec:range}, which in our experiments lies below $a_I$
 effective sample size, pushing the test towards anti-conservatism. It is the
 uniform-null slack of point (ii) that absorbs this bias, and the net level of
 the deployed pipeline is what Figure~\ref{fig:level} and the single-class
-windows of Section~\ref{subsec:realspec} verify empirically. The same
+windows of Section~\ref{subsec:realspec} \revtext{validate} empirically. The same
 accounting explains why ESS-Dip-R, which removes the uniform slack, is not
 licensed by the proposition and is validated on the model's null only.
 (iv) \emph{Two further idealisations.} The detrending step is switched off,
@@ -556,11 +564,12 @@ data-dependent in practice, (C2) being the fixed-direction idealisation under
 which Figure~\ref{fig:level} shows no level inflation when the $2$-means
 direction is used instead. Non-Gaussian within-class laws fall outside (C1)
 altogether, where the distribution-free uniform null of ESS-Dip is the safer
-reference.}
+reference.
 \end{remark}
 
 The
-Gaussian-simulation reference \eqref{eq:sgstest} controls the level exactly for
+Gaussian-simulation reference \eqref{eq:sgstest} controls the level \revtext{up
+to Monte Carlo error, and up to the fitted variogram,} for
 a single homogeneity test and so provides an assumption-light check on the
 leading split, but, as Section~\ref{subsec:geostat-ref} shows, it does not yield
 a better recursive estimator. The effective-sample-size test \eqref{eq:test} is
@@ -568,17 +577,18 @@ thus an approximation whose adequacy is assessed empirically:
 Section~\ref{sec:simulation} finds that, over the $75$ null and trend
 realisations with no discrete classes, the procedure returns $\hat K=1$ in
 every case, whereas the gap statistic and the silhouette, Calinski--Harabasz
-and Davies--Bouldin indices report spurious clusters in all of them.
+and Davies--Bouldin indices \revtext{report more than one class in all of
+them}.
 
 The calibration can be probed directly, in isolation from the recursion.
-\revtext{The design is a single homogeneity decision per scene (root node
+The design is a single homogeneity decision per scene (root node
 only): one-class Gaussian random fields with kernel bandwidths
 $\sigma\in\{2,4,6,8\}$ on square domains of side $32$ to $80$ pixels,
 $160$ realisations per cell, spanning effective sample sizes from $35$ to over
 $300$ (the regime the recursion visits). The power panel uses two-class fields
 of the same sizes at separation $\delta=3$, the middle of the factorial
 design's range; the power curve is therefore specific to that separation and
-shifts with it.} On these single-class fields the per-node test of
+shifts with it. On these single-class fields the per-node test of
 Section~\ref{subsec:ess} never produces a false split: its empirical
 false-split rate is $0.00$ at every $\neff$ (Figure~\ref{fig:level}a), at or
 below the nominal $\alpha$, and unchanged whether the projection direction is
@@ -588,11 +598,11 @@ the level. Calibrating instead at the nominal size $n_C$ breaks this control
 rises with $\neff$ to one (Figure~\ref{fig:level}b). The effective size borrowed
 from sample-mean theory therefore calibrates the dip across the operating range,
 holding the level conservatively, even though its exact constant for the dip
-functional is left undetermined. \revtext{The zero, rather than merely
+functional is left undetermined. The zero, rather than merely
 at-most-$\alpha$, false-split rate is the deliberate conservatism of the
 least-favourable calibration that Remark~\ref{rem:prop}(ii) explains, and it
 is what the recall variant ESS-Dip-R trades away for power
-(Section~\ref{subsec:ess}).}
+(Section~\ref{subsec:ess}).
 
 \begin{figure}[t]
 \centering

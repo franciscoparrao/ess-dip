@@ -1,13 +1,12 @@
 \section{Conclusions}\label{sec:conclusions}
 
-Selecting the number of clusters on spatial data is compromised by a
-\revtext{property that the standard criteria share and that spatial data
-expose: they take no account of the dependence between observations.} We have
-shown that the \revtext{omission} is not benign.
-Under spatial autocorrelation the gap statistic and the silhouette,
-Calinski--Harabasz and Davies--Bouldin indices over-detect without exception,
-inventing classes on featureless fields and fragmenting single land-cover
-regions on real imagery.
+\revtext{Selecting the number of clusters on spatial data runs into a
+property the standard criteria share: they take no account of the dependence
+between observations, and so cannot separate grouping that reflects discrete
+classes from grouping that autocorrelation alone produces. Under spatial
+autocorrelation the gap statistic and the silhouette, Calinski--Harabasz and
+Davies--Bouldin indices reported several classes on every field we simulated
+with one, and divided single land-cover regions on real imagery.}
 
 We have proposed a remedy framed in geostatistical terms. Recast as a
 calibrated test of cluster homogeneity, asking whether a region carries
@@ -15,13 +14,15 @@ multimodality in excess of spatial autocorrelation, ESS-Dip evaluates the
 Hartigan dip along the locally optimal split direction and calibrates it
 against the \emph{effective} sample size, estimated from a within-class
 autocorrelation range obtained by local range estimation, after removing a
-low-order trend whenever one is resolvable. The procedure carries an asymptotic
-false-split-control property and runs in near-linear time. On a factorial
+low-order trend whenever one is resolvable. \revtext{For a stylised version
+of the test we prove that the probability of dividing a homogeneous region
+vanishes; the procedure} runs in near-linear time. On a factorial
 simulation with known ground truth it reaches unit specificity, and its recall
-variant ESS-Dip-R attains the best balanced score of \revtext{sixteen} criteria at the
+variant ESS-Dip-R attains the best balanced score of sixteen criteria at the
 same specificity; on the Indian Pines, Salinas and Sentinel-2 scenes both
 identify single land-cover regions as homogeneous where the standard criteria
-do not. Their reliable negatives suit the family to use as a homogeneity guard
+do not. \revtext{The asymmetry between its two kinds of error suits the
+family} to use as a homogeneity guard
 or a stopping rule for region-growing as much as to cluster-number selection,
 spanning a precision--recall axis from the conservative distribution-free null
 to the higher-recall Gaussian one.
