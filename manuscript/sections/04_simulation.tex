@@ -49,15 +49,19 @@ datasets over the bounding box and the one-standard-error rule, the average
 silhouette, Calinski--Harabasz, and Davies--Bouldin (each maximised,
 or minimised for Davies--Bouldin, over $K$). These four are the
 original formulations, with no null model added by us; the null-calibrated
-criteria in this benchmark are the spatial gap next, the Hennig--Lin variants,
+criteria in this benchmark are the autocorrelation-matched gap described
+next, the Hennig--Lin variants,
 and the proposed family, and in each case the null is an addition of the
-respective later work, not of the original index papers. A fifth is the most
+\revtext{work that introduced each of those calibrations, not of the papers
+that introduced the indices themselves.} A fifth is the most
 direct spatial adaptation of an existing index, the \emph{gap with an
 autocorrelated reference}: identical to the gap statistic except that the
 eight reference datasets are drawn not uniformly over the bounding box but as
 per-band Gaussian random fields whose $1/e$ range matches the tile-median
-estimate of Section~\ref{subsec:range}, scaled to each band's standard
-deviation, with the same one-standard-error rule. It isolates how far
+estimate of Section~\ref{subsec:range}, scaled to each band's
+\revtext{standard deviation as estimated from the scene itself, since no
+deployable version of the criterion has access to the true value},
+with the same one-standard-error rule. It isolates how far
 correcting only the reference's autocorrelation goes. (The latter three cannot return
 $K=1$ by construction, an asymmetry we return to below.) Two more are the
 calibrated-validity-index method of \citet{HennigLin2015}, the procedure
@@ -214,7 +218,7 @@ specificity and recall gains carry to the real scenes of
 Section~\ref{sec:application}. Standard indices that look strong on pure
 structured scenes collapse once specificity is taken into account.
 
-\paragraph{Comparison with the method ESS-Dip extends.}
+\paragraph{\revtext{Comparison with the method that ESS-Dip extends.}}
 The calibrated-validity-index framework of \citet{HennigLin2015} is
 instructive precisely because the present method generalises it. Applied with
 an independence (i.i.d.) null it inherits the over-detection of the standard
@@ -287,7 +291,7 @@ modest cost in structured recall ($0.92$ to $0.81$).
 \subsection{Geostatistical reference and the effective-sample-size
 approximation}\label{subsec:geostat-ref}
 
-Section~\ref{subsec:range} offers, alongside the default $1/e$-range proxy, a
+Section~\ref{subsec:range} offers, alongside the default $\ell^{2}$ proxy, a
 fitted variogram and its integral range, and Section~\ref{subsec:sgs} offers the
 exact
 Gaussian-simulation reference \eqref{eq:sgstest} in place of the
@@ -436,8 +440,13 @@ silence, not invention.
 \begin{table}[t]
 \centering
 \caption{Sensitivity of the deployed pipeline to a multiplicative error $f$ in
-the estimated range ($15$ paired scenes per world; area scales as $f^2$).
-$f<1$ underestimates the range (inflates $\neff$); $f>1$ overestimates it.}
+the estimated range ($15$ paired scenes per world; the decorrelation area
+scales as $f^2$). \revtext{Each entry is an average over those $15$ scenes: the
+first row gives the proportion on which the one-class world was divided at all
+($\hat K>1$), the second the mean of $\hat K$ over the four-class world, and
+the third the proportion of that world on which $\hat K$ equalled the true
+$K=4$.} $f<1$ underestimates the range (inflates $\neff$); $f>1$ overestimates
+it.}
 \label{tab:misspec}
 \begin{tabular}{l ccccccc}
 \toprule

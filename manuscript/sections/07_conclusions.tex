@@ -27,11 +27,10 @@ or a stopping rule for region-growing as much as to cluster-number selection,
 spanning a precision--recall axis from the conservative distribution-free null
 to the higher-recall Gaussian one.
 
-The broader message is that number-of-clusters selection on autocorrelated data
-must be calibrated to the information the data actually contain, not to their
-nominal size, and that the signal distinguishing classes from autocorrelation
-is modality, not dispersion. The effective sample size and declustering,
-long-standing tools of geostatistics, supply exactly what is needed to make
-a classical clustering criterion honest about spatial dependence. All code and
+\revtext{The broader message is that two long-standing tools of geostatistics,
+the effective sample size and declustering, are what a clustering criterion
+needs in order to answer this question on dependent data, and that the signal
+which separates classes from autocorrelation is modality rather than
+dispersion.} All code and
 data required to reproduce the simulation study and the applications are
 released.
