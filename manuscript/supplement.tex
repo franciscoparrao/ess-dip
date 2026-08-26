@@ -1,0 +1,302 @@
+\documentclass[11pt]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\neff}{n_{\mathrm{eff}}}
+\newcommand{\dip}{\mathrm{dip}}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\theequation}{S\arabic{equation}}
+
+\title{Supplementary material for\\
+``Effective-sample-size calibration of a modality test for cluster
+homogeneity and the number of classes in spatially autocorrelated data''}
+\author{Francisco Parra}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+This supplement collects three things that would weigh down the main text: the
+full discussion of what Proposition~1 does and does not establish (Section~S1);
+a complete specification of every criterion in the benchmark, sufficient to
+reproduce the comparison (Section~S2); and the implementation of ESS-Dip in
+enough detail to re-code it from the description alone (Section~S3). Section,
+equation and table numbers without an ``S'' refer to the main text. The
+released code is the executable reference and fixes every seed.
+
+\section{What Proposition 1 does and does not establish}\label{sec:supp-prop}
+
+Proposition~1 concerns a stylised version of the test: the projection direction
+is held fixed, the detrending step is switched off, and the decorrelation area
+is the indicator integral range $a_I$ rather than the deployed $\ell^{2}$
+proxy. It is a consistency check on the calibration principle, not a statement
+about the procedure as applied. Four gaps separate the two, and we set them out
+in turn.
+
+\paragraph{(i) Condition (C3) carries the analytic weight.}
+Condition (C3) is the empirical-process counterpart, at the indicator integral
+range, of the effective-sample-size heuristic. It therefore assumes precisely
+what one would most want proved: that ``plugging an effective sample size into
+the independent reference distribution'' is legitimate for a distributional
+statistic such as the dip, and that the appropriate decorrelation scale for the
+dip is the indicator range $a_I$ rather than the field integral range that
+governs the sample mean (Section~3.7). Functional central limit theorems of
+this form are established for the empirical processes of strongly mixing and of
+associated sequences and fields, and condition (C1) places $\bm\varepsilon$ in
+the associated class through \citet{Pitt1982} and
+\citet{BulinskiShashkin2007}; a complete verification for the lattice empirical
+process under our exact conditions is beyond the present scope, so (C3) is
+stated as a hypothesis and not derived. A reader who doubts (C3) should regard
+Proposition~1 as showing that the rest of the argument is sound \emph{given}
+the effective-sample-size premise, and nothing more.
+
+\paragraph{(ii) Why the level is conservative rather than exact.}
+The critical value is calibrated on the least-favourable uniform null, whereas
+under (C1) the projected data are Gaussian, whose rescaled dip vanishes
+asymptotically; the rejection probability therefore tends to zero rather than
+to $\alpha$. \citet{ChengHall1998} note the same degeneracy for
+uniform-calibrated dip and excess-mass tests. This is consistent with the zero
+empirical false-split rate of Figure~1a. Attaining level $\alpha$ would require
+calibrating on the model's own null, which is what the recall variant
+ESS-Dip-R does, at the price of the distribution-free property.
+
+\paragraph{(iii) The deployed default is assessed empirically, not covered by
+the proposition.}
+The proposition takes the decorrelation area to be $a_I$. The deployed default
+estimates it by the $\ell^{2}$ proxy of Section~3.5, which in our experiments
+lies below $a_I$ ($\ell^{2}\approx0.3$--$0.56\,a_I$) and therefore
+\emph{overstates} the effective sample size, pushing the test towards
+anti-conservatism. It is the slack of point~(ii) that absorbs this bias. The
+net level of the deployed pipeline is an empirical matter, addressed by
+Figure~1, by the range-perturbation experiment of Section~4.8, and by the
+single-class windows of Section~5.3. The same accounting explains why
+ESS-Dip-R, which removes the uniform slack, is not covered by the proposition
+at all and is assessed on the model's null only.
+
+\paragraph{(iv) Detrending and the projection direction.}
+Both are idealisations, but they are not equally consequential. The projection
+direction is data-dependent in practice, (C2) being the fixed-direction
+idealisation; Figure~1a shows no inflation of the empirical level when the
+$2$-means direction is used instead, but this is evidence, not proof.
+
+Switching off the detrending step, by contrast, costs no generality
+asymptotically under (C1). There is no deterministic trend under the null, and
+the adaptive rule of Section~3.6 is asymptotically inactive. The quadratic
+design spans a fixed number $d$ of low-frequency directions ($d=6$ for degree
+two in two coordinates), so the sum of squares it can capture is at most $d$
+times the largest eigenvalue of the residual's covariance matrix. By the
+Gershgorin bound that eigenvalue is at most
+$\sum_{\bm h}\lvert C(\bm h)\rvert=\sigma^{2}a$, finite precisely because (C1)
+makes the correlogram absolutely summable, while the total sum of squares grows
+in proportion to $n_C\sigma^{2}$. Hence
+\begin{equation}\label{eq:r2rate}
+  \E\,R^{2}_{\mathrm{poly}}\;\le\;\frac{d\,\sigma^{2}a}{n_C\sigma^{2}}
+  \;=\;\frac{d}{\neff},
+  \qquad\text{so}\qquad
+  \Prob\bigl(R^{2}_{\mathrm{poly}}>\tau\bigr)\;\le\;\frac{d}{\tau\,\neff}
+  \;\longrightarrow\;0
+\end{equation}
+by Markov's inequality: the detrending trigger switches off at the same rate at
+which the calibration becomes valid. Under long-range dependence, where
+summability fails, this argument breaks down, as does the calibration itself.
+
+Finally, non-Gaussian within-class laws fall outside (C1) altogether. There the
+distribution-free uniform null of ESS-Dip is the safer reference, and ESS-Dip-R
+may reject a homogeneous but skewed or heavy-tailed region.
+
+\section{Specification of the benchmarked criteria}\label{sec:supp-methods}
+
+All sixteen criteria search over $K=1,\dots,K_{\max}$ with $K_{\max}=8$ on the
+factorial study and $K_{\max}=20$ on full real scenes. Unless stated otherwise
+the partitions scored are produced by $k$-means. Every stochastic element is
+seeded; the released code reproduces each number in the paper.
+
+\paragraph{Partitions.}
+For the four standard indices and the gap statistic, partitions come from
+MiniBatch $k$-means \citep{Sculley2010} with three initialisations
+(\texttt{n\_init}${}=3$) and batch size $256$, the best of the three by the
+$k$-means objective being retained. Within ESS-Dip and its relatives the
+binary split at each node is ordinary $k$-means with five initialisations
+(\texttt{n\_init}${}=5$), again keeping the best by objective.
+
+\paragraph{Gap statistic \citep{Tibshirani2001}.}
+$\log W_K$ is computed on all pixels for $K=1,\dots,8$. Eight reference
+datasets of the same size are drawn uniformly and independently over the
+per-band bounding box of the data, that is, coordinate $b$ is drawn uniformly
+on $[\min_s z_b(s),\max_s z_b(s)]$. With
+$\mathrm{gap}(K)=\overline{\log W^{\ast}_K}-\log W_K$ and
+$s_K=\mathrm{sd}(\log W^{\ast}_K)\sqrt{1+1/8}$, the estimate is the smallest
+$K$ with $\mathrm{gap}(K)\ge\mathrm{gap}(K+1)-s_{K+1}$, the one-standard-error
+rule of the original paper.
+
+\paragraph{Average silhouette \citep{Rousseeuw1987}, Calinski--Harabasz
+\citep{CalinskiHarabasz1974}, Davies--Bouldin \citep{DaviesBouldin1979}.}
+Each index is evaluated for $K=2,\dots,8$; none can return $K=1$ by
+construction, an asymmetry discussed in Section~4.3. Because the silhouette
+requires all pairwise distances, all three are computed on a common uniform
+subsample of $\min(1500,N)$ pixels drawn without replacement, which keeps the
+$O(m^{2})$ cost bounded and applies the same sample to the three indices; the
+subsample is redrawn per scene, not per $K$. The estimate maximises the index
+($-$Davies--Bouldin, since lower is better there).
+
+\paragraph{Gap with an autocorrelation-matched reference (Section~4.2).}
+Identical to the gap statistic except for the reference datasets, which are
+drawn as per-band Gaussian random fields whose $1/e$ range matches the
+tile-median estimate $\ell$ of the scene (Section~3.5) and whose per-band
+standard deviation matches the \emph{estimated} standard deviation of the
+corresponding band, both quantities being computed from the data at hand, as
+any deployable version of the method must. The generator is the Gaussian-kernel
+construction of Section~4.1 with bandwidth $\sigma=\ell/2$, for which the
+correlogram $\exp(-h^{2}/4\sigma^{2})$ crosses $1/e$ at $h=2\sigma=\ell$.
+
+\paragraph{Calibrated validity index \citep{HennigLin2015}, two variants.}
+The calibrated index is
+\begin{equation}\label{eq:hl}
+  V(K)=\frac{\mathrm{ASW}(K)-\overline{\mathrm{ASW}}_{\mathrm{null}}(K)}
+             {\mathrm{sd}_{\mathrm{null}}(K)},
+\end{equation}
+where $\mathrm{ASW}$ is the average silhouette width and the null moments are
+estimated from $B=20$ null datasets. The estimate is
+$\hat K=\arg\max_K V(K)$ when $\max_K V(K)>1.96$ and $\hat K=1$ otherwise; the
+threshold $1.96$ is the two-sided standard-normal quantile at level $0.05$, and
+Section~4.5 reports the sensitivity of the comparison to it. As for the
+standard indices, each dataset is reduced to a uniform subsample of $1200$
+pixels before the silhouette is computed, so that $20$ null replicates remain
+tractable at every $K$. The two variants differ only in the null: the
+\emph{i.i.d.} variant draws each band independently from a Gaussian matched to
+the band's mean and variance; the \emph{spatial} variant draws phase-randomised
+surrogates, which preserve each band's periodogram, hence its variogram, while
+destroying any phase structure.
+
+\paragraph{Dip-means at the nominal size \citep{Kalogeratos2012}.}
+The recursion and the split direction are those of Algorithm~1, but the dip is
+referred to the uniform null at the nominal size $n_C$ rather than at
+$\neff$, and neither the local range nor the trend removal is applied. This
+isolates the contribution of the spatial machinery.
+
+\paragraph{ESS-Dip, ESS-Dip-R and the four ablations.}
+Section~S3 specifies these. The ablations disable one component each: the
+\emph{global range} variant estimates $\ell$ over the whole image instead of as
+a tile median; \emph{no trend removal} sets $\tau=\infty$; \emph{forced trend
+removal} sets $\tau=0$; and \emph{declustering} replaces the calibration by
+subsampling the scene to one pixel per decorrelation patch (a lattice of
+spacing $\ell$, averaged over six offsets) and applying the uncalibrated dip
+test to the thinned sample, with a node tested only if it retains at least $25$
+thinned pixels and each child at least $12$.
+
+\paragraph{SGS-Dip, with and without a multiple-testing correction.}
+The per-node quantile is obtained from $B=40$ unconditional Gaussian
+simulations on the support of the candidate cluster, generated by the spectral
+method with the variogram fitted to that node's projected values. The corrected
+variant tests each node at level $\alpha/K_{\max}$, with the number of
+simulations raised to resolve the smaller quantile. Prespecifying the number of
+tests is possible here only because the recursion is capped: a binary recursion
+that returns at most $K_{\max}$ leaves performs at most $K_{\max}-1$ splits and
+therefore visits at most $2K_{\max}-1$ nodes, so $\alpha/K_{\max}$ is a valid,
+if conservative, Bonferroni level for the family of tests actually run. Without
+the cap the number of tests would not be bounded in advance and the correction
+would have no prespecified denominator.
+
+\section{Implementation of ESS-Dip}\label{sec:supp-impl}
+
+\paragraph{Inputs.}
+The method takes a feature image $\bm z$ on a lattice $D$ with $p$ bands. No
+preprocessing is part of the method. In the real-data experiments bands are
+standardised to zero mean and unit variance and the hyperspectral cubes are
+reduced by principal components to $p=10$; Section~5.3 reports the
+insensitivity of the results to truncations between five and thirty components.
+
+\paragraph{Constants.}
+Every constant is fixed once across all experiments; none is tuned per scene.
+
+\begin{center}
+\small
+\begin{tabular}{llp{6.4cm}}
+\toprule
+Symbol & Value & Role\\
+\midrule
+$\alpha$ & $0.05$ & level of the per-node test, Eq.~(6)\\
+$\tau$   & $0.25$ & threshold on $R^{2}_{\mathrm{poly}}$ that triggers
+                    detrending, Eq.~(11)\\
+--       & $2$    & degree of the polynomial drift surface, Eq.~(10)\\
+$t$      & $24$   & tile side in pixels, reduced to
+                    $\min(24,\lfloor H/2\rfloor,\lfloor W/2\rfloor)$ on domains
+                    too small for it\\
+$\nu$    & $12$   & smallest $\neff$ at which a node is tested; below it the
+                    node becomes a leaf untested\\
+$B$      & $5$    & number of independent runs of the recursion whose median
+                    is reported (distinct from the $B$ simulations per node of
+                    the Gaussian-simulation reference)\\
+--       & $300$  & Monte Carlo draws behind each null quantile\\
+--       & $[12,2000]$ & interval to which $\lfloor\neff\rceil$ is clamped
+                    before the quantile is looked up\\
+$K_{\max}$ & $8$ / $20$ & cap on the number of leaves (factorial study / full
+                    scenes)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Range estimation.}
+The decorrelation area $a=\ell^{2}$ is estimated once per scene, not per node,
+and on the detrended field when the rule of Section~3.6 fires. The lattice is
+cut into disjoint $t\times t$ tiles, discarding any remainder at the right and
+bottom edges. Within tile $j$ the first principal component of the $p$ bands is
+taken, its two-dimensional sample autocorrelation is computed as the inverse
+Fourier transform of the periodogram, and the profiles along the two axes are
+averaged; $\ell_j$ is the first lag at which the averaged profile falls below
+$1/e$, and $\ell$ is the median of $\{\ell_j\}$. If a tile's profile never
+falls below $1/e$ within the tile, that tile contributes $\ell_j=t$; if no
+tile is available because the domain is smaller than $t$ in both directions,
+the estimate falls back to the whole-domain range.
+
+\paragraph{Null quantiles.}
+For a node with effective size $\neff$, let
+$m=\min\{\max\{\lfloor\neff\rceil,12\},2000\}$. The critical value
+$q_{1-\alpha}(m)$ is the empirical $(1-\alpha)$ quantile of $300$ dip
+statistics computed from $m$ pseudo-random draws of the reference law:
+$\mathrm{U}(0,1)$ for ESS-Dip and $\mathrm{N}(0,1)$ for ESS-Dip-R. Quantiles
+are memoised on the pair (reference law, $m$), so each distinct size is
+simulated once per run however many nodes request it; this is what keeps the
+calibration cost negligible relative to the $k$-means and dip evaluations.
+
+\paragraph{Recursion.}
+The stack is initialised with the whole scene. A node $C$ is popped; if
+$\neff=n_C/a<\nu$ it becomes a leaf without being tested. Otherwise $2$-means
+is run on the feature vectors of $C$, the split direction is the normalised
+difference of the two cluster means, and the dip is computed on the projected
+values by the algorithm of \citet{HartiganHartigan1985}. If the dip exceeds
+$q_{1-\alpha}(m)$ \emph{and} both children retain at least $a$ pixels, both
+children are pushed; otherwise $C$ becomes a leaf. The recursion stops early if
+the number of leaves plus the stack depth would reach $K_{\max}$, in which case
+$K_{\max}$ is returned. The estimate is the number of leaves.
+
+\paragraph{Ensemble.}
+The recursion is run $B=5$ times with independent seeds and the median of the
+five values of $\hat K$ is reported. The randomness being averaged over is that
+of the $k$-means initialisations and of the Monte Carlo quantiles; note that
+the choice among initialisations \emph{within} a node is already made by the
+$k$-means objective (\texttt{n\_init}${}=5$), so the ensemble absorbs residual
+variation in the path the recursion takes, not variation in the quality of any
+single split.
+
+\paragraph{Cost.}
+Each node costs one $k$-means on its pixels, one projection and one dip
+evaluation, the last being $O(n_C\log n_C)$ through the sort. Range estimation
+is one FFT per tile, $O(N\log t)$ over the scene. The null quantiles are
+amortised by memoisation. Total cost is therefore near-linear in $N$ up to the
+depth of the recursion, which is bounded by $K_{\max}$; Section~4.6 reports the
+measured scaling.
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+\end{document}

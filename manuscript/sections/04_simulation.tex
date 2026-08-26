@@ -38,9 +38,11 @@ seeds, for $495$ scenes in total.
 
 \subsection{Methods and metrics}\label{subsec:methods}
 
-We compare sixteen criteria; the exact decision rule of each is
-given here or in Section~\ref{sec:method}, and every implementation, with its
-seeds, is in the released code. Four are standard internal indices evaluated
+We compare sixteen criteria. \revtext{The decision rule of each is summarised
+here; Section~S2 of the supplementary material specifies every one in full,
+including all tuning constants, the subsampling used by the indices that
+require pairwise distances, and how the multiple-testing correction is applied,
+and the released code reproduces each number with its seeds.} Four are standard internal indices evaluated
 over $K=1,\dots,8$ on MiniBatch $k$-means partitions: the gap
 statistic \citep{Tibshirani2001} with eight uniform reference
 datasets over the bounding box and the one-standard-error rule, the average

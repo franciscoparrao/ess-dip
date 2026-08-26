@@ -1,0 +1,251 @@
+MATG-D-26-00180 R1 -> decision: MAJOR REVISION (2026-08-26)
+EIC: Roussos Dimitrakopoulos. Reviewer #2: satisfied, no further comments.
+
+REVIEWER #1
+The paper is improved and I'm largely fine with the method and the research,
+however the presentation is still not very reader friendly by often not
+explaining things precisely enough, sometimes misleading wording, and an
+occasionally confusing use of terminology, assuming that the reader knows the
+author's use which cannot be taken for granted, even though all this has
+somewhat improved (which raised a few new issues though). I still think a web
+supplement clarifying details and potentially outsourcing some material that
+currently is in the paper would help as the paper is too long. The added
+Appendix unfortunately says surprisingly little beyond what is already said in
+the main text. Furthermore, some claims regarding existing methodology are
+still misleading. Furthermore, the authors still promise more in places than
+the method can deliver.
+
+[G1] General: The paper implicitly suggests in many places that there is a
+uniquely true clustering of a dataset. This is not the case, see Hennig (2015).
+In particular, a data analyst may in some situations be interested in
+clustering data regardless of whether some of the clustering can be explained
+by spatial autocorrelation, which may occasionally be useful (for example for
+avalanche risk mapping and the like). Therefore it is not in general true that
+structure that can be explained by spatial autocorrelation should not be
+clustered. It is for sure relevant what the authors do here because in many
+applications indeed we want to tell apart clustering that has meaning beyond
+the spatial autocorrelation and clustering that may be explained by the spatial
+structure alone. However, any wording that suggests that clusterings can only
+be valid if spatial autocorrelation is taken into account should be changed
+(starting from the abstract "miscalibrated on spatial data"). Indexes like the
+Silhouette index may well be fine for spatial data if the application doesn't
+require what is required here. Also, e.g. p. 2, l.40/41 "A criterion that
+cannot recognise the absence of clusters is a precarious foundation for
+deciding their number." The "absence of clusters" is not an absolute fact but
+relative to your definition what counts as a cluster. There are more instances
+of this kind.
+
+[G2] General: I don't think the authors have commented on the possibility that
+2-means may cut through a cluster in situations with more than 2 clusters in an
+early stage of the algorithm.
+
+[1] p. 2, l.16/17 "An analyst mapping land cover from a satellite scene must
+fix K before any unsupervised classifier runs" - not true in general. There are
+clustering methods (such as DBSCAN) that estimate K on the fly.
+
+[2] l.42-45 "Correcting this is not a matter of swapping in a better null."
+Isn't this what you are doing (at least in some sense)? I don't really see
+what's wrong with "swapping in a better null".
+
+[3] Terms like "scene", "mosaic", "MiniBatch" are used without explicit
+introduction (it is always good to link terminology explicitly to your model
+and problem, and generally it is good to use always the same term for the same
+thing. Later you use terms like "\ell^2 proxy", "1/e proxy" again without
+having explicitly defined what you mean. The reader can guess it in most cases
+but will lose time asking themselves "what was that?", potentially looking
+around on the paper without success. Explain all terminology explicitly and
+then don't switch it.
+
+[4] p. 3, l.20: "its negatives are trustworthy: when it declares a region
+homogeneous that verdict can be relied on". Not so. In general if a statistical
+test doesn't reject a null hypothesis, it never means that the null hypothesis
+is true, Obviously there can be deviations from homogeneity that are so weak
+that the available data can't find them. Furthermore your test is mostly
+conservative, meaning that absolutely there are instances where the null
+hypothesis is not true and the test will not reject (whether you tried such
+instances in your simulation or not). This is not a specific problem with your
+method; in general homogeneity and weak non-homogeneity can often not be told
+apart, but still, don't write as if it were different.
+
+[5] l.32: As Proposition 1 is "stylised", it doesn't guarantee anything for the
+proposed method. There is no such thing as a proven "asymptotic
+false-split-control property" for the method as a whole. It's all heuristic
+arguments.
+
+[6] p. 4, l.24/25: "None of these criteria was proposed with a distribution
+theory that requires independent observations." Well, some yes (mixture/BIC,
+gap), some no (ASW, DB). Be precise.
+
+[7] By the way, there is also mixture model-based clustering taking spatial
+autocorrelation into account, see, e.g., Vanhatalo et al. (2021).
+
+[8] l.37: "That an independence reference over-detects structure in dependent
+data is known across several fields." Be precise. Structure is detected by
+methods for detecting structure. A reference is not a method but a model.
+
+[9] p. 5, l.46/47: "Because k-means dispersion is itself a variance-based
+quantity, a null matched to the data's covariance structure can explain away
+the very clusters one seeks" - I don't understand the logic. k-means dispersion
+is one thing, the null is another. Maybe what the authors have in mind makes
+sense but is underexplained here.
+
+[10] p. 7/8 "Internal validity criteria for K, namely the gap statistic
+(Tibshirani et al. 2001), the average silhouette, Calinski-Harabasz and
+Davies-Bouldin, compare a within-cluster dispersion against the value expected
+with no clustering, under an independent reference distribution." This is true
+for the gap statistic but not for the other criteria listed here.
+
+[11] p. 8, l. 3: "autocorrelation reduces the number of independent
+observations far below N" - as a standard there aren't any independent
+observations here (you mean what is called "effective sample size", which is
+not a number of actually independent observations).
+
+[12] "Second, a smooth drift \mu spreads the feature cloud along a
+low-dimensional manifold and is read as structure by an independence null." You
+could have an independence null that takes drift into account but not
+dependence.
+
+[13] l.14 "null H_0"
+
+[14] Assumption 1: Chances are you should state already here that you sometimes
+require Assumption 1 and sometimes not (and throughout the paper it should be
+mentioned where this is needed). This is a bit confusing.
+
+[15] l.38 "bimodality" - you could have more than two modes.
+
+[16] p. 9, l.17: least-favourable > least favourable (also elsewhere) By the
+way l.38: It is unclear here in which sense the uniform is least favourable.
+
+[17] l.45 "the two are the distribution-free and the model-matched ends of one
+calibration." Unclear.
+
+[18] Sec. 3.5: Say explicitly what j denotes.
+
+[19] p.10, l.20 27%? Wasn't it supposed to be the majority?
+
+[20] l.26 "the conventional definition of the correlation range, exact for the
+exponential model, averaged over the two axes." I don't understand the use of
+"exact" here - a definition that is not exact is not a proper definition, so it
+should always be exact, no? (I think you refer to a certain statement here that
+is not the definition itself, but this is not clear.)
+
+[21] l.32/33: "the single-class fractions quoted above make the straddling
+tiles a minority on all three real scenes" There are only two numbers "above",
+one of which is 27% (for the non-straddling tiles, although maybe I
+misunderstood how the 27% relate to this, then explain it better)!?
+
+[22] (8): How is r_j^2=\int r\rho(r)dr, the latter apparently not dependent
+on j?
+
+[23] l.48 "The fitted parameters" - fitted how?
+
+[24] p.11, l. 4: Simulating from a Gaussian is for sure not "assumption-free".
+
+[25] l. 9: "A smooth drift \mu is itself unimodal" - how so? If you want to
+assume this, do it explicitly when introducing the model.
+
+[26] l.27 "from the trend world of the factorial design" - I don't understand
+this.
+
+[27] B in Sec. 3.7 and 3.8 is not the same thing.
+
+[28] Sec. 3.8: Regarding the k-means initialisation variability I think what is
+done here is not the best that could be done. k-means is about optimising the
+k-means objective function, so if you get B solutions from B initialisations,
+some of these are good and some aren't. You shouldn't just use the median or
+mean of K derived from these. The way I think it should be done is that you run
+B initialisations for each K and then for each K you use the best solution
+according to the objective function (this is what Python Kmeans actually does
+when setting n_init).
+
+[29] p.12, l.39: "The calibration (6) is designed so that, in the absence of
+discrete structure, the recursion does not split." There is no guarantee that
+this is so, yet you write as if there were one.
+
+[30] Sec. 3.9: "The result is deliberately stylised" - this is sugarcoating the
+fact that you apparently don't have a better one (if you had one it should be
+there). It is fine to present this result, but be honest about its limitations
+not only in this place but also whenever you make reference to it. There is no
+"guarantee" of anything here regarding actual application of your method as the
+method has several elements that are not covered by the Proposition. The result
+is of purely heuristic value. What makes it even more limited is that (C3)
+basically assumes the central thing I'd be curious about, namely that the
+"effective sample size" as defined in the given setting is the right one to use
+(as is admitted in Remark 1). I accept the proof now but I have my doubts
+whether the Proposition says much of interest (enough to justify the lengthy
+treatment of it). The paper may just be better (shorter and easier to read)
+without it. But I leave this decision to you (OK the detailed discussion is of
+some value, but also long).
+
+[31] p.13, l.46 "Consequently..." This does not follow from (13) unless \alpha
+is 0.
+
+[32] p.14, l.47: Nothing is guaranteed for the actual method.
+
+[33] p.15, l. 5: "Empirical verification" is not a verification in any
+generality and shouldn't be called "verification". I'd accept "validated"
+
+[34] l.23: A simulation-based test does not control levels "exactly" unless you
+have infinitely many simulation runs. Same p.23, l. 8.
+
+[35] l.36: \delta is not defined at this point.
+
+[36] Fig. 1(b) this will depend on the exact alternative, which at the very
+least needs specification of \delta if not more.
+
+[37] Sec. 3.10: Give references for the claims made here.
+
+[38] p/17, l.32: "spatial gap next" should probably be "test" but isn't
+introduced as terminology in any case.
+
+[39] l.34: "the respective later work" - not sure to what work this refers.
+
+[40] l.38: "scaled to each band's standard deviation" - true or estimated, if
+estimated how? If true, does this make sense given that in reality this
+information isn't available?
+
+[41] l.42: "the procedure ESS-Dip extends" - strange grammar here.
+
+[42] In a Supplement there needs be an explanation of all tuning choices for
+*all* methods simulated. A number of choices in Sec. 4.2 look like being taken
+from or inspired by literature that is not cited; or choices are not
+motivated/explained. ("scenes subsampled to 1200 pixels" - how exactly?
+Reference? "Bonferroni correction" was how exactly applied? Note that as a
+standard this needs a prespecification of the number of tests run, and I don't
+think you can do that as it is not clear in advance when the splitting process
+will end.)
+
+[43] Table 4: Say explicitly what the entries are.
+
+[44] p.27, l.38: "The calibration presumes a within-class autocorrelation that
+is real" - is that so? In principle everything should go through if the
+autocorrelation is zero, in which case n_eff=n, shouldn't it?
+
+[45] p.28, l.31/32: "the true number of classes is one" - if the "true number
+of classes" is defined according to (1), there is no guarantee that in a real
+situation with a single land-cover class the true number of classes is indeed
+one. The formal model-based definition is not identical to the real one. You
+can say something like "in such a situation the desirable outcome is one
+class". Even this is questionable if the single ground-truth class has less
+than 100% of pixels because one could then well expect to have the rest as one
+or more further classes.
+
+[46] p.30, l.30/31: Give a reference for ARI and NMI. (I think ARI is enough by
+the way.)
+
+[47] p.32, l.14 "the independence reference of the classical criteria" - as
+noted before, most classical criteria have no such reference.
+
+[48] A number of things stated in the Conclusion are said for at least the
+third time. Maybe be less repetitive.
+
+[49] p.33, l.29/30 "inventing classes on featureless fields" - inappropriate
+wording due to the relativity of the existence of classes to how they are
+defined, see above.
+
+REFERENCES GIVEN BY REVIEWER
+Christian Hennig (2015), What are the true clusters?, Pattern Recognition
+Letters 64, 53-62, https://doi.org/10.1016/j.patrec.2015.04.009
+Vanhatalo J, Foster SD, Hosack GR. (2021) Spatiotemporal clustering using
+Gaussian processes embedded in a mixture model. Environmetrics. 2021; 32:e2681.
+https://doi.org/10.1002/env.2681

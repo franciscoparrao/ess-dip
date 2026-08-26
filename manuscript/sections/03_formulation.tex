@@ -174,10 +174,19 @@ and a node is actually partitioned only when the test licenses it. The
 direction remains a heuristic. $k$-means favours balanced, spherical groups,
 so when more than two classes coexist at a node, or modes differ strongly in
 variance, the proposed direction can fail to expose the multimodality or can
-cut through a class. The recursion re-tests each child, which recovers many
-such cases (the structured-world recovery of Section~\ref{sec:simulation}
-spans $K$ up to $5$); a poor direction costs recall, never level (the
-fixed-direction check of Figure~\ref{fig:level}). Section~\ref{sec:discussion}
+cut through a class. \revtext{The latter is the more serious case, and it is
+worth being explicit about what the recursion can and cannot repair. If an
+early split cuts through a class, the two fragments of that class are handed to
+different subtrees, and no later test can reunite them: the damage is
+permanent, and shows up as an over-estimate of $K$ or as a partition that
+misplaces boundaries even when $\hat K$ is right. What the recursion does
+repair is the opposite error, a split that leaves two classes on the same side,
+since the child is tested again. The asymmetry is one reason we report
+partition quality (Section~\ref{subsec:realfull}) alongside $\hat K$: on the
+structured worlds, recovery holds for $K$ up to five
+(Section~\ref{sec:simulation}), which bounds how often the cutting failure is
+severe at these separations, but it does occur.} A poor direction costs recall,
+never level (the fixed-direction check of Figure~\ref{fig:level}). Section~\ref{sec:discussion}
 discusses mode-seeking directions as the natural refinement.
 
 \subsection{Effective-sample-size calibration}\label{subsec:ess}
@@ -348,10 +357,10 @@ resulting level is controlled across the operating range of $\neff$. The second 
 geostatistical \emph{neutral model} \citep{Goovaerts2004}. By the
 spectral (fast-Fourier) method \citep{DietrichNewsam1993,Lantuejoul2002},
 simulate an ensemble of unconditional Gaussian realisations
-$\{\tilde y^{(b)}\}_{b=1}^{B}$ on the support of $C$, with covariance given
+$\{\tilde y^{(m)}\}_{m=1}^{M}$ on the support of $C$, with covariance given
 by the fitted variogram of the projection $y$; unimodality is rejected when
 \begin{equation}\label{eq:sgstest}
-  \hat D_C \;>\; q_{1-\alpha}\bigl(\bigl\{\dip(\tilde y^{(b)})\bigr\}_{b=1}^{B}\bigr).
+  \hat D_C \;>\; q_{1-\alpha}\bigl(\bigl\{\dip(\tilde y^{(m)})\bigr\}_{m=1}^{M}\bigr).
 \end{equation}
 For a \emph{single} homogeneity decision on a full rectangular domain,
 testing $K=1$ against $K\ge2$, this Monte Carlo test makes no independence
@@ -366,7 +375,7 @@ incur multiple comparisons. We implement the resulting recursive estimator
 (Section~\ref{subsec:geostat-ref}): a direct version over-splits, a
 multiple-testing correction makes it competitive with \eqref{eq:test} on
 controlled fields, but its plug-in variogram on irregular supports keeps it
-behind on real imagery, and at the cost of $B$ simulations per node against the
+behind on real imagery, and at the cost of $M$ simulations per node against the
 cached, near-linear cost of \eqref{eq:test}. We therefore retain
 \eqref{eq:test} as the method and use \eqref{eq:sgstest} as an
 assumption-light check on the leading split.
@@ -378,8 +387,13 @@ The components above are combined into a top-down recursion
 its $2$-means children whenever the calibrated dip test \eqref{eq:test} is
 significant and both children retain at least one decorrelation patch
 ($n\ge a$, so that $\neff\ge1$); otherwise it becomes a leaf. The estimate
-$\hat K$ is the number of leaves. To absorb the variability of the $k$-means
-initialisation the recursion is repeated $B$ times with independent seeds and
+$\hat K$ is the number of leaves. \revtext{The choice among $k$-means
+initialisations \emph{within} a node is made in the usual way, by the $k$-means
+objective: each binary split retains the best of five random starts. What the
+objective cannot settle is which of several near-equivalent splits the
+recursion then follows, since a different split at one node changes the nodes
+its descendants see. To absorb that residual path dependence} the recursion is
+repeated $B$ times with independent seeds and
 the median of $\{\hat K^{(b)}\}_{b=1}^B$ is reported (the median
 rather than the mode: the two coincide when the small integer-valued ensemble
 concentrates, and the median resolves split ensembles without a tie-breaking
@@ -510,61 +524,23 @@ the recursion visits finitely many nodes, so a union bound over their
 \end{proof}
 
 \begin{remark}\label{rem:prop}
-Four observations delimit what the proposition does and does not
-establish.
-(i) \emph{Condition (C3) carries the analytic weight.} It is the
-empirical-process counterpart, at the indicator integral range, of the
-effective-sample-size heuristic. It is precisely the step that a formal
-justification of ``plugging an effective sample size into the independent
-reference distribution'' requires for a distributional statistic such as the
-dip; for the dip the appropriate decorrelation scale is the indicator range
-$a_I$, not the field integral range that governs the sample mean
-(Section~\ref{subsec:sgs}). Functional central limit theorems of this form are
-established for empirical processes of strongly mixing and of associated
-sequences and fields, and (C1) places $\bm\varepsilon$ in the associated class
-through \citet{Pitt1982,BulinskiShashkin2007}; a complete verification for the
-lattice empirical process under our exact conditions is beyond the present
-scope, so we state (C3) as a hypothesis rather than derive it.
-(ii) \emph{Why the level is conservative rather than exact.} The critical
-value is calibrated on the least-favourable uniform null, whereas under (C1)
-the projected data are Gaussian, whose rescaled dip vanishes asymptotically;
-the rejection probability therefore tends to zero, not to $\alpha$; the same
-degeneracy is noted for uniform-calibrated dip and excess-mass tests by
-\citet{ChengHall1998}. This is
-consistent with the zero empirical false-split rate of
-Figure~\ref{fig:level}a, and exact level $\alpha$ would require calibrating on
-the model's own null, which is what the recall variant ESS-Dip-R does, at
-the price of leaving the distribution-free guarantee.
-(iii) \emph{The deployed default is covered empirically, not by the
-proposition.} The proposition takes the decorrelation area to be $a_I$; the
-deployed default estimates it by the $\ell^2$ proxy of
-Section~\ref{subsec:range}, which in our experiments lies below $a_I$
-($\ell^2\approx0.3$--$0.56\,a_I$) and therefore \emph{overstates} the
-effective sample size, pushing the test towards anti-conservatism. It is the
-uniform-null slack of point (ii) that absorbs this bias, and the net level of
-the deployed pipeline is what Figure~\ref{fig:level} and the single-class
-windows of Section~\ref{subsec:realspec} \revtext{validate} empirically. The same
-accounting explains why ESS-Dip-R, which removes the uniform slack, is not
-licensed by the proposition and is validated on the model's null only.
-(iv) \emph{Two further idealisations.} The detrending step is switched off,
-and under (C1) this costs no generality asymptotically. There is no
-deterministic trend under the null, and the adaptive rule of
-Section~\ref{subsec:detrend} is asymptotically inactive: the quadratic design
-spans a fixed number of low-frequency directions, so the variance it captures
-is bounded by a constant multiple of $\sigma^2 a$ (each eigenvalue of the
-residual's covariance matrix is at most $\sum_{\bm h}\lvert
-C(\bm h)\rvert=\sigma^2 a$, finite precisely because (C1) makes the
-correlogram summable), while the total sum of squares grows in proportion to
-$n_C\sigma^2$. Hence $R^2_{\mathrm{poly}}=O_p(1/\neff)$ and
-$\Prob(R^2_{\mathrm{poly}}>\tau)\to0$: the detrending trigger switches off
-at exactly the rate at which the calibration becomes valid. Under long-range
-dependence, where summability fails, this argument, like the calibration
-itself, would break. And the split direction is
-data-dependent in practice, (C2) being the fixed-direction idealisation under
-which Figure~\ref{fig:level} shows no level inflation when the $2$-means
-direction is used instead. Non-Gaussian within-class laws fall outside (C1)
-altogether, where the distribution-free uniform null of ESS-Dip is the safer
-reference.
+\revtext{Four elements separate the proposition from the deployed procedure,
+and none of them is innocuous. (i)~Condition (C3) carries the analytic weight:
+it is the empirical-process form of the effective-sample-size heuristic, so it
+assumes what one would most want proved, and we state it as a hypothesis rather
+than derive it. (ii)~The level is conservative rather than exact, because the
+critical value comes from the least-favourable uniform null while the data
+under (C1) are Gaussian; \citet{ChengHall1998} note the same degeneracy for
+uniform-calibrated dip tests. (iii)~The deployed default replaces $a_I$ by the
+$\ell^{2}$ proxy, which in our experiments lies below it and so overstates
+$\neff$; it is the slack of point (ii) that absorbs the bias, and the net level
+of the deployed pipeline is an empirical matter
+(Figure~\ref{fig:level}, Sections~\ref{subsec:misspec}
+and~\ref{subsec:realspec}). (iv)~Detrending is switched off and the projection
+direction is held fixed, neither of which holds in practice, although the
+first costs no generality asymptotically and the second does not inflate the
+empirical level. Section~S1 of the supplementary material develops each point,
+including the rate at which the detrending trigger becomes inactive.}
 \end{remark}
 
 The
