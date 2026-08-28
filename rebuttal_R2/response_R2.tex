@@ -555,10 +555,13 @@ recognise.''
 \end{rquote}
 Both suggestions adopted. Hubert and Arabie (1985) is now cited for the
 adjusted Rand index, and normalised mutual information has been dropped from
-Table~8 and from the surrounding discussion, which loses nothing: the two
-indices ranked the methods identically on the hyperspectral scenes, and the
-conclusion drawn from the table, that a test which refuses to split does not
-maximise partition recovery, rests on the ARI alone.
+Table~8 and from the surrounding discussion. Dropping it costs nothing the
+table was used for. The two measures order the methods identically on Salinas
+and on the Sentinel-2 scene; they disagree on Indian Pines, but only in
+ordering three methods whose scores are nearly tied there ($0.21$ against
+$0.18$ for the ARI, $0.36$ against $0.37$ for the NMI), and the paper drew no
+conclusion from that ordering. The conclusion it does draw, that a test which
+refuses to split does not maximise partition recovery, rests on the ARI alone.
 
 \R{47. The independence reference of the classical criteria.}
 Corrected in Section~6, which now says that Assumption~1 ``replaces the
