@@ -201,8 +201,7 @@ this distinction, and to ways of relaxing it, in Section~\ref{sec:discussion}.
 
 The number of classes is only half the picture; the quality of the induced
 partition completes it. Table~\ref{tab:realari} reports the adjusted Rand index
-\revtext{\citep[ARI;][]{HubertArabie1985}} and normalised mutual information
-\revtext{\citep[NMI;][]{Vinh2010}} of each labelling against the
+\revtext{\citep[ARI;][]{HubertArabie1985}} of each labelling against the
 ground-truth map. Two things stand out. First, unsupervised recovery of these
 partitions is hard for every method: no ARI exceeds $0.52$. Second, on the
 multi-class hyperspectral scenes ESS-Dip's partition quality trails the
@@ -216,25 +215,25 @@ guard rather than a classifier.
 
 \begin{table}[t]
 \centering
-\caption{Partition quality on the full scenes: adjusted Rand index (ARI) and
-normalised mutual information (NMI) against the ground-truth land-cover map,
-with the number of classes each method returns. Computed on labelled pixels.}
+\caption{Partition quality on the full scenes: adjusted Rand index (ARI)
+against the ground-truth land-cover map, with the number of classes each method
+returns. Computed on labelled pixels.}
 \label{tab:realari}
-\begin{tabular}{l l c cc}
+\begin{tabular}{l l c c}
 \toprule
-Scene & Method & $\hat K$ & ARI & NMI\\
+Scene & Method & $\hat K$ & ARI\\
 \midrule
-Indian Pines & Gap statistic & 3 & 0.21 & 0.36\\
-             & Silhouette    & 2 & 0.18 & 0.37\\
-             & ESS-Dip       & 2 & 0.18 & 0.37\\
+Indian Pines & Gap statistic & 3 & 0.21\\
+             & Silhouette    & 2 & 0.18\\
+             & ESS-Dip       & 2 & 0.18\\
 \midrule
-Salinas      & Gap statistic & 9 & \textbf{0.52} & \textbf{0.71}\\
-             & Silhouette    & 2 & 0.18 & 0.37\\
-             & ESS-Dip       & 5 & 0.32 & 0.57\\
+Salinas      & Gap statistic & 9 & \textbf{0.52}\\
+             & Silhouette    & 2 & 0.18\\
+             & ESS-Dip       & 5 & 0.32\\
 \midrule
-Sentinel-2   & Gap statistic & 5 & 0.10 & 0.14\\
-             & Silhouette    & 2 & 0.36 & 0.22\\
-             & ESS-Dip       & 1 & 0.00 & 0.00\\
+Sentinel-2   & Gap statistic & 5 & 0.10\\
+             & Silhouette    & 2 & 0.36\\
+             & ESS-Dip       & 1 & 0.00\\
 \bottomrule
 \end{tabular}
 \end{table}
