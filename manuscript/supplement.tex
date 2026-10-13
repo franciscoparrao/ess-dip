@@ -42,7 +42,7 @@ released code is the executable reference and fixes every seed.
 For convenience we restate what is proved. Under (C1)--(C3), with $C$
 increasing to $\Z^{2}$ along a sequence of rectangles and the test calibrated
 at $\neff=n_C/a_I$, the rejection probability of the per-node test tends to
-zero, and hence to at most $\alpha$; consequently $\Prob(\hat K=1)\to1$ when
+zero; consequently $\Prob(\hat K=1)\to1$ when
 every node visited satisfies (C1).
 
 \begin{proof}
@@ -70,7 +70,7 @@ $c_\alpha>0$, from the uniform law, for which $\sqrt m\,D_m$ converges to the
 nondegenerate dip of a Brownian bridge
 \citep[Theorem~3]{HartiganHartigan1985}. Hence
 $\Prob\bigl(\hat D_C>q_{1-\alpha}(\lfloor\neff\rceil)\bigr)\to0$, which
-gives the bound of the proposition, and indeed a limiting rejection probability of zero;
+is the statement of the proposition;
 the same conclusion holds for any projected law in the class of
 \citet[Theorem~5]{HartiganHartigan1985}. The bound $\alpha$ itself is
 approached only in the flat-topped boundary case, where linear stretches of the
@@ -392,7 +392,7 @@ over-corrects a statistic of the empirical distribution, whose appropriate scale
 is the smaller indicator integral range.
 
 Because the simulation reference Equation~(14) of the main text controls the
-level \revtext{up to Monte Carlo error} for a single test on a full rectangular domain, one may hope to
+level up to Monte Carlo error for a single test on a full rectangular domain, one may hope to
 obtain a fully assumption-light estimator of $K$ by using it at every node:
 that is, replacing the effective-sample-size quantile in
 Algorithm~1 of the main text by a fresh simulated quantile, computed from $B$

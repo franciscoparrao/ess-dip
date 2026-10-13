@@ -15,11 +15,11 @@ Comparative studies cover the many further variants
 \citep{Arbelaitz2013}. A second family selects $K$ through a probabilistic
 model: model-based clustering fits a finite mixture and chooses the number of
 components by an information criterion such as the BIC
-\citep{GormleyMurphyRaftery2023}\revtext{; that family has itself been
+\citep{GormleyMurphyRaftery2023}; that family has itself been
 extended to spatially dependent data by embedding Gaussian processes in the
-mixture \citep{Vanhatalo2021}}.
+mixture \citep{Vanhatalo2021}.
 
-\revtext{These criteria differ in how far they commit to a probability model,
+These criteria differ in how far they commit to a probability model,
 and the distinction matters here. The gap statistic and model-based selection
 by BIC do rest on assumptions that treat observations as independent: the gap
 compares the observed within-cluster dispersion with its expectation under a
@@ -31,16 +31,16 @@ geometry, and on dependent data they are neither correct nor incorrect, because
 they make no probabilistic claim that dependence could violate. What all of
 them share is that dependence between observations plays no role in their
 construction, so none of them separates grouping produced by discrete classes
-from grouping that autocorrelation alone produces.} \revtext{Spatial data are
-where that distinction bites, because nearby}
-locations are correlated: ``everything is related to everything else, but
+from grouping that autocorrelation alone produces. \revtext{The distinction
+matters most for spatial data, because nearby
+locations are correlated}: ``everything is related to everything else, but
 near things are more related than distant things'' \citep{Tobler1970}.
 
 \subsection{Accounting for spatial dependence}\label{subsec:bg-spatial}
 
-\revtext{That methods comparing data against an independence reference report
-structure which the dependence alone can account for is
-known across several fields.} In spatial epidemiology, \citet{Goovaerts2004}
+\revtext{It is known across several fields that methods comparing data against
+an independence reference report structure that the dependence alone can
+account for.} In spatial epidemiology, \citet{Goovaerts2004}
 show that a complete-spatial-randomness null over-identifies disease clusters
 and propose, in its place, a geostatistical \emph{spatial neutral model}
 (realisations reproducing the histogram and variogram of the data by sequential
@@ -107,7 +107,7 @@ a standard geostatistical correction for spatially clustered support
 
 \subsection{Modality as a clustering signal}\label{subsec:bg-modality}
 
-\revtext{Suppose one kept a dispersion-based index and improved only the
+Suppose one kept a dispersion-based index and improved only the
 null, matching it to the covariance structure estimated from the data. The
 within-cluster dispersion the index measures is a variance-based quantity, and
 the contrast between classes contributes to the very covariance the null now
@@ -115,7 +115,7 @@ reproduces; the null therefore generates reference datasets of much the same
 dispersion as the data whether or not classes are present, and the comparison
 loses what it was meant to detect. A criterion able to survive an
 autocorrelation-matched null must read something the covariance does not
-determine.} Multimodality is the natural choice. The dip test of
+determine. Multimodality is the natural choice. The dip test of
 \citet{HartiganHartigan1985} measures the departure of a univariate sample from
 unimodality, and dip-means \citep{Kalogeratos2012} turns it into a
 divisive procedure that splits a cluster only when a projection of it is
@@ -128,12 +128,12 @@ as two modes.
 \subsection{Distinction from spatially constrained clustering}\label{subsec:bg-constrained}
 
 A separate line of work \emph{imposes} spatial contiguity on the partition:
-regionalization methods such as SKATER \citep{Assuncao2006}, ClustGeo
+\revtext{regionalisation} methods such as SKATER \citep{Assuncao2006}, ClustGeo
 \citep{Chavent2018} and the max-$p$-regions problem \citep{Duque2012} constrain
-clusters to be spatially connected. These address a different question, how
-to partition space into contiguous regions, and still require the number of
+clusters to be spatially connected. These address a different question \revtext{(how
+to partition space into contiguous regions)} and still require the number of
 regions as an input or a tuning parameter. We do not constrain the partition;
-we correct the criterion that selects \emph{how many} groups are present, and
-the two are complementary: the effective-sample-size calibration developed here
-could in principle inform the stopping rule of a regionalization just as it
+we correct the criterion that selects \emph{how many} groups are present.
+\revtext{The two approaches are complementary}: the effective-sample-size calibration developed here
+could in principle inform the stopping rule of a \revtext{regionalisation} just as it
 informs the recursion of Section~\ref{sec:method}.

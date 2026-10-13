@@ -18,11 +18,11 @@ spatial autocorrelation, and is correspondingly cautious about enumerating
 structure that the data do not independently support. For the analyst this is
 the useful direction of error, a guard against the over-segmentation that
 Section~\ref{subsec:realspec} documents for the standard indices, but it is
-a genuine limitation when an exhaustive class inventory is the goal. This fixes
-the method's natural role: not a stand-alone classifier (on real multi-class
-scenes it under-reports), but a calibrated homogeneity test, a guard placed
-before an unsupervised classification or a stopping rule for a region-growing
-or regionalization procedure (Section~\ref{subsec:bg-constrained}), where a
+a genuine limitation when an exhaustive class inventory is the goal. \revtext{This
+defines the method's natural role. It is not a stand-alone classifier (on real
+multi-class scenes it under-reports) but a calibrated homogeneity test: a guard
+placed before an unsupervised classification, or a stopping rule for a
+region-growing or regionalisation procedure} (Section~\ref{subsec:bg-constrained}), where a
 negative one can trust is worth more than an exhaustive but unreliable class
 count.
 
@@ -38,10 +38,11 @@ substantially more structure at the same measured specificity (eleven against
 five classes on Salinas; balanced score $0.868$ against $0.771$). The
 imbalance sweep of Section~\ref{subsec:imbalance} makes the boundary
 quantitative: minority classes below about a fifth of the scene call for the
-recall variant, and below a twentieth lie beyond both. Neither variant needs a
-pre-selected univariate feature: the projection is part of the procedure,
-computed in the full feature space, and what the method does require is a
-space in which Euclidean geometry is meaningful, so bands should be
+recall variant, and \revtext{those below a twentieth lie beyond the reach of
+both}. Neither variant needs a pre-selected univariate feature: the projection
+is part of the procedure\revtext{ and is computed in the full feature space.
+What} the method does require is a space in which Euclidean geometry is
+meaningful, so bands should be
 standardised and strongly collinear cubes reduced by principal components
 (we use ten throughout; Section~\ref{subsec:realspec} shows the results are
 insensitive to truncations from five to thirty). Three embedding patterns
@@ -53,9 +54,10 @@ that applies the homogeneity test within each cluster proposed by any
 external algorithm, flagging the clusters the data do not support.
 
 \paragraph{Relation to geostatistical null models.}
-\revtext{Assumption~\ref{ass:null} replaces the independence reference of the
-gap statistic, and supplies one where the ratio indices have none,} by a unimodal Gaussian random field, the continuous-field counterpart
-of the spatial neutral models used in disease mapping \citep{Goovaerts2004} and
+Assumption~\ref{ass:null} replaces the independence reference of the
+gap statistic \revtext{with a unimodal Gaussian random field, and supplies such a
+reference where the ratio indices have none. This field is} the continuous-field
+counterpart of the spatial neutral models used in disease mapping \citep{Goovaerts2004} and
 of Moran spectral randomization \citep{WagnerDray2015}. We realise it
 implicitly, through the effective-sample-size calibration of the dip, rather
 than by simulating reference fields. A more explicit route would calibrate the
@@ -99,16 +101,16 @@ Each limitation suggests a direction. The recall-oriented variant ESS-Dip-R
 realises one: trading the distribution-free uniform null for the model's
 Gaussian one recovers more structure at the same specificity (eleven classes on
 Salinas against five). Further recall could come from revisiting leaves at a
-relaxed level, or testing minority modes against the residual of the majority,
+relaxed level, or \revtext{from} testing minority modes against the residual of the majority,
 to mitigate the imbalance that bounds the Sentinel-2 result. Replacing the scalar range by an anisotropic variogram model, and
 the uniform dip null by conditional simulation, would extend the calibration to
-non-stationary autocorrelation, although Section~\ref{subsec:aniso} shows the
-isotropic estimate is already robust to directional autocorrelation up to an
-eight-fold anisotropy ratio, in the scenarios simulated there. The same effective-sample-size
+non-stationary autocorrelation\revtext{. Section~\ref{subsec:aniso} shows, however,
+that the isotropic estimate is already robust to directional autocorrelation up
+to an eight-fold anisotropy ratio in the scenarios simulated there.} The same effective-sample-size
 correction applies, unchanged, to spatio-temporal stacks, where the
 decorrelation ``area'' becomes a space--time volume. Finally, because our
 contribution is a stopping rule rather than a partitioning constraint, it
 composes naturally with spatially constrained clustering
 (Section~\ref{subsec:bg-constrained}): the calibrated test could decide when a
-regionalization has produced as many regions as the data independently
+\revtext{regionalisation} has produced as many regions as the data independently
 support.

@@ -51,7 +51,7 @@ homogeneity and the number of classes in spatially autocorrelated data}
 Selecting the number of clusters $K$ is a basic step in unsupervised
 classification. The standard internal criteria (the gap statistic, the
 average silhouette, the Calinski--Harabasz and Davies--Bouldin indices)
-\revtext{take no account of the dependence between observations, so on spatial
+take no account of the dependence between observations, so on spatial
 data they leave one question unanswered: whether an apparent grouping reflects
 discrete classes, or is already produced by the autocorrelation of a single
 class. Neighbouring locations are correlated, so a scene carries far less
@@ -59,25 +59,25 @@ information than its pixel count suggests, and a smooth large-scale trend
 mimics discrete structure. The effect is systematic: on autocorrelated fields
 simulated without discrete classes these criteria report more than one class in
 every one of $75$ realisations, and on real imagery they divide single
-land-cover regions.} We recast the choice of $K$ as a recursive homogeneity test: at each step,
+land-cover regions. We recast the choice of $K$ as a recursive homogeneity test: at each step,
 whether a region is a single class or carries \emph{multimodality in excess of
 spatial autocorrelation}. The proposed method, ESS-Dip, evaluates the Hartigan dip
 statistic along the locally optimal split direction. It calibrates the statistic
 against the effective sample size derived from a within-class autocorrelation
 range, which a local declustering estimator separates from the between-class
 scale; a low-order trend is removed adaptively. A recursive partitioning returns $K$,
-\revtext{and for a stylised version of the test we give conditions under which
-the probability of dividing a homogeneous region vanishes.} On a factorial
+and for a stylised version of the test we give conditions under which
+the probability of dividing a homogeneous region vanishes. On a factorial
 simulation with known ground truth, ESS-Dip reaches unit specificity with
 competitive recovery; its recall-oriented variant ESS-Dip-R, calibrated against
 the model's Gaussian null, attains the best balanced score of sixteen criteria
 at the same specificity. On the Indian Pines, Salinas and Sentinel-2 scenes both
 identify single land-cover regions as homogeneous where the standard criteria
-do not. \revtext{The method is conservative by design: it seldom divides a region the
+do not. The method is conservative by design: it seldom divides a region the
 null can account for, at the cost of power against weakly separated or strongly
 imbalanced classes. That trade-off, which we characterise, suits it to use as a
 homogeneity guard or a stopping rule rather than as an exhaustive enumerator of
-classes.} Code and data are released.
+classes. Code and data are released.
 \end{abstract}
 
 \noindent\textbf{Keywords:} number of clusters \textperiodcentered\ cluster

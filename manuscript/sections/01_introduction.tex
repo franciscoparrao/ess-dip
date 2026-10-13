@@ -11,13 +11,13 @@ Calinski--Harabasz \citep{CalinskiHarabasz1974} and Davies--Bouldin
 \citep{DaviesBouldin1979} indices each score a partition by its internal
 geometry and select the $K$ that optimises the score.
 The stakes are concrete. An analyst mapping land cover from a
-satellite scene \revtext{must commit to $K$ for the large family of methods
+satellite scene must commit to $K$ for the large family of methods
 that take it as input, among them $k$-means and finite mixtures; methods that
 instead determine the number of groups on the fly, such as
 DBSCAN \citep{Ester1996}, replace that choice by tuning parameters that
-govern it. Either way,} every downstream product (class areas, change
+govern it. Either way, every downstream product (class areas, change
 statistics, sampling strata, training masks) inherits the
-\revtext{decision}. Set $K$ too high and single crop fields
+decision. Set $K$ too high and single crop fields
 fragment into spurious sub-classes that propagate into those products; set it
 too low and real classes merge. The same prior decision arises when
 delineating geochemical domains, zoning a mineral deposit, or partitioning a
@@ -25,12 +25,12 @@ scene into regions for stratified field sampling: in each case the analyst
 must first ask how many classes the data actually support.
 
 These criteria share a blind spot: none of them takes the dependence
-between observations into account. \revtext{The gap statistic makes the
+between observations into account. The gap statistic makes the
 omission explicit, in a reference distribution of points scattered
 independently across the data's range; the silhouette, Calinski--Harabasz and
 Davies--Bouldin indices carry no reference distribution at all, and score
 geometry in a way that is silent about how the points came to be placed
-where they are.} Spatial data are not exchangeable.
+where they are. Spatial data are not exchangeable.
 Neighbouring pixels are autocorrelated \citep{Tobler1970}, so the effective
 number of independent observations is far below the nominal pixel count
 \citep{Cressie1993}, and a smooth illumination or topographic gradient spreads
@@ -41,13 +41,13 @@ Sections~\ref{sec:simulation}--\ref{sec:application}, is systematic
 score are produced by $k$-means, the dominant choice in this setting;
 statements about a criterion's behaviour are therefore statements about the
 criterion--$k$-means pair, a dependence Section~\ref{subsec:methods} makes
-explicit). On synthetic fields containing no discrete classes the
-gap statistic reports on average between seven and eight; on real imagery
-the silhouette, Calinski--Harabasz and Davies--Bouldin indices fragment a
+explicit). \revtext{On synthetic fields containing no discrete classes, the
+gap statistic reports, on average, between seven and eight classes; on real
+imagery, the} silhouette, Calinski--Harabasz and Davies--Bouldin indices fragment a
 single, homogeneous crop field into several sub-classes in every instance we
 examined.
 
-\revtext{None of this makes those criteria wrong. A clustering is not a fact
+None of this makes those criteria wrong. A clustering is not a fact
 waiting to be uncovered: which groupings count as clusters depends on what the
 analysis is for \citep{Hennig2015}, and an analyst may have good reason to
 partition an autocorrelated field into contiguous units whether or not the
@@ -57,15 +57,15 @@ addresses: does a region contain discrete classes, over and above the variation
 that a single autocorrelated class already produces? That question is the
 relevant one whenever the classes are meant to denote distinct ground objects
 rather than convenient subdivisions, and against it a criterion that reports
-several classes on a field simulated with one is uninformative.}
+several classes on a field simulated with one is uninformative.
 
-\revtext{Answering it is not a matter of swapping in a better null alone.} Because the
+Answering it is not a matter of swapping in a better null alone. Because the
 within-cluster dispersion that these criteria minimise is a variance-based
 quantity, a reference matched to the data's spatial covariance structure,
-its variogram, reproduces the same dispersion \revtext{whether or not classes
+its variogram, reproduces the same dispersion whether or not classes
 are present, because the between-class contrast is itself part of the
 covariance the reference is matched to; the comparison then has nothing left to
-detect}. \revtext{The null must change, but so must the statistic:} distinguishing
+detect. The null must change, but so must the statistic: distinguishing
 classes from autocorrelation requires
 information beyond the covariance, namely the \emph{multimodality} of the feature
 distribution; and distinguishing real classes from a smooth trend requires
@@ -92,42 +92,38 @@ the within-class autocorrelation range, in the manner of declustering
 mosaic from corrupting that calibration. The third is an adaptive
 trend--residual decomposition, which removes a smooth drift only when it is
 statistically resolvable. A recursive partitioning driven by the calibrated dip statistic
-\citep{HartiganHartigan1985} returns $K$. \revtext{Because the test is tuned
+\citep{HartiganHartigan1985} returns $K$. Because the test is tuned
 for specificity, it seldom divides a region that the null can account for; as
 with any test, failing to reject is not evidence that a region is homogeneous,
 only that the data do not contradict homogeneity at the effective sample size.
 That asymmetry makes ESS-Dip as useful as a homogeneity guard or a stopping
-rule for region-growing as it is as a conservative estimator of $K$.} Our contributions are:
+rule for region-growing as it is as a conservative estimator of $K$.
 
-\begin{itemize}
-  \item We document, on controlled ground truth, \revtext{that the standard
-    number-of-clusters criteria report more than one class on every one of the
-    $75$ scenes we simulate without discrete classes}
-    (Section~\ref{sec:simulation}).
-  \item We propose \emph{ESS-Dip}, an effective-sample-size-calibrated test of
-    cluster homogeneity (whether a region holds discrete structure beyond its
-    spatial autocorrelation), combining a within-class range from local
-    range estimation with adaptive trend removal (Section~\ref{sec:method}).
-    Applied recursively it returns a conservative $K$. \revtext{For a
-    stylised version of the test we prove that the probability of dividing a
-    homogeneous region vanishes (Proposition~\ref{prop:fpr}); the deployed
-    procedure is assessed empirically.} A recall-oriented variant, ESS-Dip-R,
-    trades the distribution-free uniform null for the model's Gaussian null to
-    recover more structure at the same specificity.
-  \item We evaluate sixteen criteria on a factorial simulation with known $K$,
-    including the most direct spatial adaptation of a standard index (the gap
-    statistic with an autocorrelation-matched reference),
-    including the calibrated-validity-index method of \citet{HennigLin2015} that
-    ESS-Dip generalises; ESS-Dip reaches unit specificity, its recall variant
-    ESS-Dip-R attains the best balanced score at the same specificity, and an
-    ablation attributes the gain to the local range and the adaptive detrending
-    (Section~\ref{sec:simulation}).
-  \item We confirm the behaviour on three real scenes spanning hyperspectral
-    and multispectral sensing (Indian Pines, Salinas, and a Sentinel-2 scene
-    labelled by ESA WorldCover), where ESS-Dip identifies single land-cover
-    regions as homogeneous where the standard criteria do not
-    (Section~\ref{sec:application}).
-\end{itemize}
+\revtext{The paper makes four contributions. First, we document, on
+controlled ground truth, that the standard number-of-clusters criteria report
+more than one class on every one of the $75$ scenes we simulate without
+discrete classes (Section~\ref{sec:simulation}). Second, we propose
+\emph{ESS-Dip}, an effective-sample-size-calibrated test of cluster
+homogeneity (whether a region holds discrete structure beyond its spatial
+autocorrelation), which combines a within-class range from local range
+estimation with adaptive trend removal (Section~\ref{sec:method}). Applied
+recursively, it returns a conservative $K$. For a stylised version of the
+test, we prove that the probability of dividing a homogeneous region vanishes
+(Proposition~\ref{prop:fpr}); the deployed procedure is assessed empirically.
+A recall-oriented variant, ESS-Dip-R, trades the distribution-free uniform
+null for the model's Gaussian null to recover more structure at the same
+specificity. Third, we evaluate sixteen criteria on a factorial simulation
+with known $K$. They include the most direct spatial adaptation of a standard
+index (the gap statistic with an autocorrelation-matched reference) and the
+calibrated-validity-index method of \citet{HennigLin2015} that ESS-Dip
+generalises. ESS-Dip reaches unit specificity, its recall variant ESS-Dip-R
+attains the best balanced score at the same specificity, and an ablation
+attributes the gain to the local range and the adaptive detrending
+(Section~\ref{sec:simulation}). Fourth, we confirm this behaviour on three
+real scenes spanning hyperspectral and multispectral sensing (Indian Pines,
+Salinas, and a Sentinel-2 scene labelled by ESA WorldCover), on which ESS-Dip
+identifies single land-cover regions as homogeneous where the standard
+criteria do not (Section~\ref{sec:application}).}
 
 The remainder of the paper is organised as follows.
 Section~\ref{sec:background} reviews number-of-clusters criteria, the

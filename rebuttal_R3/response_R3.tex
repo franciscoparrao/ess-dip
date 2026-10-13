@@ -1,0 +1,92 @@
+\documentclass[11pt]{article}
+\usepackage[margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{parskip}
+\usepackage{microtype}
+\newcommand{\neff}{n_{\mathrm{eff}}}
+\newcommand{\R}[1]{\medskip\noindent\textbf{#1}\quad}
+\newenvironment{rquote}{\begin{quote}\itshape}{\end{quote}}
+\begin{document}
+\begin{center}
+{\LARGE\bfseries Response to Reviewers}\\[6pt]
+{\large Manuscript MATG-D-26-00180 --- \emph{Mathematical Geosciences},
+third revision}\\[4pt]
+``Effective-sample-size calibration of a modality test for cluster homogeneity
+and the number of classes in spatially autocorrelated data''\\[4pt]
+Francisco Parra \,\textperiodcentered\, Universidad de Santiago de Chile
+\end{center}
+\medskip
+
+I thank the Editor for the decision and Reviewer~1 for a third careful
+reading. Every point has been implemented. Reviewer comments are quoted in
+italics; section and equation numbers refer to the revised manuscript, and the
+changes made in this round are shown in blue in the marked copy.
+
+\section*{Reviewer 1}
+
+\R{1. Maximising a distribution.}
+\begin{rquote}
+``Sec.~3.4, l.~2/3 `least favourable among unimodal laws in the sense that it
+maximises the asymptotic distribution of the rescaled dip' --- you can
+maximise a number but not a distribution.''
+\end{rquote}
+Corrected. The sentence now says that, asymptotically, the rescaled dip of the
+uniform law is stochastically largest, so that its $(1-\alpha)$ quantile is at
+least that of any other unimodal law in the class considered. It has also been
+moved out of the definition of $q_{1-\alpha}(m)$ into a sentence of its own.
+
+\R{2. The limit in Proposition~1.}
+\begin{rquote}
+``If the limsup in (13) is 0, then write `$=0$' rather than `$\le\alpha$',
+which makes the awkward wording below it superfluous.''
+\end{rquote}
+Done. Equation~(13) now states that the limit is zero, and the sentence that
+followed it has been removed. The proof in Section~S1 of the supplement has
+been aligned with the new statement.
+
+\R{3. The wording of Condition (C3), and the Proposition itself.}
+\begin{rquote}
+``In my view `Condition (C3) (\dots) assumes what one would most want proved'
+is correct but super awkward as well \dots\ If you feel comfortable with the
+awkward state of affairs as stated above, fair enough.''
+\end{rquote}
+I have kept the Proposition, which is shorter now that point~2 is
+implemented, and rewritten the sentence. Remark~1(i) now reads: ``Condition
+(C3) carries the analytic weight: it is the empirical-process form of the
+effective-sample-size heuristic. We take it as a hypothesis and do not derive
+it, so the proposition shows only that the rest of the argument holds once
+that heuristic is granted.'' Should the Editor prefer the paper without the
+Proposition, it can move entirely to the supplement at the proof stage.
+
+\R{4. The projection direction and the empirical level.}
+\begin{rquote}
+``p.~16: `\dots\ the second does not inflate the empirical level.' The latter
+statement is not proved in general as far as I can see, so don't overclaim.''
+\end{rquote}
+Corrected. Remark~1(iv) now says that we have no proof for the data-dependent
+direction, only the empirical observation that it did not inflate the level in
+the experiment of Figure~1a. The same claim appeared in two further places,
+Section~3.3 and the discussion of Figure~1 in Section~3.9; both are now
+restricted in the same way to the experiment that supports them.
+
+\R{5. English language and bullet-point lists.}
+\begin{rquote}
+``The manuscript needs further English language improvement (examples below).
+The use of bullet-point lists in select sections should also be
+restructured.''
+\end{rquote}
+The three sentences cited have been corrected as indicated: the first is no
+longer a fragment (``We recast the choice of $K$ as a recursive homogeneity
+test, which asks at each step whether \dots''), and the missing commas have
+been added to the other two. The list of contributions in Section~1, the only
+bulleted list in the paper, is now a paragraph of prose. Beyond the examples,
+the whole manuscript has been revised for language, with attention to the
+kinds of problem the examples illustrate: sentence fragments, missing commas
+after introductory phrases, dangling modifiers, absolute constructions, and
+long sentences that read better as two. These edits do not change the
+content, and British spelling is now used consistently.
+
+\end{document}

@@ -4,8 +4,8 @@ We assess the procedure on synthetic scenes with known ground truth, where the
 number of classes, the strength of spatial autocorrelation, the presence of a
 trend, and the class separability are all controlled. The design isolates the
 two failure modes of Section~\ref{subsec:null}, autocorrelation and
-large-scale drift, and lets us \revtext{measure how far the calibration keeps
-the recursion from splitting}, by counting how often each method
+large-scale drift, and lets us measure how far the calibration keeps
+the recursion from splitting, by counting how often each method
 recovers a single class when the scene contains exactly one.
 
 \subsection{Generative model}\label{subsec:design}
@@ -15,60 +15,60 @@ building block is a unit-variance Gaussian random field
 $g_\sigma$, obtained by convolving Gaussian white noise with an isotropic
 Gaussian kernel of bandwidth $\sigma$ (which sets the autocorrelation range)
 and standardising. Four world types instantiate the decomposition
-\eqref{eq:decomp}:
-\begin{description}
-  \item[Null] ($K=1$): each band an independent $g_\sigma$,
-        $\sigma\in\{3,6,9\}$. Pure autocorrelation, no discrete structure.
-  \item[Trend] ($K=1$): each band $\theta\,t(s)+0.4\,g_3(s)$, with $t$ a
-        standardised planar--bilinear polynomial surface and trend amplitude
-        $\theta\in\{1.5,3.0\}$. Smooth large-scale variation, no classes.
-  \item[Structured] ($K\in\{2,3,4,5\}$): a contiguous label map is drawn as
-        the pixelwise $\argmax$ of $K$ independent fields $g_{\sigma_f}$,
-        $\sigma_f\in\{6,9\}$; class $k$ is assigned a mean spectrum
-        $\bm\mu_k\sim\mathcal N(\bm 0,\delta^2 I_p)$ with separation
-        $\delta\in\{2,3,4\}$, and a per-band autocorrelated noise $g_2$ is
-        added. Discrete classes embedded in autocorrelated noise.
-  \item[Mixed] ($K\in\{3,4\}$): a structured scene ($\delta=3$, $\sigma_f=6$)
-        plus a global polynomial trend of amplitude $\theta\in\{1.5,3.0\}$.
-        The realistic case: classes \emph{and} drift together.
-\end{description}
+\eqref{eq:decomp}.
+\revtext{The \emph{null} world ($K=1$) is pure autocorrelation with no discrete
+structure: each band is an independent $g_\sigma$, with
+$\sigma\in\{3,6,9\}$. The \emph{trend} world ($K=1$) has smooth large-scale
+variation but no classes: each band is $\theta\,t(s)+0.4\,g_3(s)$, where $t$
+is a standardised planar--bilinear polynomial surface and the trend amplitude
+is $\theta\in\{1.5,3.0\}$. The \emph{structured} world
+($K\in\{2,3,4,5\}$) embeds discrete classes in autocorrelated noise: a
+contiguous label map is drawn as the pixelwise $\argmax$ of $K$ independent
+fields $g_{\sigma_f}$, with $\sigma_f\in\{6,9\}$; class $k$ is assigned a mean
+spectrum $\bm\mu_k\sim\mathcal N(\bm 0,\delta^2 I_p)$ with separation
+$\delta\in\{2,3,4\}$; and a per-band autocorrelated noise $g_2$ is added.
+Finally, the \emph{mixed} world ($K\in\{3,4\}$), the realistic case, combines
+classes \emph{and} drift: a structured scene ($\delta=3$, $\sigma_f=6$) plus a
+global polynomial trend of amplitude $\theta\in\{1.5,3.0\}$.}
 The factorial of these settings yields $33$ cells ($3$ null, $2$ trend, $24$
 structured, $4$ mixed); each cell is realised $15$ times with independent
 seeds, for $495$ scenes in total.
 
 \subsection{Methods and metrics}\label{subsec:methods}
 
-We compare sixteen criteria. \revtext{The decision rule of each is summarised
-here; Section~S2 of the supplementary material specifies every one in full,
+We compare sixteen criteria. The decision rule of each is summarised
+here\revtext{. Section~S2} of the supplementary material specifies every one in full,
 including all tuning constants, the subsampling used by the indices that
 require pairwise distances, and how the multiple-testing correction is applied,
-and the released code reproduces each number with its seeds.} Four are standard internal indices evaluated
+and the released code reproduces each number with its seeds. Four are standard internal indices evaluated
 over $K=1,\dots,8$ on MiniBatch $k$-means partitions: the gap
 statistic \citep{Tibshirani2001} with eight uniform reference
 datasets over the bounding box and the one-standard-error rule, the average
-silhouette, Calinski--Harabasz, and Davies--Bouldin (each maximised,
-or minimised for Davies--Bouldin, over $K$). These four are the
-original formulations, with no null model added by us; the null-calibrated
+silhouette, Calinski--Harabasz, and Davies--Bouldin (each maximised over $K$,
+\revtext{except Davies--Bouldin, which is minimised}). These four are the
+original formulations, with no null model added by us\revtext{. The} null-calibrated
 criteria in this benchmark are the autocorrelation-matched gap described
 next, the Hennig--Lin variants,
-and the proposed family, and in each case the null is an addition of the
-\revtext{work that introduced each of those calibrations, not of the papers
-that introduced the indices themselves.} A fifth is the most
+and the proposed family, and in each case the null \revtext{was introduced by}
+the work \revtext{that proposed} that calibration, not by the papers
+that introduced the indices themselves. A fifth \revtext{criterion} is the most
 direct spatial adaptation of an existing index, the \emph{gap with an
-autocorrelated reference}: identical to the gap statistic except that the
+autocorrelated reference}\revtext{. It is} identical to the gap statistic except that the
 eight reference datasets are drawn not uniformly over the bounding box but as
 per-band Gaussian random fields whose $1/e$ range matches the tile-median
-estimate of Section~\ref{subsec:range}, scaled to each band's
-\revtext{standard deviation as estimated from the scene itself, since no
-deployable version of the criterion has access to the true value},
-with the same one-standard-error rule. It isolates how far
-correcting only the reference's autocorrelation goes. (The latter three cannot return
+estimate of Section~\ref{subsec:range}\revtext{, and it uses} the same
+one-standard-error rule\revtext{. The reference fields are} scaled to each band's
+standard deviation as estimated from the scene itself, since no
+deployable version of the criterion has access to the true value. \revtext{This
+criterion} isolates how far
+correcting only the reference's autocorrelation goes. (The \revtext{silhouette,
+Calinski--Harabasz and Davies--Bouldin indices} cannot return
 $K=1$ by construction, an asymmetry we return to below.) Two more are the
 calibrated-validity-index method of \citet{HennigLin2015}, the procedure
 ESS-Dip extends: the average silhouette width calibrated by parametric
 bootstrap against a null model, run both with an \emph{i.i.d.} Gaussian null
 (the autocorrelation-blind application) and with a \emph{spatial} null
-(phase-randomized surrogates preserving each band's variogram, their
+(phase-\revtext{randomised} surrogates preserving each band's variogram, their
 autocorrelation-aware variant adapted to the gridded setting). The
 calibrated index is
 $V(K)=\bigl(\mathrm{ASW}(K)-\overline{\mathrm{ASW}}_{\mathrm{null}}(K)\bigr)/
@@ -86,7 +86,7 @@ $\nu=12$ throughout, with no per-scene tuning. The tenth, \textbf{ESS-Dip-R}, is
 its recall-oriented variant: it calibrates the dip against the Gaussian null of
 Assumption~\ref{ass:null} rather than the uniform least-favourable null, which is
 less conservative and recovers more structure at the same specificity
-(Section~\ref{subsec:simresults}). The remaining four are
+(Section~\ref{subsec:simresults}). The \revtext{next} four are
 ablations of ESS-Dip that disable one component each, to attribute the
 contribution of every ingredient:
 \emph{global range} (the $\ell^2$ range estimated over the whole image rather
@@ -127,7 +127,7 @@ the exact-$K$ rate. Best in each column in bold.}
 \cmidrule(lr){3-4}
 Method & ($\hat K{=}1$) & Acc. & MAE & Acc. & score\\
 \midrule
-\multicolumn{6}{l}{\textit{Standard internal indices} \revtext{\textit{(no spatial null)}}}\\
+\multicolumn{6}{l}{\textit{Standard internal indices} \textit{(no spatial null)}}\\
 Gap statistic            & 0.00 & \textbf{0.97} & \textbf{0.03} & 0.03 & 0.336\\
 Silhouette               & 0.00 & 0.76 & 0.32 & 0.30 & 0.355\\
 Calinski--Harabasz       & 0.00 & 0.85 & 0.18 & 0.40 & 0.418\\
@@ -164,49 +164,50 @@ SGS-Dip                  & 0.85 & 0.49 & 0.91 & 0.27 & 0.535\\
 \centering
 \includegraphics[width=\linewidth]{figures/benchmark}
 \caption{Left: specificity (class-free scenes) against exact-$K$ accuracy on
-structured and mixed scenes, by method. Only the proposed family attains unit
-specificity; among them ESS-Dip recovers the most structure. Right: exact-$K$
-accuracy versus the true number of classes on structured scenes. For legibility
-the panels show the four standard indices and the ESS-Dip family; the
-calibrated-validity-index and Gaussian-simulation methods of
+structured and mixed scenes, by method. \revtext{Of the methods shown, only
+ESS-Dip and its ablations attain unit specificity, and among them ESS-Dip
+recovers the most structure.} Right: exact-$K$
+accuracy versus the true number of classes on structured scenes. \revtext{For
+legibility, the panels show the four standard indices, ESS-Dip and its
+ablations; ESS-Dip-R and the} calibrated-validity-index and Gaussian-simulation methods of
 Table~\ref{tab:bench} are omitted.}
 \label{fig:bench}
 \end{figure}
 
-\paragraph{\revtext{Standard indices report classes on every class-free scene.}}
-On the $75$ class-free scenes every standard index reports spurious structure:
+\paragraph{Standard indices report classes on every class-free scene.}
+On the $75$ class-free scenes\revtext{,} every standard index reports spurious structure:
 the $\hat K{=}1$ rate is $0.00$ for all four. The failure is severe, not
-marginal: the gap statistic returns on average $\hat K=7.7$ classes on
-\revtext{fields generated without any}, and the silhouette, Calinski--Harabasz and
-Davies--Bouldin indices average $2.9$, $3.6$ and $4.1$. This is the
+marginal: the gap statistic returns\revtext{, on average, $\hat K=7.7$} classes on
+fields generated without any, and the silhouette, Calinski--Harabasz and
+Davies--Bouldin indices average $2.9$, $3.6$ and $4.1$\revtext{, respectively}. This is the
 over-detection anticipated in Section~\ref{subsec:null}, now quantified: under
-spatial autocorrelation an independence null cannot recognise the absence of
-\revtext{discrete structure in the sense of \eqref{eq:decomp}}. Nor is the failure repaired by the simplest spatial
-correction: the gap with an autocorrelation-matched reference lifts
+spatial autocorrelation\revtext{,} an independence null cannot recognise the absence of
+discrete structure in the sense of \eqref{eq:decomp}. Nor is the failure repaired by the simplest spatial
+correction: the gap with an autocorrelation-matched reference \revtext{raises}
 specificity only to $0.21$, because matching the reference's autocorrelation
 addresses one of the two failure modes but not the other, the smooth drift.
-On trend scenes its reference fields carry no drift and the criterion reads
-the gradient as structure ($\hat K\approx7$ on average), and in the mixed
-regime its accuracy collapses to $0.10$; its balanced score, $0.427$, sits far
-below the proposed family's. Fixing the reference is not enough; the
-dispersion statistic itself, and the trend, must both be addressed.
+On trend scenes\revtext{,} its reference fields carry no drift\revtext{,} and the criterion reads
+the gradient as structure ($\hat K\approx7$ on average)\revtext{; in} the mixed
+regime\revtext{,} its accuracy collapses to $0.10$\revtext{, and} its balanced score, $0.427$, \revtext{lies} far
+below \revtext{that of} the proposed family. Fixing the reference is not enough\revtext{:} \revtext{both} the
+dispersion statistic itself and the trend must be addressed.
 
-\paragraph{\revtext{The proposed family leaves the class-free scenes undivided.}}
-Every member of the proposed family, ESS-Dip and all four ablations,
-attains specificity $1.00$: in $75$ out of $75$ class-free scenes it returns a
+\paragraph{The proposed family leaves the class-free scenes undivided.}
+Every member of the proposed family\revtext{ (}ESS-Dip and all four ablations\revtext{)}
+attains specificity $1.00$: in $75$ out of $75$ class-free scenes\revtext{,} it returns a
 single class. This is the empirical content of Proposition~\ref{prop:fpr}, and
 it holds whether the class-free scene is stationary (null) or carries a smooth
 drift (trend), confirming that the effective-sample-size calibration and the
 adaptive detrending together neutralise both failure modes.
 
 \paragraph{Specificity does not cost competitiveness.}
-On the structured scenes the gap statistic is most accurate
-($0.97$): with well-separated classes and an aligned null it is hard to beat,
-and we do not. ESS-Dip reaches $0.81$, ahead of the silhouette ($0.76$),
-Davies--Bouldin ($0.70$) and close to Calinski--Harabasz ($0.85$), while being
-the \emph{only} method with non-zero specificity. On the realistic mixed
-scenes ESS-Dip reaches $0.50$, ahead of every standard index ($0.40$ for the
-best), because the adaptive detrending removes the drift that collapses them.
+On the structured scenes\revtext{,} the gap statistic is \revtext{the} most accurate
+($0.97$): with well-separated classes and an aligned null\revtext{,} it is hard to beat,
+and we do not \revtext{beat it}. ESS-Dip reaches $0.81$, ahead of the silhouette ($0.76$)
+\revtext{and} Davies--Bouldin ($0.70$) and close to Calinski--Harabasz ($0.85$), while being
+the \emph{only} \revtext{one of these} \revtext{methods} with non-zero specificity. On the realistic mixed
+scenes\revtext{,} ESS-Dip reaches $0.50$, ahead of every standard index ($0.40$ for the
+best), because the adaptive detrending removes the drift that \revtext{causes them to collapse}.
 The recall variant ESS-Dip-R does better still: calibrating against the Gaussian
 null of Assumption~\ref{ass:null} rather than the conservative uniform one, it
 raises structured accuracy to $0.89$ and mixed accuracy to $0.72$ at the same
@@ -214,35 +215,35 @@ unit specificity, for a balanced score of $0.868$, the best of any method.
 ESS-Dip itself scores $0.771$, already far above the next non-proposed method
 ($0.638$) and more than twice the best standard index ($0.418$). These synthetic
 fields are Gaussian, so the model-matched ESS-Dip-R is favoured here; its
-specificity and recall gains carry to the real scenes of
+specificity and recall gains carry \revtext{over} to the real scenes of
 Section~\ref{sec:application}. Standard indices that look strong on pure
 structured scenes collapse once specificity is taken into account.
 
-\paragraph{\revtext{Comparison with the method that ESS-Dip extends.}}
+\paragraph{Comparison with the method that ESS-Dip extends.}
 The calibrated-validity-index framework of \citet{HennigLin2015} is
 instructive precisely because the present method generalises it. Applied with
-an independence (i.i.d.) null it inherits the over-detection of the standard
+an independence (i.i.d.) null\revtext{,} it inherits the over-detection of the standard
 indices (specificity $0.00$, balanced score $0.280$), confirming that the
 framework alone, without a spatial null, does not address the problem. With its
-autocorrelation-aware (spatial) null it recovers much of the lost specificity
+autocorrelation-aware (spatial) null\revtext{,} it recovers much of the lost specificity
 ($0.80$) and a comparable structured accuracy ($0.72$), a clear vindication of
 its central idea. Two differences remain, and they are the contribution of this
 paper. First, its specificity, at $0.80$, still admits one class-free scene in
-five as clustered, where the within-class calibration of ESS-Dip admits none.
-Second, and decisively, on the mixed regime its accuracy is only $0.17$,
+five as clustered, where\revtext{as} the within-class calibration of ESS-Dip admits none.
+Second, and decisively, on the mixed regime\revtext{,} its accuracy is only $0.17$,
 no better than the i.i.d.\ variant and far below ESS-Dip's $0.50$, because a
-phase-randomized null preserves the trend along with the autocorrelation and so
+phase-\revtext{randomised} null preserves the trend along with the autocorrelation and so
 cannot separate a smooth drift from discrete classes. The explicit
 trend--residual decomposition of Section~\ref{subsec:detrend}, absent from the
 calibrated-index framework, is what closes this gap. This comparison is
-insensitive to the significance threshold: the value used, $V>1.96$ (the
+insensitive to the significance threshold\revtext{. The} value used, $V>1.96$ (the
 one-sided $2.5\%$ level for the calibrated index under approximate normality),
-and the alternatives $V>1.64$ and $V>2.33$ all leave the conclusion intact:
-the i.i.d.\ null fails specificity ($0.00$) at every threshold, and the spatial
+and the alternatives $V>1.64$ and $V>2.33$ all leave the conclusion intact\revtext{.
+At} every threshold\revtext{,} the i.i.d.\ null fails \revtext{on} specificity ($0.00$), and the spatial
 null controls specificity ($0.77$--$0.83$) but not the mixed regime
-($\le0.08$) at every threshold. Figure~\ref{fig:recover} makes the mixed-scene
+($\le0.08$). Figure~\ref{fig:recover} makes the mixed-scene
 behaviour concrete on one realisation: the gap statistic and the Hennig--Lin
-null fragment the scene into six and eight clusters, whereas ESS-Dip recovers
+null fragment the scene into six and eight clusters\revtext{, respectively}, whereas ESS-Dip recovers
 the three true classes.
 
 \begin{figure}[t]
@@ -263,18 +264,18 @@ reproduces the colours of panel (a).}
 
 The ablations isolate where ESS-Dip's accuracy comes from
 (Table~\ref{tab:bench}, lower block). The single largest contribution is the
-\emph{local within-class range} of Section~\ref{subsec:range}: replacing it by
-a scene-wide range drops structured accuracy from $0.81$ to $0.63$ and mixed
-accuracy from $0.50$ to $0.28$. This confirms the diagnosis of
-Section~\ref{subsec:range} (a global range conflates the between-class
+\emph{local within-class range} of Section~\ref{subsec:range}: replacing it \revtext{with}
+a scene-wide range \revtext{lowers} structured accuracy from $0.81$ to $0.63$ and mixed
+accuracy from $0.50$ to $0.28$\revtext{, while leaving specificity untouched}. This confirms the diagnosis of
+Section~\ref{subsec:range}\revtext{:} a global range conflates the between-class
 mosaic with the within-class scale, inflating $\ell$, collapsing $\neff$, and
-starving the test of power) while leaving specificity untouched.
+starving the test of power.
 \emph{Adaptive} trend removal matters in both directions: forcing detrending on
 every scene ($\tau=0$) destroys structured accuracy ($0.19$), because the
 polynomial absorbs genuine between-class signal when no trend is present;
-disabling it ($\tau=\infty$) halves mixed accuracy ($0.13$), because an
+disabling it ($\tau=\infty$) \revtext{reduces} mixed accuracy \revtext{to $0.13$}, because an
 unremoved drift inflates the range. Removing the drift \emph{only when present}
-attains both ($0.81$ structured, $0.50$ mixed). The declustering precursor,
+\revtext{preserves both} ($0.81$ structured, $0.50$ mixed). The declustering precursor,
 which discards all but one pixel per patch, matches the others on specificity
 but trails on accuracy ($0.08$ mixed), confirming the value of calibrating on
 the full pixel set rather than thinning it. At the opposite extreme, plain
@@ -291,44 +292,44 @@ modest cost in structured recall ($0.92$ to $0.81$).
 \subsection{Geostatistical reference and the effective-sample-size
 approximation}\label{subsec:geostat-ref}
 
-\revtext{Section~\ref{subsec:range} offers, alongside the default $\ell^{2}$
+Section~\ref{subsec:range} offers, alongside the default $\ell^{2}$
 proxy, a fitted variogram and its integral range, and
 Section~\ref{subsec:sgs} offers the Gaussian-simulation reference
 \eqref{eq:sgstest} in place of the effective-sample-size shortcut. Section~S4
 of the supplementary material compares all three, and reports two findings
 used elsewhere in this paper. First, as a single homogeneity test on a full
-rectangular domain the simulation reference decides correctly on every world,
+rectangular domain\revtext{,} the simulation reference decides correctly on every world,
 accepting homogeneity on the class-free ones ($p=0.35$, $0.46$) and rejecting
-it where classes are present ($p<10^{-3}$), which is the assumption-light check
-referred to in Section~\ref{subsec:prop}; the mean-based integral range,
+it where classes are present ($p<10^{-3}$)\revtext{; this} is the assumption-light check
+referred to in Section~\ref{subsec:prop}\revtext{. The} mean-based integral range,
 however, is some three times larger than $\ell^{2}$ on these fields and so
 loses recall, which is why the proxy is the default. Second, promoting the
-simulation reference to a recursive estimator does not pay: without a
-multiple-testing correction it over-splits (specificity $0.85$, balanced score
-$0.535$), with a Bonferroni correction it becomes competitive on controlled
-fields (balanced score $0.710$ against ESS-Dip's $0.771$), and on real imagery
+simulation reference to a recursive estimator does not pay\revtext{. Without} a
+multiple-testing correction\revtext{,} it over-splits (specificity $0.85$, balanced score
+$0.535$)\revtext{; with} a Bonferroni correction\revtext{,} it becomes competitive on controlled
+fields (balanced score $0.710$ against ESS-Dip's $0.771$)\revtext{; and} on real imagery\revtext{,}
 its per-node variogram, fitted on irregular non-rectangular supports, leaves it
-behind (Section~\ref{subsec:realspec}), at $M$ simulations per node against the
+behind (Section~\ref{subsec:realspec})\revtext{. Moreover, it requires} $M$ simulations per node\revtext{,} against the
 cached near-linear cost of \eqref{eq:test}. The apparent paradox that a
 conservative correction raises accuracy is resolved in Section~S4: the
 correction lowers $\hat K$ in every world, and accuracy rises because the
-uncorrected recursion overshoots.}
+uncorrected recursion overshoots.
 
 \subsection{Computational performance}\label{subsec:timing}
 
 Figure~\ref{fig:timing} reports single-threaded wall-clock time on structured
 scenes. Across image sizes from $\sim\!2{,}300$ to $\sim\!66{,}000$ pixels,
 ESS-Dip scales with an empirical exponent
-$\mathrm{d}\log t/\mathrm{d}\log N = 0.86$ (panel~a), near-linear, consistent
+$\mathrm{d}\log t/\mathrm{d}\log N = 0.86$ (panel~a)\revtext{, which is} near-linear \revtext{and} consistent
 with Section~\ref{subsec:complexity}, and is a constant factor (about
 $1.2$--$2\times$) faster than the gap statistic, which scales similarly but
 carries the overhead of its reference replicates. Cost grows sub-linearly with
-the band count $p$ (panel~b: $0.31$\,s at $p=3$ to $1.02$\,s at $p=40$, at
-$N=128^2$). Peak memory at $256\times256\times6$ is $8.9$\,MB, about three times
+the band count $p$ (panel~b: \revtext{from} $0.31$\,s at $p=3$ to $1.02$\,s at $p=40$, at
+$N=128^2$). Peak memory \revtext{for a} $256\times256\times6$ \revtext{cube} is $8.9$\,MB, about three times
 the input cube, so the method is memory-light at scene scale. The exact
 Gaussian-simulation homogeneity test \eqref{eq:sgstest} with $B=120$ costs
-$0.10$--$0.34$\,s over the same sizes, comparable to a single ESS-Dip
-evaluation, as it concerns one node; a fully recursive simulation null would
+$0.10$--$0.34$\,s over the same sizes\revtext{. This is} comparable to a single ESS-Dip
+evaluation\revtext{ because} it concerns \revtext{a single} node; a fully recursive simulation null would
 multiply this by the number of nodes, which is the cost the
 effective-sample-size calibration is designed to avoid.
 
@@ -350,30 +351,30 @@ factor of up to eight between the two axes, ESS-Dip retains specificity $1.00$
 and structured accuracy $1.00$ at every anisotropy ratio tested ($1,2,4,8$),
 whereas the gap statistic's specificity on the same class-free fields falls from
 $0.88$ to $0.12$ as the field elongates. The isotropic scalar is thus an
-adequate summary even under marked anisotropy, the modality signal it feeds
-being direction-agnostic, and a fully anisotropic variogram
+adequate summary even under marked anisotropy\revtext{, because} the modality signal it feeds
+\revtext{is} direction-agnostic\revtext{;} a fully anisotropic variogram
 (Section~\ref{sec:discussion}) is a refinement rather than a necessity.
 
 \subsection{Robustness to misestimation of the range}\label{subsec:misspec}
 
 The calibration consumes a single estimated scale, so the practical question
-is how much error in that scale the test tolerates. We answer it directly: the
+is how much error in that scale the test tolerates. We answer it directly\revtext{. The}
 locally estimated range $\ell$ is multiplied by a factor
 $f\in\{\tfrac14,\tfrac12,\tfrac34,1,\tfrac32,2,4\}$ (the decorrelation area
-scales as $f^2$) and the full pipeline is re-run with the perturbed value, on
+scales as $f^2$)\revtext{,} and the full pipeline is re-run with the perturbed value\revtext{ on}
 the null world (specificity) and on the structured world with $K=4$
-(recovery), $15$ paired scenes each. Table~\ref{tab:misspec} reports the
-exact values and Figure~\ref{fig:misspec} the response curves. The level is essentially indifferent to the error: overestimating the
+(recovery), \revtext{with} $15$ paired scenes each. Table~\ref{tab:misspec} reports the
+exact values\revtext{,} and Figure~\ref{fig:misspec} the response curves. The level is essentially indifferent to the error: overestimating the
 range only makes the test more conservative, and even a four-fold
 \emph{under}estimate, which inflates the effective sample size sixteen-fold,
 raises the false-split rate merely to $0.07$, near the nominal $\alpha$,
 because the least-favourable uniform calibration absorbs most of the slack
-(Remark~\ref{rem:prop}). Recovery is asymmetric in the opposite direction: it
+(Remark~\ref{rem:prop}). Recovery is asymmetric in the opposite direction\revtext{.} \revtext{It}
 survives underestimation unharmed (full recovery at $f=\tfrac14$) and degrades
 only under overestimation, retaining $\hat K=4$ in $73\%$ of scenes at
 $f=\tfrac32$ and collapsing to no splits at $f=4$, where the effective sample
-size falls below the testable minimum. The deployed estimator therefore sits
-on the benign side of both asymmetries: errors of up to a factor of two in the
+size falls below the testable minimum. The deployed estimator therefore \revtext{lies}
+on the benign side of both asymmetries\revtext{.} \revtext{Errors} of up to a factor of two in the
 range move the operating point along the precision--recall curve rather than
 breaking the calibration, and the failure mode of a gross overestimate is
 silence, not invention.
@@ -382,11 +383,11 @@ silence, not invention.
 \centering
 \caption{Sensitivity of the deployed pipeline to a multiplicative error $f$ in
 the estimated range ($15$ paired scenes per world; the decorrelation area
-scales as $f^2$). \revtext{Each entry is an average over those $15$ scenes: the
+scales as $f^2$). Each entry is an average over those $15$ scenes: the
 first row gives the proportion on which the one-class world was divided at all
 ($\hat K>1$), the second the mean of $\hat K$ over the four-class world, and
 the third the proportion of that world on which $\hat K$ equalled the true
-$K=4$.} $f<1$ underestimates the range (inflates $\neff$); $f>1$ overestimates
+$K=4$. $f<1$ underestimates the range (inflates $\neff$); $f>1$ overestimates
 it.}
 \label{tab:misspec}
 \begin{tabular}{l ccccccc}
@@ -420,13 +421,13 @@ class hides minorities; here we quantify how severe the imbalance must be.
 Two-class scenes are generated with a contiguous minority class occupying a
 controlled proportion $\pi\in\{0.50,0.30,0.20,0.10,0.05,0.02\}$ of the domain
 (a Gaussian random field thresholded at its $(1-\pi)$ quantile, class means
-drawn as in Section~\ref{subsec:design}), $15$ replicates at each of two
-separations ($\mathrm{sep}=3,4$), pooled, with the same scene shown to every
+drawn as in Section~\ref{subsec:design})\revtext{, with} $15$ replicates at each of two
+separations ($\mathrm{sep}=3,4$)\revtext{. The replicates are} pooled, \revtext{and} the same scene \revtext{is} shown to every
 method. Table~\ref{tab:imbalance} reports the minority-detection rate
 $\Prob(\hat K\ge2)$ and the mean $\hat K$; Figure~\ref{fig:imbalance}
 displays the degradation curves. ESS-Dip detects the minority
-reliably down to $\pi=0.20$ ($0.90$), degrades at $\pi=0.10$ ($0.73$) and is
-blind below $\pi=0.05$; the recall variant ESS-Dip-R extends the reliable
+reliably down to $\pi=0.20$ ($0.90$), degrades at $\pi=0.10$ ($0.73$)\revtext{,} and is
+blind \revtext{from} $\pi=0.05$ \revtext{downwards}; the recall variant ESS-Dip-R extends the reliable
 regime to $\pi=0.10$ ($0.93$) and detects half the cases at $\pi=0.05$. The
 mechanism is the calibration itself: a minority occupying proportion $\pi$
 contributes a mode of mass $\pi$ to the projected distribution, and once
@@ -436,7 +437,7 @@ the baselines at extreme imbalance is not creditable as detection: their
 false-split rate on class-free scenes is near one (Table~\ref{tab:bench}), so
 a reported $\hat K\ge2$ carries no evidence, and at $\pi=0.02$ the silhouette
 returns $\hat K\approx3$ by fragmenting the majority class rather than
-isolating the minority. As practical guidance: minorities below about a fifth
+isolating the minority. As practical guidance\revtext{,} minorities below about a fifth
 of the scene call for ESS-Dip-R, and minorities below a twentieth are beyond
 the specificity-controlled family at this separation, a limitation
 Section~\ref{sec:discussion} returns to.
