@@ -34,3 +34,9 @@ revistas_bib_final/
 .venv/
 manuscript/EM_upload_R2/
 manuscript/EM_upload_R3/
+manuscript/EM_upload_R4/
+
+# Python package build artifacts
+python/dist/
+python/.pytest_cache/
+python/src/*.egg-info/

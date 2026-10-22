@@ -14,8 +14,27 @@ direction, calibrates it at the **effective sample size** derived from a
 **within-class autocorrelation range** (local declustering), and removes a
 low-order **trend** adaptively. A recursive partitioning returns *K*.
 
-This repository reproduces every result in the accompanying paper (under review
-at *Mathematical Geosciences*).
+This repository reproduces every result in the accompanying paper (accepted in
+*Mathematical Geosciences*).
+
+## Use the method on your own data
+
+The method is packaged on its own, without the experiments, in [`python/`](python/):
+
+```bash
+pip install ess-dip
+```
+
+```python
+from ess_dip import ESSDip
+model = ESSDip(random_state=0).fit(image)   # image: (H, W, bands), NaN = outside
+model.n_classes_, model.labels_
+```
+
+The package reproduces the published method exactly (identical range, trend and decision
+code; same K on every scene of a 66-scene sample of the benchmark) and adds a NaN mask, an
+explicit range option and a switch for the trend removal. See
+[`python/README.md`](python/README.md).
 
 ## Repository layout
 
