@@ -1,63 +1,61 @@
 \section{Application to land-cover imagery}\label{sec:application}
 
-We now turn to real scenes, where the question is no longer whether a method
-recovers a known $K$ but whether it behaves sensibly on data with genuine
-spatial autocorrelation, smooth illumination gradients, and spectrally
-overlapping classes. We use three benchmarks spanning two sensing modalities
-and report two experiments: a direct test of the specificity property of
-Section~\ref{subsec:prop} on regions known to contain a single class, and a
-full-scene estimate of the number of classes.
+\revtext{We now turn to real scenes. Here the question is no longer whether a
+method recovers a known $K$ but whether it behaves sensibly on data
+with genuine spatial autocorrelation, smooth illumination gradients, and
+spectrally overlapping classes. We use three benchmarks spanning hyperspectral
+and multispectral sensing. On them we report two experiments: a direct test of the specificity
+property of Section~\ref{subsec:prop} on regions known to contain a single
+class, and a full-scene estimate of the number of classes.}
 
 \subsection{Data and preprocessing}\label{subsec:data}
 
-Two airborne hyperspectral scenes with per-pixel ground truth are used: the
-\emph{Indian Pines} ($145\times145$, $200$ bands after removal of
-water-absorption bands, $16$ classes; \citealp{Baumgardner2015}) and the
-\emph{Salinas} scene ($512\times217$, $204$ bands, $16$ classes), both standard
-in the classification literature. Each cube is standardised per band and
+\revtext{We use two airborne hyperspectral scenes with per-pixel ground truth,
+both standard in the classification literature. The first is the \emph{Indian
+Pines} scene ($145\times145$, $200$ bands after removal of water-absorption
+bands, $16$ classes; \citealp{Baumgardner2015}), and the second is the
+\emph{Salinas} scene ($512\times217$, $204$ bands, $16$ classes).} Each cube is standardised per band and
 reduced by principal components to ten dimensions, retaining $95.5\%$ and
-$99.6\%$ of the variance\revtext{,} respectively. As a multispectral counterpart\revtext{,
-representative of} the common satellite setting, we use a $246\times237$ Sentinel-2 Level-2A scene
-over the Po Valley with ten surface-reflectance bands (B02--B12), labelled by
-the ESA WorldCover product \citep{Zanaga2022}; four classes exceed $1\%$ of the
-scene (crop $83\%$, tree $9\%$, grass $5\%$, built $4\%$), so its nominal
-number of classes is four. Bands are standardised; no dimensionality reduction
-is needed.
+$99.6\%$ of the variance, respectively. \revtext{As a multispectral counterpart, representative of the common satellite
+setting, we use a $246\times237$ Sentinel-2 Level-2A scene over the Po Valley.
+It has ten surface-reflectance bands (B02--B12) and is labelled by the ESA
+WorldCover product \citep{Zanaga2022}. Four classes exceed $1\%$ of the scene
+(crop $83\%$, tree $9\%$, grass $5\%$, built $4\%$), so its nominal number of
+classes is four. Its bands are standardised, and no dimensionality reduction is
+needed.}
 
 \subsection{Within-class autocorrelation}\label{subsec:realvario}
 
-Nothing in the calibration requires the within-class autocorrelation
-to be non-zero: were it absent, $\ell$ would be one pixel, $a=1$ and
-$\neff=n_C$, and the test would reduce to the ordinary dip test at the nominal
-size. What the calibration does require is that the range be
+\revtext{Nothing in the calibration requires the within-class autocorrelation to
+be non-zero. Were it absent, $\ell$ would be one pixel, $a=1$ and $\neff=n_C$,
+and the test would reduce to the ordinary dip test at the nominal size.} What the calibration does require is that the range be
 estimable and separable from the between-class mosaic, since it is the
 \emph{ratio} $n_C/a$ that the test consumes. We check both on the data,
-\revtext{together with the premise that the autocorrelation is present at
-all.} Averaging the radial empirical semivariogram of the first principal
+together with the premise that the autocorrelation is present at
+all. \revtext{When we average the radial empirical semivariogram of the first principal
 component over pure single-class windows, each scene shows a well-defined
-within-class structure (Figure~\ref{fig:variogram}): an exponential model fits
-Indian Pines and Salinas (ranges $1.8$ and $1.4$ pixels) and a spherical model
-fits Sentinel-2 (range $5.4$ pixels), with $1/e$ correlation lengths of two to
-three pixels. The indicator-to-field integral-range ratio derived in
+within-class structure (Figure~\ref{fig:variogram}). An exponential model fits
+Indian Pines and Salinas (ranges $1.8$ and $1.4$ pixels), and a spherical model
+fits Sentinel-2 (range $5.4$ pixels), with $1/e$ correlation
+lengths of two to three pixels.} The indicator-to-field integral-range ratio derived in
 Section~\ref{subsec:sgs} holds on these real variograms:
 $a_{\mathrm{int}}/a_I=1.51$, $1.54$ and $1.51$ for the three scenes, close to
-the $1.45$ of the Gaussian fields. Local estimation separates the within-class
-range from the scene scale: the tile-median range is $3$ to $4$ pixels, whereas
-the scene-wide estimate, conflating the between-class mosaic, is three to
-fifteen times larger ($14.5$ to $46$ pixels). The premise that most tiles fall
-within a single class holds on the contiguous scenes ($62\%$ of Salinas and
-Sentinel-2 tiles are single-class) and weakens on the fragmented Indian Pines
-fields ($27\%$), where the tile median nonetheless recovers a within-class scale
-($3.5$ against the $16$-pixel scene range)\revtext{; this robustness is the reason
-the median is used.}
+the $1.45$ of the Gaussian fields. \revtext{Local estimation separates the within-class range from the scene scale.
+The tile-median range is $3$ to $4$ pixels, whereas the scene-wide estimate, which
+conflates the between-class mosaic, is three to fifteen times larger ($14.5$ to
+$46$ pixels). The premise that most tiles fall within a single class holds on
+the contiguous scenes, where $62\%$ of Salinas and Sentinel-2 tiles are
+single-class, but weakens on the fragmented Indian Pines fields ($27\%$). There,
+the tile median nonetheless recovers a within-class scale ($3.5$ against the
+$16$-pixel scene range), and this robustness is the reason the median is used.}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.62\linewidth]{figures/variogram}
-\caption{Within-class variograms on the real scenes: the radial empirical
-semivariogram of the first principal component (points), averaged over pure
-single-class windows and standardised to unit sill, with the best-fitting
-exponential, spherical or Gaussian model (lines). The within-class
+\caption{\revtext{Within-class variograms on the real scenes. Points show the
+radial empirical semivariogram of the first principal component, averaged over
+pure single-class windows and standardised to unit sill. Lines show the
+best-fitting exponential, spherical or Gaussian model.} The within-class
 autocorrelation the calibration relies on is real and has a well-defined range
 on actual imagery.}
 \label{fig:variogram}
@@ -65,22 +63,22 @@ on actual imagery.}
 
 \subsection{Specificity on single-class regions}\label{subsec:realspec}
 
-A region covered by a single land-cover class is the real-data analogue of the
-null and trend worlds of Section~\ref{sec:simulation}: its pixels are
-autocorrelated and spectrally variable (soil, moisture and illumination vary
-within a crop field), and the desirable outcome is a single class.
-\revtext{The wording ``single land-cover class'' is deliberate:} the ground truth records one land-cover label, which
-need not mean that the model of Equation~(1) holds there with $K=1$, and a
-window whose dominant class covers less than all of its pixels could
-legitimately support a second. What we can say is that a criterion reporting
+\revtext{A region covered by a single land-cover class is the real-data analogue
+of the null and trend worlds of Section~\ref{sec:simulation}. Its pixels are
+autocorrelated and spectrally variable (soil, moisture and illumination
+vary within a crop field), and the desirable outcome is a single class. The wording
+``single land-cover class'' is deliberate, because the ground truth records one
+land-cover label, which need not mean that the model of Equation~(1) holds
+there with $K=1$. Moreover, a window whose dominant class covers less than all
+of its pixels could legitimately support a second class.} What we can say is that a criterion reporting
 several classes on such a window is reporting structure the label map does not
-recognise. We extract all
-$16\times16$ windows in which a single ground-truth class covers at least
-$90\%$ of the pixels ($67$ windows across Indian Pines and Salinas, $60$ in the
-Sentinel-2 scene, all of the dominant crop class), and record the number of
-clusters each method reports. Table~\ref{tab:realspec} summarises the outcome;
-the proposed-family ablations of Section~\ref{subsec:methods} all behave like
-ESS-Dip here (specificity $\ge0.97$) and are omitted for brevity.
+recognise. \revtext{We extract all $16\times16$ windows in which a single ground-truth class
+covers at least $90\%$ of the pixels. This gives $67$ windows across Indian
+Pines and Salinas and $60$ in the Sentinel-2 scene, all of the dominant crop
+class. For each window, we record the number of clusters each method reports,
+and Table~\ref{tab:realspec} summarises the outcome. The proposed-family ablations
+of Section~\ref{subsec:methods} all behave like ESS-Dip here (specificity
+$\ge0.97$) and are omitted for brevity.}
 
 \begin{table}[t]
 \centering
@@ -108,57 +106,55 @@ ESS-Dip-R (recall)  & 0.99 & 1.01 & 1.00 & 1.00\\
 \end{tabular}
 \end{table}
 
-The simulation result reproduces on real imagery. The silhouette,
-Calinski--Harabasz and Davies--Bouldin indices split a single real land-cover
-class into two or more sub-clusters in \emph{every} window of both modalities;
-the gap statistic does so in all but the cleanest hyperspectral windows
-($\hat K{=}1$ rate $0.64$) and, on the multispectral crop fields, fragments a
-single class into nearly seven on average. ESS-Dip identifies the region as a
+\revtext{The simulation result reproduces on real imagery: the silhouette, Calinski--Harabasz and Davies--Bouldin indices split a
+single real land-cover class into two or more sub-clusters in \emph{every}
+hyperspectral and multispectral window. The gap statistic does so in all but the cleanest
+hyperspectral windows ($\hat K{=}1$ rate $0.64$), and on the multispectral crop
+fields it fragments a single class into nearly seven on average.} ESS-Dip identifies the region as a
 single class in $99\%$ of the hyperspectral and $100\%$ of the multispectral
 windows. The within-field spectral variability that the standard indices read
 as structure is precisely what the effective-sample-size calibration discounts.
-The two closer baselines confirm the attribution on real data: the Hennig--Lin
-spatial null, calibrated for autocorrelation, improves on the standard indices
-over the hyperspectral windows ($0.72$) but collapses on the crop-dominated
-Sentinel-2 fields ($0.07$, mean $\hat K=4.8$), where within-field variation
-defeats its \revtext{phase-randomised} reference; plain dip-means, the modality test
-without the effective-sample-size calibration, reaches $0.84$ and $0.63$. Both
+\revtext{The two closer baselines confirm the attribution on real data: the
+Hennig--Lin spatial null, calibrated for autocorrelation, improves on the
+standard indices over the hyperspectral windows ($0.72$). It collapses,
+however, on the crop-dominated Sentinel-2 fields ($0.07$, mean $\hat K=4.8$),
+where within-field variation defeats its phase-randomised reference. Plain
+dip-means, the modality test without the effective-sample-size calibration,
+reaches $0.84$ and $0.63$. Both baselines
 trail ESS-Dip's $0.99$ and $1.00$, isolating the contribution of the spatial
-calibration on real imagery.
-The result is not an artefact of the preprocessing: on the Indian Pines windows
-ESS-Dip returns a single class in every window across principal-component
+calibration on real imagery.}
+\revtext{The result is not an artefact of the preprocessing. On the Indian Pines
+windows, ESS-Dip returns} a single class in every window across principal-component
 truncations from five to thirty components, window sides from $12$ to $24$
 pixels, and purity thresholds from $0.85$ to $0.95$ (for those combinations that
-yield windows). The recursive Gaussian-simulation estimator,
-even with the multiple-testing correction of
-Section~\ref{subsec:geostat-ref}, is less reliable here: it returns a single
-class in $0.82$ of the hyperspectral and $0.98$ of the multispectral windows\revtext{,
-below ESS-Dip. Its per-node plug-in variogram degrades on real, non-stationary
-support, a residual effect that the correction does not remove.}
+yield windows). \revtext{The recursive Gaussian-simulation estimator is less
+reliable here, even with the multiple-testing correction of
+Section~\ref{subsec:geostat-ref}, returning a single class in $0.82$ of the
+hyperspectral and $0.98$ of the multispectral windows, below ESS-Dip.} Its per-node plug-in variogram degrades on real, non-stationary
+support, a residual effect that the correction does not remove.
 
 \subsection{Full-scene estimation}\label{subsec:realfull}
 
 Applied to an entire labelled scene, the methods estimate the number of
-land-cover classes present (Table~\ref{tab:realfull}). Two caveats
-frame the reading of the table. First, $\hat K$ estimates the number of
-classes \emph{distinguishable from the autocorrelation null at the effective
-sample size}, not the nominal label count; failing to reject does not certify
-that finer labelled classes are absent, only that the data do not support them
-against the null, so a testing-based $\hat K$ is conservative by
-construction. Second, no criterion approaches
-the nominal sixteen classes of the hyperspectral scenes: the labels include
-many small, spectrally similar agricultural classes that are not separable
-without supervision, and the best standard index reaches nine (the gap on
-Salinas) while the others return two to six. ESS-Dip is deliberately
+land-cover classes present (Table~\ref{tab:realfull}). \revtext{Two caveats
+frame the reading of the table: first, $\hat K$ estimates the number of classes \emph{distinguishable
+from the autocorrelation null at the effective sample size}, not the nominal
+label count. Failing to reject does not certify that finer labelled classes are
+absent but shows only that the data do not support them against the null, so a
+testing-based $\hat K$ is conservative by construction. Second, no criterion
+approaches the nominal sixteen classes of the hyperspectral scenes: the labels
+include many small, spectrally similar agricultural classes that are not
+separable without supervision. The best standard index reaches nine (the gap
+on Salinas), and the others return two to six.} ESS-Dip is deliberately
 conservative, reporting two classes on Indian Pines and five on Salinas. On the
 crop-dominated Sentinel-2 scene, where a single class covers $83\%$ of the
 pixels, ESS-Dip returns that one dominant class, whereas the gap reports five.
-The recall variant ESS-Dip-R recovers more where the structure is separable,
-reporting eleven classes on Salinas at the same single-class-window specificity
-(Table~\ref{tab:realspec}), while remaining conservative where it cannot help:
-\revtext{two classes on the spectrally overlapping Indian Pines scene and one on
-the imbalanced Sentinel-2 scene, outcomes limited by separability and dominance
-rather than by the calibration's conservatism.}
+\revtext{The recall variant ESS-Dip-R recovers more where the structure is
+separable, reporting eleven classes on Salinas at the same single-class-window
+specificity (Table~\ref{tab:realspec}). It remains conservative where it cannot
+help, with two classes on the spectrally overlapping Indian Pines scene and one
+on the imbalanced Sentinel-2 scene. These outcomes are limited by separability
+and dominance rather than by the calibration's conservatism.}
 
 \begin{table}[t]
 \centering
@@ -182,32 +178,32 @@ SGS-Dip (corrected) & 2 & $\ge20$ & 6\\
 \end{table}
 
 These full-scene figures should be read against the precision--recall
-trade-off of Section~\ref{subsec:simresults}. Exhaustive recovery of many
-overlapping classes from a single scene is beyond every criterion considered,
-and the conservatism of ESS-Dip is the price of its specificity: a procedure
-that refuses to invent structure will, on a scene dominated by one class or
-composed of weakly separated ones, under-report rather than over-report. The
-recursive simulation estimator errs in the opposite direction, over-detecting
-to the imposed cap on Salinas and to six classes on the crop-dominated
-Sentinel-2 scene even after the multiple-testing correction\revtext{, because the
-error of the plug-in variogram on the scene's irregular, non-stationary support
-compounds over a full-scene recursion.} We
-regard the method's value as residing in that precision (it answers
-reliably whether genuine class structure is present beyond spatial
-autocorrelation) rather than in maximal class enumeration, and we return to
-this distinction, and to ways of relaxing it, in Section~\ref{sec:discussion}.
+trade-off of Section~\ref{subsec:simresults}. \revtext{Exhaustive recovery of many overlapping classes from a single scene is
+beyond every criterion considered. The conservatism of ESS-Dip is the price of
+its specificity: on a scene dominated by one class or composed of weakly
+separated ones, a procedure that refuses to invent structure will under-report
+rather than over-report. The recursive simulation estimator errs in the
+opposite direction: even after the multiple-testing correction, it
+over-detects to the imposed cap on Salinas and to six classes on the
+crop-dominated Sentinel-2 scene. This happens because the error of the plug-in
+variogram on the scene's irregular, non-stationary support compounds over a
+full-scene recursion. We regard the method's value as residing in that
+precision rather than in maximal class enumeration: it answers reliably whether
+genuine class structure is present beyond spatial autocorrelation.
+Section~\ref{sec:discussion} returns to this distinction and to ways of
+relaxing it.}
 
-The number of classes is only half the picture; the quality of the induced
-partition completes it. Table~\ref{tab:realari} reports the adjusted Rand index
+\revtext{The number of classes is only half the picture, and the quality of the
+induced partition completes it.} Table~\ref{tab:realari} reports the adjusted Rand index
 \citep[ARI;][]{HubertArabie1985} of each labelling against the
 ground-truth map. Two things stand out. First, unsupervised recovery of these
-partitions is hard for every method: no ARI exceeds $0.52$. Second, on the
-multi-class hyperspectral scenes ESS-Dip's partition quality trails the
-over-detecting gap statistic (Salinas ARI $0.32$ versus $0.52$), and on the
-crop-dominated Sentinel-2 scene, where it returns a single class, its ARI is
-zero. This is the partition-quality counterpart of the conservatism already
-visible in the class counts: a precision-oriented test that refuses to split
-does not, and is not meant to, maximise partition recovery. The numbers make
+partitions is hard for every method: no ARI exceeds $0.52$. \revtext{Second, on the multi-class hyperspectral scenes, ESS-Dip's partition
+quality trails that of the over-detecting gap statistic (Salinas ARI $0.32$
+versus $0.52$). On the crop-dominated Sentinel-2 scene, where it returns a
+single class, its ARI is zero. This is the partition-quality counterpart of the
+conservatism already visible in the class counts. A precision-oriented test
+that refuses to split does not, and is not meant to, maximise partition
+recovery.} The numbers make
 the trade-off explicit and reinforce the reading of ESS-Dip as a homogeneity
 guard rather than a classifier.
 

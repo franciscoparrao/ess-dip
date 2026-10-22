@@ -2,138 +2,142 @@
 
 \subsection{Selecting the number of clusters}\label{subsec:bg-k}
 
-Choosing the number of clusters $K$ is a classical problem in unsupervised
-analysis, and a large family of \emph{internal} criteria address it by scoring
-a partition against the geometry of the data alone. The gap statistic
-\citep{Tibshirani2001} compares the within-cluster dispersion to its
+\revtext{Choosing the number of clusters $K$ is a classical problem in
+unsupervised analysis, and a large family of \emph{internal} criteria address it by
+scoring a partition against the geometry of the data alone.} \revtext{The gap
+statistic \citep{Tibshirani2001} compares the within-cluster dispersion to its
 expectation under a reference distribution with no clustering, typically
-uniform over the data's bounding box; the average silhouette
+uniform over the data's bounding box. The average silhouette
 \citep{Rousseeuw1987}, the Calinski--Harabasz ratio
 \citep{CalinskiHarabasz1974} and the Davies--Bouldin index
-\citep{DaviesBouldin1979} balance within- against between-cluster scatter.
+\citep{DaviesBouldin1979} balance within- against between-cluster scatter.}
 Comparative studies cover the many further variants
-\citep{Arbelaitz2013}. A second family selects $K$ through a probabilistic
-model: model-based clustering fits a finite mixture and chooses the number of
-components by an information criterion such as the BIC
-\citep{GormleyMurphyRaftery2023}; that family has itself been
-extended to spatially dependent data by embedding Gaussian processes in the
-mixture \citep{Vanhatalo2021}.
+\citep{Arbelaitz2013}. \revtext{A second family selects $K$ through a
+probabilistic model: model-based clustering fits a finite mixture and chooses
+the number of components by an information criterion such as the BIC
+\citep{GormleyMurphyRaftery2023}. That family has itself been extended to
+spatially dependent data by embedding Gaussian processes in the mixture
+\citep{Vanhatalo2021}.}
 
 These criteria differ in how far they commit to a probability model,
-and the distinction matters here. The gap statistic and model-based selection
-by BIC do rest on assumptions that treat observations as independent: the gap
-compares the observed within-cluster dispersion with its expectation under a
-reference distribution of independently scattered points, and the mixture
-likelihood behind the BIC is a product over observations. The average
-silhouette, the Calinski--Harabasz ratio and the Davies--Bouldin index assume
-no probability model at all; they are descriptive summaries of a partition's
-geometry, and on dependent data they are neither correct nor incorrect, because
-they make no probabilistic claim that dependence could violate. What all of
-them share is that dependence between observations plays no role in their
-construction, so none of them separates grouping produced by discrete classes
-from grouping that autocorrelation alone produces. \revtext{The distinction
+and the distinction matters here. \revtext{The gap statistic and model-based
+selection by BIC do rest on assumptions that treat observations as
+independent. The gap compares the observed within-cluster dispersion with its
+expectation under a reference distribution of independently scattered points,
+and the mixture likelihood behind the BIC is a product over observations.}
+\revtext{The average silhouette, the Calinski--Harabasz ratio and the
+Davies--Bouldin index assume no probability model at all and are descriptive
+summaries of a partition's geometry. On dependent data they are neither
+correct nor incorrect, because they make no probabilistic claim that
+dependence could violate.} \revtext{What all of them share is that dependence
+between observations plays no role in their construction, so none of
+them separates grouping produced by discrete classes from grouping that
+autocorrelation alone produces.} The distinction
 matters most for spatial data, because nearby
-locations are correlated}: ``everything is related to everything else, but
+locations are correlated: ``everything is related to everything else, but
 near things are more related than distant things'' \citep{Tobler1970}.
 
 \subsection{Accounting for spatial dependence}\label{subsec:bg-spatial}
 
-\revtext{It is known across several fields that methods comparing data against
+It is known across several fields that methods comparing data against
 an independence reference report structure that the dependence alone can
-account for.} In spatial epidemiology, \citet{Goovaerts2004}
-show that a complete-spatial-randomness null over-identifies disease clusters
-and propose, in its place, a geostatistical \emph{spatial neutral model}
-(realisations reproducing the histogram and variogram of the data by sequential
-Gaussian simulation), against which far fewer locations remain significant.
+account for. \revtext{In spatial epidemiology, \citet{Goovaerts2004}
+show that a complete-spatial-randomness null over-identifies disease clusters.
+In its place, they propose a geostatistical \emph{spatial neutral model},
+whose realisations reproduce the histogram and variogram of the data by
+sequential Gaussian simulation, and against this model far fewer locations remain
+significant.}
 In neuroimaging, \citet{Eklund2016} trace inflated false-positive rates in
 cluster-extent inference to a mis-specified parametric model of the spatial
-autocorrelation. The common remedy is a null that \emph{preserves} the
-spatial covariance structure while removing the effect being tested, realised
-either by geostatistical simulation \citep{Goovaerts2004} or by spatially
-constrained randomisation such as Moran spectral randomization
-\citep{WagnerDray2015}.
+autocorrelation. \revtext{The common remedy is a null that \emph{preserves} the
+spatial covariance structure while removing the effect being tested. It is
+realised either by geostatistical simulation \citep{Goovaerts2004} or by
+spatially constrained randomisation such as Moran spectral randomization
+\citep{WagnerDray2015}.}
 
 The same logic has been brought to bear on $K$ itself.
-\citet{HennigLin2015} calibrate a validity index (the gap, silhouette or
-prediction strength) against its distribution under a problem-specific null
-that encodes non-clustering structure, including spatial autocorrelation, and
-use the calibrated index both to test for clustering and to estimate $K$; on a
-biogeographic example a plain Gaussian null favours eight clusters while the
-autocorrelation-aware null reduces this to two and renders the apparent
-clustering non-significant. Their framework is the conceptual basis of the
-present work. Its guiding principle, that all structure not
-attributable to clustering belongs in the null model, is exactly the principle
-the present method instantiates for spatially autocorrelated continuous
-fields; the two contributions differ in how the calibration is obtained and in
-the data setting they treat. First, \citet{HennigLin2015} calibrate by
-simulation, so every decision requires an ensemble of null datasets, whereas
-the calibration developed here is analytic, through the effective sample size,
-which is what makes the near-linear full-scene cost of
-Section~\ref{subsec:complexity} possible. Second, their construction is
-formulated for discrete presence--absence data
-with an algorithmic disjunction-parameter null, and addresses neither the
-\emph{continuous-field} setting of gridded imagery nor the confounding of a
-smooth large-scale \emph{trend} with discrete classes. The present
-contribution supplies exactly these: a Gaussian-random-field null on the
-lattice, a within-class range obtained by local range estimation, an adaptive
+\revtext{\citet{HennigLin2015} calibrate a validity index (the gap, silhouette
+or prediction strength) against its distribution under a problem-specific null
+that encodes non-clustering structure, including spatial autocorrelation. They
+use the calibrated index both to test for clustering and to estimate $K$.}
+\revtext{On a biogeographic example, a plain Gaussian null favours eight
+clusters, whereas the autocorrelation-aware null reduces this to two and renders the
+apparent clustering non-significant.} \revtext{Their framework is the conceptual basis
+of the present work, and its guiding principle is that all structure not
+attributable to clustering belongs in the null model. The present method
+instantiates exactly this principle for spatially autocorrelated continuous
+fields, although the two contributions differ in how the calibration is obtained and in
+the data setting they treat.} \revtext{First, \citet{HennigLin2015} calibrate
+by simulation, so every decision requires an ensemble of null datasets. The
+calibration developed here is instead analytic, through the effective sample
+size, and this is what makes the near-linear full-scene cost of
+Section~\ref{subsec:complexity} possible.} \revtext{Second, their construction
+is formulated for discrete presence--absence data with an algorithmic
+disjunction-parameter null. It addresses neither the \emph{continuous-field}
+setting of gridded imagery nor the confounding of a smooth large-scale
+\emph{trend} with discrete classes.} \revtext{The present contribution supplies
+exactly these elements: a Gaussian-random-field null on the lattice,
+a within-class range obtained by local range estimation, an adaptive
 trend--residual separation, and an effective-sample-size calibration of a
-modality statistic. Throughout the comparisons of
+modality statistic.} \revtext{Throughout the comparisons of
 Sections~\ref{sec:simulation} and~\ref{sec:application}, the label
-Hennig--Lin accordingly denotes their published null-model construction
-applied to our setting, not this general framework, of which the proposed
-method is itself an instance.
+Hennig--Lin accordingly denotes their published null-model construction applied
+to our setting, not this general framework, of which the
+proposed method is itself an instance.}
 
-The quantitative device that makes this possible is the \emph{effective
-sample size}: under spatial autocorrelation the variance of a sample statistic
-behaves as if computed from $\neff<n$ independent observations, a reduction
-governed by the integral of the autocorrelation \citep{Cressie1993},
-a quantity formalised as the \emph{integral range} in the theory of ergodic
-random functions \citep{Lantuejoul1991,Lantuejoul2002}.
-The concept recurs across statistics whenever dependent data carry
-less information than their count suggests: \citet{Griffith2005} develops
-effective geographic sample sizes for spatial sampling design,
-\citet{Berger2014} formalise the notion for general parametric inference,
+\revtext{The quantitative device that makes this possible is the
+\emph{effective sample size}: under spatial autocorrelation, the variance of a
+sample statistic behaves as if computed from $\neff<n$ independent
+observations. The reduction is governed by the integral of the autocorrelation
+\citep{Cressie1993}, a quantity formalised as the \emph{integral range} in the
+theory of ergodic random functions \citep{Lantuejoul1991,Lantuejoul2002}.}
+\revtext{The concept recurs across statistics whenever dependent data carry
+less information than their count suggests. \citet{Griffith2005} develops
+effective geographic sample sizes for spatial sampling design, and
+\citet{Berger2014} formalise the notion for general parametric inference.
 \citet{VallejosOsorio2014} define and study it for spatial process models, and
 \citet{Acosta2021} extend its computation to large spatial datasets through
-block likelihoods.
-\citet{Dutilleul1993} operationalised this idea to correct the degrees of
-freedom of a correlation test between two spatial processes; we use it to
-recalibrate, rather than to correct after the fact, the reference distribution
-of a clustering criterion. The autocorrelation scale it requires is the
-variogram range \citep{Matheron1963,Cressie1993}, and the safeguard against
-letting large homogeneous regions dominate its estimate is \emph{declustering},
-a standard geostatistical correction for spatially clustered support
-\citep{IsaaksSrivastava1989,Deutsch1998}.
+block likelihoods.}
+\revtext{\citet{Dutilleul1993} operationalised this idea to correct the degrees
+of freedom of a correlation test between two spatial processes. We use it
+instead to recalibrate, rather than to correct after the fact, the reference
+distribution of a clustering criterion.} \revtext{The autocorrelation scale it
+requires is the variogram range \citep{Matheron1963,Cressie1993}. The
+safeguard against letting large homogeneous regions dominate its estimate is
+\emph{declustering}, a standard geostatistical correction for spatially
+clustered support \citep{IsaaksSrivastava1989,Deutsch1998}.}
 
 \subsection{Modality as a clustering signal}\label{subsec:bg-modality}
 
 Suppose one kept a dispersion-based index and improved only the
-null, matching it to the covariance structure estimated from the data. The
-within-cluster dispersion the index measures is a variance-based quantity, and
-the contrast between classes contributes to the very covariance the null now
-reproduces; the null therefore generates reference datasets of much the same
-dispersion as the data whether or not classes are present, and the comparison
-loses what it was meant to detect. A criterion able to survive an
+null, matching it to the covariance structure estimated from the data.
+\revtext{The within-cluster dispersion that the index measures is a
+variance-based quantity, and the contrast between classes contributes to the
+very covariance that the null now reproduces. The null therefore generates
+reference datasets of much the same dispersion as the data, whether or not
+classes are present. The comparison then loses what it was meant to detect.}
+\revtext{A criterion able to survive an
 autocorrelation-matched null must read something the covariance does not
-determine. Multimodality is the natural choice. The dip test of
+determine, and multimodality is the natural choice.} \revtext{The dip test of
 \citet{HartiganHartigan1985} measures the departure of a univariate sample from
-unimodality, and dip-means \citep{Kalogeratos2012} turns it into a
-divisive procedure that splits a cluster only when a projection of it is
-significantly multimodal, thereby estimating $K$. These methods assume
-independent observations; our contribution is to make the dip test valid under
-spatial autocorrelation by calibrating it at the effective sample size, and to
-pair it with the trend removal that prevents a smooth gradient from being read
-as two modes.
+unimodality. Dip-means \citep{Kalogeratos2012} turns it into a divisive
+procedure that splits a cluster only when a projection of it is significantly
+multimodal, thereby estimating $K$.} \revtext{These methods assume independent
+observations, and our contribution is to make the dip test valid under spatial
+autocorrelation by calibrating it at the effective sample size. We also pair it
+with the trend removal that prevents a smooth gradient from being read as two
+modes.}
 
 \subsection{Distinction from spatially constrained clustering}\label{subsec:bg-constrained}
 
 A separate line of work \emph{imposes} spatial contiguity on the partition:
-\revtext{regionalisation} methods such as SKATER \citep{Assuncao2006}, ClustGeo
+regionalisation methods such as SKATER \citep{Assuncao2006}, ClustGeo
 \citep{Chavent2018} and the max-$p$-regions problem \citep{Duque2012} constrain
-clusters to be spatially connected. These address a different question \revtext{(how
-to partition space into contiguous regions)} and still require the number of
-regions as an input or a tuning parameter. We do not constrain the partition;
-we correct the criterion that selects \emph{how many} groups are present.
-\revtext{The two approaches are complementary}: the effective-sample-size calibration developed here
-could in principle inform the stopping rule of a \revtext{regionalisation} just as it
-informs the recursion of Section~\ref{sec:method}.
+clusters to be spatially connected. \revtext{These methods address a different
+question, namely how to partition space into contiguous regions, yet they still
+require the number of regions as an input or a tuning parameter.} \revtext{We
+do not constrain the partition but instead correct the criterion that selects
+\emph{how many} groups are present.} \revtext{The two approaches are
+complementary: the effective-sample-size calibration developed here could in
+principle inform the stopping rule of a regionalisation, just as it informs the
+recursion of Section~\ref{sec:method}.}

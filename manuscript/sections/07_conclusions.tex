@@ -1,36 +1,36 @@
 \section{Conclusions}\label{sec:conclusions}
 
-Selecting the number of clusters on spatial data runs into a
-property the standard criteria share: they take no account of the dependence
+\revtext{Selecting the number of clusters on spatial data runs into a property
+that the standard criteria share. They take no account of the dependence
 between observations, and so cannot separate grouping that reflects discrete
 classes from grouping that autocorrelation alone produces. Under spatial
-autocorrelation the gap statistic and the silhouette, Calinski--Harabasz and
+autocorrelation, the gap} statistic and the silhouette, Calinski--Harabasz and
 Davies--Bouldin indices reported several classes on every field we simulated
 with one, and divided single land-cover regions on real imagery.
 
-We have proposed a remedy framed in geostatistical terms. \revtext{The
+\revtext{We have proposed a remedy framed in geostatistical terms: the
 problem is recast as a calibrated test of cluster homogeneity, which asks
-whether a region carries multimodality in excess of spatial autocorrelation.
+whether a region carries multimodality in excess of spatial autocorrelation.}
 After removing a low-order trend whenever one is resolvable, ESS-Dip evaluates
 the Hartigan dip along the locally optimal split direction and calibrates it
 against the \emph{effective} sample size. That size is estimated from a
-within-class autocorrelation range obtained by local range estimation.} For a stylised version
-of the test we prove that the probability of dividing a homogeneous region
-vanishes; the procedure runs in near-linear time. On a factorial
+within-class autocorrelation range obtained by local range estimation. \revtext{For a stylised version of the test, we prove that the probability of
+dividing a homogeneous region vanishes. The procedure runs in near-linear
+time.} On a factorial
 simulation with known ground truth it reaches unit specificity, and its recall
 variant ESS-Dip-R attains the best balanced score of sixteen criteria at the
-same specificity. \revtext{On the Indian Pines, Salinas and Sentinel-2
-scenes, both variants} identify single land-cover regions as homogeneous where
-the standard criteria do not. \revtext{The asymmetry between its two kinds of
-error makes the family as suitable for use as a homogeneity guard or a stopping
-rule for region-growing as for selecting the number of clusters, and the family
-spans} a precision--recall axis from the conservative distribution-free null
-to the higher-recall Gaussian one.
+same specificity. On the Indian Pines, Salinas and Sentinel-2
+scenes, both variants identify single land-cover regions as homogeneous where
+the standard criteria do not. \revtext{The asymmetry between its two kinds of error makes the family as
+suitable for use as a homogeneity guard or a stopping rule for region-growing
+as for selecting the number of clusters. The family spans a precision--recall
+axis, from the conservative distribution-free null to the higher-recall
+Gaussian one.}
 
-The broader message is that two long-standing tools of geostatistics,
-the effective sample size and declustering, are what a clustering criterion
-needs in order to answer this question on dependent data, and that the signal
-which separates classes from autocorrelation is modality rather than
-dispersion. All code and
+\revtext{The broader message has two parts. First, two long-standing tools of
+geostatistics, the effective sample size and declustering, are what a
+clustering criterion needs in order to answer this question on dependent data.
+Second, the signal that separates classes from autocorrelation is modality
+rather than dispersion.} All code and
 data required to reproduce the simulation study and the applications are
 released.

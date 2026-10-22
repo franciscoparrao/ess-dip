@@ -1,0 +1,70 @@
+\documentclass[11pt]{article}
+\usepackage[margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{parskip}
+\usepackage{microtype}
+\usepackage{booktabs}
+\newcommand{\R}[1]{\medskip\noindent\textbf{#1}\quad}
+\newenvironment{rquote}{\begin{quote}\itshape}{\end{quote}}
+\begin{document}
+\begin{center}
+{\LARGE\bfseries Response to the Editor}\\[6pt]
+{\large Manuscript MATG-D-26-00180 --- \emph{Mathematical Geosciences},
+final revision}\\[4pt]
+``Effective-sample-size calibration of a modality test for cluster homogeneity
+and the number of classes in spatially autocorrelated data''\\[4pt]
+Francisco Parra \,\textperiodcentered\, Universidad de Santiago de Chile
+\end{center}
+\medskip
+
+I thank the Editor for accepting the manuscript and for the precise
+indication of what remained to be done. The changes made in this round are
+shown in blue in the marked copy. Because long sentences ran through most of the
+text, the revision touched most paragraphs, and much of the marked copy is
+therefore blue; no scientific content, figure, table or reference has changed.
+
+\R{English language and sentence structure.}
+\begin{rquote}
+``English language needs editing and improvement (around 85\% ready) to meet
+publication standards; numerous instances of unclear sentence structures.
+[\dots] ideas need to be broken up into separate sentences.''
+\end{rquote}
+The whole text, from the abstract to the conclusions, has been revised to
+break long sentences into separate ones, each carrying a single idea. Clauses
+joined by semicolons, chains of subordinate clauses and long parenthetical
+remarks have been rewritten as sentences of their own. The example given has
+become four sentences:
+\begin{quote}
+The within-cluster dispersion that these criteria minimise is a
+variance-based quantity. A reference matched to the data's spatial covariance
+structure, its variogram, therefore reproduces the same dispersion whether or
+not classes are present. This happens because the between-class contrast is
+itself part of the covariance that the reference is matched to. The comparison
+then has nothing left to detect.
+\end{quote}
+The effect of the revision on sentence structure across the main text is as
+follows.
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+ & Previous version & Revised version\\
+\midrule
+Median sentence length (words) & $29$ & $21$\\
+Sentences longer than 35 words & $35\%$ & below $1\%$\\
+Semicolons per 1{,}000 words & $7.8$ & $0.8$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Two sentences remain above 35 words, deliberately. One lists the preprocessing
+settings of a robustness check in Section~5.3 and reads more clearly as a single
+list. The other, in Section~6, ends with a clause that qualifies only the
+stopping-rule use of the method; splitting it would extend that qualification to
+every use.
+The abstract was revised in the same
+way, and the abstract in the submission metadata has been updated to match it.
+
+\end{document}
